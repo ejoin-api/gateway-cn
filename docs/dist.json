@@ -8,303 +8,160 @@
   "tags": [],
   "paths": {
     "/goip_post_sms.html": {
-      "get": {
+      "post": {
         "summary": "SMS Sending",
         "deprecated": false,
         "description": "Tips:\n1. While not choose a port, device will pick up a random port to send SMS to every recipient.\n2. While chose more than one ports, and just one SMS recipient , then device will use all chose port to\nsend SMS to this recipient.\n3. If more ports, and more recipient designed, then every port will send SMS to every recipient\nseparately.",
         "tags": [],
         "parameters": [
           {
-            "name": "type",
+            "name": "version",
             "in": "query",
-            "description": "Message type.",
-            "required": true,
-            "example": "",
+            "description": "API version",
+            "required": false,
+            "example": "1.01",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "sr_url",
+            "name": "username",
             "in": "query",
-            "description": "Status report forward url\nnumber, start from 1. ",
-            "required": false,
-            "example": "",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sr_cnt",
-            "in": "query",
-            "description": "Max num of SMS\nresult can keep in\ncache.",
-            "required": false,
-            "example": [
-              "100"
-            ],
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sr_prd",
-            "in": "query",
-            "description": "The max time SMS\nresult can keep in\ncache",
-            "required": false,
-            "example": [
-              "30"
-            ],
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "sms_url",
-            "in": "query",
-            "description": "SMS forward URL",
+            "description": "Device username",
             "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "sms_cnt",
+            "name": "password",
             "in": "query",
-            "description": "otal ports of device.",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "max-slots",
-            "in": "query",
-            "description": "Total SIM slots of device. ",
-            "required": false,
-            "example": "1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sms_prd",
-            "in": "query",
-            "description": "1. The time expired, even\nif not enough SMS is received, it is sent\nimmediately, then the timer is\nreset.",
-            "required": false,
-            "example": 30,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "task_num",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "example": "1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tasks",
-            "in": "query",
-            "description": "Specific SMS send task",
-            "required": false,
-            "example": [
-              "[{\"tid\":\"\", \"from\":\"\", \"to\":\"\", \"to_all\":\"\", \"sms\":\"\", \"chs\":\"\", \"coding\":0}]"
-            ],
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "tid",
-            "in": "query",
-            "description": "Task ID",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "from",
-            "in": "query",
-            "description": "Use‘,’‘-’to assign more than one port(from\nchannel 1)",
+            "description": "Device password",
             "required": false,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "to",
-            "in": "query",
-            "description": "one or more(use ‘,’to distinguish) recipients",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "to_all",
-            "in": "query",
-            "description": "1 represents all ports",
-            "required": false,
-            "example": "1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sms",
-            "in": "query",
-            "description": "SMS content",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "chs",
-            "in": "query",
-            "description": "Character coding set (utf8|base64)",
-            "required": false,
-            "example": "utf8",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "coding",
-            "in": "query",
-            "description": "pecific the SMS codec",
-            "required": false,
-            "example": 0,
-            "schema": {
-              "type": "integer",
-              "enum": [
-                0,
-                1,
-                2
-              ]
-            }
-          },
-          {
-            "name": "smstype",
-            "in": "query",
-            "description": "SMS type",
-            "required": false,
-            "example": 0,
-            "schema": {
-              "type": "integer",
-              "enum": [
-                0,
-                1,
-                2
-              ]
-            }
-          },
-          {
-            "name": "smstitle",
-            "in": "query",
-            "description": "MMS subject：MMS subject format is UTF-8，this parameter could be empty",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "to_title_arr ay",
-            "in": "query",
-            "description": "Multiple MMS recipients and subject arrays. This field is valid only when smstype=2;\nFormat：\n\"to_title_array\":[[\"number1\",\"titile1\"],[\"number2\",\"titile2\"],\n...[\"number n\",\"titile n\"]]",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "attachments",
-            "in": "query",
-            "description": "1、MMS attachment，This field take effect only when\nsmstype=1 or 2;\n2、Field content format: “File type1|base64 code file content 1;\nFile type2|base64 code file content 2;\n...... File type n|base64 code file content n” 3、Remarks：\na. There can be a most of 5 attachment,all attachment\ntotal length cannot exceed 100K,at present only\nsupport jpg、gif、txt、mp3 formatted file.\n“” N\nEjoin HTTP API Development Spec.\nVersion: 2.4.0\nDocument No : xxxxxxx 11/22/2024 Page 12\nb. File type and file content use symbol | separate\nc. Attachment is could be empty,send the content of the SMS filed as a TXT attachment\n4、example：\n“txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk”",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "smsc",
-            "in": "query",
-            "description": "Store the SMSC number.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "intvl",
-            "in": "query",
-            "description": "Interval of 2 SMS while device sending them(ms)",
-            "required": false,
-            "example": "0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tmo",
-            "in": "query",
-            "description": "Max time while waiting sending result(second).",
-            "required": false,
-            "example": 30,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "sdr",
-            "in": "query",
-            "description": "If enable the successfully send report. 1:enable,0:disable",
-            "required": false,
-            "example": 0,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "fdr",
-            "in": "query",
-            "description": "If enable the failed report.1:enable,0:disable.",
-            "required": false,
-            "example": 1,
-            "schema": {
-              "type": "integer",
-              "enum": [
-                0,
-                1
-              ]
-            }
-          },
-          {
-            "name": "dr",
-            "in": "query",
-            "description": "If enable SMS delivery\nreport.1:enable,0:disable.",
-            "required": false,
-            "example": 0,
-            "schema": {
-              "type": "integer",
-              "enum": [
-                0,
-                1
-              ]
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Message type"
+                  },
+                  "sr_url": {
+                    "type": "string",
+                    "description": "Status report forward url"
+                  },
+                  "sr_cnt": {
+                    "type": "string",
+                    "description": "Max num of SMS\nresult can keep in\ncache."
+                  },
+                  "sr_prd": {
+                    "type": "integer",
+                    "description": "The max time SMS\nresult can keep in\ncache"
+                  },
+                  "sms_url": {
+                    "type": "string",
+                    "description": "SMS forward URL"
+                  },
+                  "sms_cnt": {
+                    "type": "string",
+                    "description": "Max num of SMS can\nkeep in cache"
+                  },
+                  "sms_prd": {
+                    "type": "integer",
+                    "description": "Max time SMS can"
+                  },
+                  "task_num": {
+                    "type": "string",
+                    "description": "Total task"
+                  },
+                  "tasks": {
+                    "type": "object",
+                    "properties": {
+                      "tid": {
+                        "type": "integer",
+                        "description": "Task ID"
+                      },
+                      "from": {
+                        "type": "string",
+                        "description": "Use‘,’‘-’to assign more than one port(from\nchannel 1)"
+                      },
+                      "to": {
+                        "type": "string",
+                        "description": "one or more(use ‘,’to distinguish) recipients"
+                      },
+                      "to_all": {
+                        "type": "string",
+                        "description": "1 represents all ports",
+                        "default": "1"
+                      },
+                      "sms": {
+                        "type": "string",
+                        "description": "SMS content"
+                      },
+                      "chs": {
+                        "type": "string",
+                        "description": "Character coding set (utf8|base64)"
+                      },
+                      "codeing": {
+                        "type": "integer",
+                        "description": "pecific the SMS codec",
+                        "default": 0,
+                        "enum": [
+                          0,
+                          1,
+                          2
+                        ]
+                      },
+                      "smstype": {
+                        "type": "integer",
+                        "default": 0,
+                        "enum": [
+                          0,
+                          1,
+                          2
+                        ]
+                      },
+                      "smstitle": {
+                        "type": "string",
+                        "description": "MMS subject：MMS subject format is UTF-8，this parameter could be empty;"
+                      },
+                      "to_title_arr ay": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "[\"number\", \"title\"]"
+                        }
+                      }
+                    },
+                    "required": [
+                      "tid",
+                      "from",
+                      "to",
+                      "to_all",
+                      "sms",
+                      "chs",
+                      "codeing",
+                      "smstype",
+                      "smstitle"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "task_num",
+                  "tasks"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "",
@@ -375,6 +232,184 @@
                     "value": {
                       "message": "Invalid API key."
                     }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/goip_get_esims.html": {
+      "get": {
+        "summary": "Query ESIM",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "description": "API version  \n1.0: Compatible with\nprevious API\n1.1: Support for the description of this document",
+            "required": false,
+            "example": "1.0",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device Username",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device password",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ports",
+            "in": "query",
+            "description": "The specified port number (valued\nfrom 1). The values are as follows: (4) all: all ports;\n(5) 2: Specify a single port;\n(6) 1-2, 4: Port numbers separated by\nshort numbers, specifying multiple ports, where \"-\" indicates a continuous port number;",
+            "required": false,
+            "example": "all",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "reason": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "ports": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "port": {
+                            "type": "integer"
+                          },
+                          "eid": {
+                            "type": "string"
+                          },
+                          "esim_state": {
+                            "type": "string"
+                          },
+                          "profiles": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "slot": {
+                                  "type": "integer"
+                                },
+                                "enabled": {
+                                  "type": "integer"
+                                },
+                                "iccid": {
+                                  "type": "string"
+                                },
+                                "ac": {
+                                  "type": "string"
+                                },
+                                "cc": {
+                                  "type": "string"
+                                },
+                                "provider": {
+                                  "type": "string"
+                                },
+                                "exust": {
+                                  "type": "integer"
+                                },
+                                "op": {
+                                  "type": "integer"
+                                },
+                                "status": {
+                                  "type": "integer",
+                                  "description": "The current esim profile operation status, with\nthe following values The values are as follows: 0 - No operation\n1 - Operation request submitted\n2 - Profile operation is in progress on the\ncurrent port\n3 - Operation error, the specific reason is described in the reason field",
+                                  "enum": [
+                                    0,
+                                    1,
+                                    2,
+                                    3
+                                  ]
+                                },
+                                "reason": {
+                                  "type": "string",
+                                  "description": "Causes of operational errors"
+                                }
+                              },
+                              "required": [
+                                "slot",
+                                "enabled",
+                                "iccid",
+                                "ac",
+                                "cc",
+                                "provider",
+                                "exust",
+                                "op",
+                                "status",
+                                "reason"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "port",
+                          "eid",
+                          "esim_state",
+                          "profiles"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "reason",
+                    "count",
+                    "ports"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "{“code”:200,“reason”：“OK”,“count”:n,“ports”:[{“port”:xxx,…}，…]}"
                   }
                 }
               }
