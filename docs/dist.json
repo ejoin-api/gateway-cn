@@ -158,7 +158,8 @@
                   "task_num",
                   "tasks"
                 ]
-              }
+              },
+              "example": "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"\")\npayload = json.dumps({\n   \"type\": \"string\",\n   \"sr_url\": \"string\",\n   \"sr_cnt\": \"string\",\n   \"sr_prd\": 0,\n   \"sms_url\": \"string\",\n   \"sms_cnt\": \"string\",\n   \"sms_prd\": 0,\n   \"task_num\": \"string\",\n   \"tasks\": {\n      \"tid\": 0,\n      \"from\": \"string\",\n      \"to\": \"string\",\n      \"to_all\": \"1\",\n      \"sms\": \"string\",\n      \"chs\": \"string\",\n      \"codeing\": 0,\n      \"smstype\": 0,\n      \"smstitle\": \"string\",\n      \"to_title_arr ay\": [\n         \"string\"\n      ]\n   }\n})\nheaders = {\n   'Content-Type': 'application/json'\n}\nconn.request(\"POST\", \"/goip_post_sms.html?version=1.01&username=null&password=null\", payload, headers)\nres = conn.getresponse()\ndata = res.read()\nprint(data.decode(\"utf-8\"))"
             }
           }
         },
@@ -296,7 +297,8 @@
               "schema": {
                 "type": "object",
                 "properties": {}
-              }
+              },
+              "example": "#include <string>\r\n#include <vector>\r\n#include <curl/curl.h>\r\n\r\nint main(void) {\r\n  CURL *curl;\r\n  CURLcode res;\r\n  using namespace std;\r\n\r\n  curl = curl_easy_init();\r\n  if(curl) {\r\n    char const *path = \"https://smseagleip/index.php/api/v2/messages/sms\";\r\n    curl_easy_setopt(curl, CURLOPT_URL, path);\r\n\r\n    string jsonPayload = R\"({\r\n        \"to\": [\"+4812345678\"],\r\n        \"contacts\": [12,15],\r\n        \"groups\": [57,35],\r\n        \"text\": \"my message\",\r\n        \"date\": \"2022-12-27T12:20:31+05:01\",\r\n        \"priority\": 5,\r\n        \"encoding\": \"unicode\",\r\n        \"flash\": true,\r\n        \"oid\": \"123abc456def789ghi123abc456def789ghi\",\r\n        \"validity\": \"30m\",\r\n        \"send_after\": \"12:05\",\r\n        \"send_before\": \"17:15\",\r\n        \"test\": true,\r\n        \"modem_no\": 2\r\n    })\";\r\n\r\n    struct curl_slist* headers = NULL;\r\n    headers = curl_slist_append(headers, \"Content-Type: application/json\");\r\n    headers = curl_slist_append(headers, \"access-token: 0005gOjCOlMH8F2BP8\");\r\n    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);\r\n\r\n    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonPayload.c_str());\r\n\r\n    res = curl_easy_perform(curl);\r\n\r\n    if(res != CURLE_OK)\r\n      fprintf(stderr, \"curl_easy_perform() failed: %s\\n\",\r\n              curl_easy_strerror(res));\r\n\r\n    curl_easy_cleanup(curl);\r\n  }\r\n  return 0;\r\n}\r\n"
             }
           }
         },
