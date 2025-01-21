@@ -168,7 +168,7 @@
                   "tasks"
                 ]
               },
-              "example": ""
+              "example": "import java.io.*;\r\nimport java.net.*;\r\nimport org.json.JSONObject;\r\n\r\npublic class Main {\r\n    public static void main(String[] args) {\r\n        try {\r\n            HttpURLConnection connection = null;\r\n            OutputStreamWriter writer = null;\r\n            BufferedReader reader = null;\r\n            StringBuilder sbuilder = null;\r\n            URL serverAddress = null;\r\n            serverAddress = new URL(\"https://url-of-smseagle/index.php/api/v2/messages/sms\");\r\n            connection = (HttpURLConnection) serverAddress.openConnection();\r\n            connection.setRequestProperty(\"Content-Type\", \"application/json\");\r\n            connection.setRequestProperty(\"Accept\", \"application/json\");\r\n            connection.setRequestProperty(\"access-token\", \"0005gOjCOlMH8F2BP8\");\r\n            connection.setRequestMethod(\"POST\");\r\n            connection.setDoOutput(true);\r\n            connection.connect();\r\n//\r\n            writer = new OutputStreamWriter(connection.getOutputStream());\r\n\r\n            JSONObject json = new JSONObject();\r\n\r\n            String[] to = {\"481234567\"};\r\n            json.put(\"to\", to);\r\n            json.put(\"text\", \"My message\");\r\n\r\n            System.out.println(json);\r\n            writer.write(json.toString());\r\n            writer.close();\r\n//\r\n            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));\r\n            sbuilder = new StringBuilder();\r\n            String line = null;\r\n            while ((line = reader.readLine()) != null) {\r\n                sbuilder.append(line + 'n');\r\n            }\r\n            connection.disconnect();\r\n            reader.close();\r\n            String result = sbuilder.toString();\r\n            System.out.println(result);\r\n        } catch (Exception e) {\r\n            System.out.println(e);\r\n        }\r\n    }\r\n}"
             }
           }
         },
@@ -288,7 +288,8 @@
             "headers": {}
           }
         },
-        "security": []
+        "security": [],
+        "x-codeSamples": []
       }
     },
     "/goip_get_esims.html": {
