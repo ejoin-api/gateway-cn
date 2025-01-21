@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Ejoin Gateway HTTP API",
-    "description": "",
+    "description": "Welcome to Ejoin Gateway HTTP API documentation. Here you will find details to learn about, try, and implement Ejoin Gateway HTTP API.\nThe Ejoin Gateway HTTP APIv2.4.0 is available in SMSEagle software version 5.0 and higher.",
     "version": "1.0.0"
   },
   "tags": [
