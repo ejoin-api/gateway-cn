@@ -179,7 +179,30 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {}
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "send-sms"
+                    },
+                    "task_num": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "tid": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tid"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "task_num"
+                  ]
                 },
                 "examples": {
                   "1": {
@@ -234,7 +257,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {}
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Invalid API key."
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
                 },
                 "examples": {
                   "1": {
