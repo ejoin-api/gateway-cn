@@ -3,16 +3,30 @@
   "info": {
     "title": "Ejoin Gateway HTTP API",
     "description": "",
-    "version": "1.0.0"
+    "version": "2.4.0",
+    "x-logo": {
+      "url": "./logotyp-ejoin.png",
+      "backgroundColor": "#FAFAFA",
+      "altText": ""Ejoin Gateway logo"
+    }
   },
-  "tags": [],
+  "tags": [
+     {
+      "name": "SMS Sending",
+      "description": "Send messages (SMS, MMS, binary SMS, USSD codes, Emails)"
+     },
+     {
+      "name": "ESIM",
+      "description": "esim"
+     }
+  ],
   "paths": {
     "/goip_post_sms.html": {
       "post": {
         "summary": "SMS Sending",
         "deprecated": false,
         "description": "Tips:\n1. While not choose a port, device will pick up a random port to send SMS to every recipient.\n2. While chose more than one ports, and just one SMS recipient , then device will use all chose port to\nsend SMS to this recipient.\n3. If more ports, and more recipient designed, then every port will send SMS to every recipient\nseparately.",
-        "tags": [],
+        "tags": ["SMS Sending"],
         "parameters": [
           {
             "name": "version",
@@ -248,7 +262,7 @@
         "summary": "Query ESIM",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["ESIM"],
         "parameters": [
           {
             "name": "version",
