@@ -3,12 +3,12 @@
   "info": {
     "title": "Ejoin Gateway HTTP API",
     "description": "Welcome to Ejoin Gateway HTTP API documentation. Here you will find details\nto learn about, try, and implement Ejoin Gateway HTTP API.\n\nThe Ejoin Gateway HTTP APIv2.4.0 is available in SMSEagle software version\n5.0 and higher.\n\n# SDKs\nSMSEagle API is built on OpenAPI 3.0 Specification. You may download the API specification using **Download** button at the top of the page. The specification file can be used to generate SDK in your preffered programming language using open source tools like [OpenAPI Generator](https://openapi-generator.tech/) or  [Swagger Codegen](https://swagger.io/tools/swagger-codegen/).\n\n# Examples\nFor each API endpoint, we provide basic use case examples. Each example has sample payload parameters in JSON format showing how to complete a task (for example send SMS, create Phonebook contact, Get modem signal strength, etc.). Each example is accompanied with API response sample.\n\n# Webhooks\nIf you want to be notified about certain events like incoming message or change of delivery status, use webhooks. Webhooks are standard HTTP endpoints implemented in your application that will accept HTTP requests from SMSEagle device. Webhooks save you from having to continuously send requests to the SMSEagle device asking for message status. Webhooks can be configured via feature named **Callback URL** (Web-GUI > menu CallbackURL).\n",
-    "version": "2.4.1"
-  },
-  "x-logo": {
-    "url": "./logotyp-ejoin.png",
-    "backgroundColor": "#FAFAFA",
-    "altText": "SMS logo"
+    "version": "2.4.1",
+    "x-logo": {
+      "url": "./logotyp-ejoin.png",
+      "backgroundColor": "#FAFAFA",
+      "altText": "SMS logo"
+    }
   },
   "tags": [
     {
