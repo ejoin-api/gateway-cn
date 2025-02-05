@@ -2,8 +2,13 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Ejoin Gateway HTTP API",
-    "description": "Welcome to Ejoin Gateway HTTP API documentation. Here you will find details to learn about, try, and implement Ejoin Gateway HTTP API.\nThe Ejoin Gateway HTTP APIv2.4.0 is available in SMSEagle software version 5.0 and higher.",
-    "version": "1.0.0"
+    "description": "Welcome to Ejoin Gateway HTTP API documentation. Here you will find details\nto learn about, try, and implement Ejoin Gateway HTTP API.\n\nThe Ejoin Gateway HTTP APIv2.4.0 is available in SMSEagle software version\n5.0 and higher.\n\n# SDKs\nSMSEagle API is built on OpenAPI 3.0 Specification. You may download the API specification using **Download** button at the top of the page. The specification file can be used to generate SDK in your preffered programming language using open source tools like [OpenAPI Generator](https://openapi-generator.tech/) or  [Swagger Codegen](https://swagger.io/tools/swagger-codegen/).\n\n# Examples\nFor each API endpoint, we provide basic use case examples. Each example has sample payload parameters in JSON format showing how to complete a task (for example send SMS, create Phonebook contact, Get modem signal strength, etc.). Each example is accompanied with API response sample.\n\n# Webhooks\nIf you want to be notified about certain events like incoming message or change of delivery status, use webhooks. Webhooks are standard HTTP endpoints implemented in your application that will accept HTTP requests from SMSEagle device. Webhooks save you from having to continuously send requests to the SMSEagle device asking for message status. Webhooks can be configured via feature named **Callback URL** (Web-GUI > menu CallbackURL).\n",
+    "version": "2.4.1"
+  },
+  "x-logo": {
+    "url": "./logotyp-ejoin.png",
+    "backgroundColor": "#FAFAFA",
+    "altText": "SMS logo"
   },
   "tags": [
     {
@@ -168,7 +173,7 @@
                   "tasks"
                 ]
               },
-              "example": "import java.io.*;\r\nimport java.net.*;\r\nimport org.json.JSONObject;\r\n\r\npublic class Main {\r\n    public static void main(String[] args) {\r\n        try {\r\n            HttpURLConnection connection = null;\r\n            OutputStreamWriter writer = null;\r\n            BufferedReader reader = null;\r\n            StringBuilder sbuilder = null;\r\n            URL serverAddress = null;\r\n            serverAddress = new URL(\"https://url-of-smseagle/index.php/api/v2/messages/sms\");\r\n            connection = (HttpURLConnection) serverAddress.openConnection();\r\n            connection.setRequestProperty(\"Content-Type\", \"application/json\");\r\n            connection.setRequestProperty(\"Accept\", \"application/json\");\r\n            connection.setRequestProperty(\"access-token\", \"0005gOjCOlMH8F2BP8\");\r\n            connection.setRequestMethod(\"POST\");\r\n            connection.setDoOutput(true);\r\n            connection.connect();\r\n//\r\n            writer = new OutputStreamWriter(connection.getOutputStream());\r\n\r\n            JSONObject json = new JSONObject();\r\n\r\n            String[] to = {\"481234567\"};\r\n            json.put(\"to\", to);\r\n            json.put(\"text\", \"My message\");\r\n\r\n            System.out.println(json);\r\n            writer.write(json.toString());\r\n            writer.close();\r\n//\r\n            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));\r\n            sbuilder = new StringBuilder();\r\n            String line = null;\r\n            while ((line = reader.readLine()) != null) {\r\n                sbuilder.append(line + 'n');\r\n            }\r\n            connection.disconnect();\r\n            reader.close();\r\n            String result = sbuilder.toString();\r\n            System.out.println(result);\r\n        } catch (Exception e) {\r\n            System.out.println(e);\r\n        }\r\n    }\r\n}"
+              "example": ""
             }
           }
         },
