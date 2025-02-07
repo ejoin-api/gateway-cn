@@ -1,9 +1,14 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Ejoin HTTP API",
-    "description": "",
-    "version": "1.0.0"
+    "title": "Ejoin Gateway HTTP API",
+    "description": "Welcome to Ejoin Gateway HTTP API documentation. Here you will find details\nto learn about, try, and implement Ejoin Gateway HTTP API.\n\nThe Ejoin Gateway HTTP APIv2.4.0 is available in SMSEagle software version\n5.0 and higher.\n\n# SDKs\nSMSEagle API is built on OpenAPI 3.0 Specification. You may download the API specification using **Download** button at the top of the page. The specification file can be used to generate SDK in your preffered programming language using open source tools like [OpenAPI Generator](https://openapi-generator.tech/) or  [Swagger Codegen](https://swagger.io/tools/swagger-codegen/).\n\n# Examples\nFor each API endpoint, we provide basic use case examples. Each example has sample payload parameters in JSON format showing how to complete a task (for example send SMS, create Phonebook contact, Get modem signal strength, etc.). Each example is accompanied with API response sample.\n\n# Webhooks\nIf you want to be notified about certain events like incoming message or change of delivery status, use webhooks. Webhooks are standard HTTP endpoints implemented in your application that will accept HTTP requests from SMSEagle device. Webhooks save you from having to continuously send requests to the SMSEagle device asking for message status. Webhooks can be configured via feature named **Callback URL** (Web-GUI > menu CallbackURL).\n",
+    "version": "2.4.1",
+    "x-logo": {
+      "url": "./logotyp-ejoin.png",
+      "backgroundColor": "#FAFAFA",
+      "altText": "SMS logo"
+    }
   },
   "tags": [
     {
@@ -23,6 +28,27 @@
     },
     {
       "name": "Query SMS statistics"
+    },
+    {
+      "name": "Query call statistics"
+    },
+    {
+      "name": "Operate command sending"
+    },
+    {
+      "name": "MMS receiving"
+    },
+    {
+      "name": "Modify IMEI parameters "
+    },
+    {
+      "name": "Add SIM Card Numbers"
+    },
+    {
+      "name": "AT Command"
+    },
+    {
+      "name": "USSD API"
     }
   ],
   "paths": {
@@ -30,7 +56,7 @@
       "post": {
         "summary": "SMS Sending",
         "deprecated": false,
-        "description": "Tips:\n1. While not choose a port, device will pick up a random port to send SMS to every recipient.\n2. While chose more than one ports, and just one SMS recipient , then device will use all chose port to\nsend SMS to this recipient.\n3. If more ports, and more recipient designed, then every port will send SMS to every recipient\nseparately.",
+        "description": "Message description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.\nTips:\n1. While not choose a port, device will pick up a random port to send SMS to every recipient.\n2. While chose more than one ports, and just one SMS recipient , then device will use all chose port to\nsend SMS to this recipient.\n3. If more ports, and more recipient designed, then every port will send SMS to every recipient\nseparately.",
         "tags": [
           "SMS Sending",
           "SMS Sending"
@@ -41,9 +67,14 @@
             "in": "query",
             "description": "API version",
             "required": false,
-            "example": "1.01",
+            "example": "",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "examples": [
+                "1.0：Compatible with previous API",
+                "1.1: Support for the description of  this document"
+              ],
+              "default": "1.0"
             }
           },
           {
@@ -69,177 +100,9 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "description": "Message type"
-                  },
-                  "sr_url": {
-                    "type": "string",
-                    "description": "Status report forward url"
-                  },
-                  "sr_cnt": {
-                    "type": "string",
-                    "description": "Max num of SMS\nresult can keep in\ncache."
-                  },
-                  "sr_prd": {
-                    "type": "integer",
-                    "description": "The max time SMS\nresult can keep in\ncache"
-                  },
-                  "sms_url": {
-                    "type": "string",
-                    "description": "SMS forward URL"
-                  },
-                  "sms_cnt": {
-                    "type": "string",
-                    "description": "Max num of SMS can\nkeep in cache"
-                  },
-                  "sms_prd": {
-                    "type": "integer",
-                    "description": "Max time SMS can"
-                  },
-                  "task_num": {
-                    "type": "string",
-                    "description": "Total task"
-                  },
-                  "tasks": {
-                    "type": "object",
-                    "properties": {
-                      "tid": {
-                        "type": "integer",
-                        "description": "Task ID"
-                      },
-                      "from": {
-                        "type": "string",
-                        "description": "Use‘,’‘-’to assign more than one port(from\nchannel 1)"
-                      },
-                      "to": {
-                        "type": "string",
-                        "description": "one or more(use ‘,’to distinguish) recipients"
-                      },
-                      "to_all": {
-                        "type": "string",
-                        "description": "1 represents all ports",
-                        "default": "1"
-                      },
-                      "sms": {
-                        "type": "string",
-                        "description": "SMS content"
-                      },
-                      "chs": {
-                        "type": "string",
-                        "description": "Character coding set (utf8|base64)"
-                      },
-                      "codeing": {
-                        "type": "integer",
-                        "description": "pecific the SMS codec",
-                        "default": 0,
-                        "enum": [
-                          0,
-                          1,
-                          2
-                        ]
-                      },
-                      "smstype": {
-                        "type": "integer",
-                        "default": 0,
-                        "enum": [
-                          0,
-                          1,
-                          2
-                        ],
-                        "description": "SMS type\n0：SMS，\n1：MMS，\n2：MMS with multiple numbers and multiple subject"
-                      },
-                      "smstitle": {
-                        "type": "string",
-                        "description": "MMS subject：MMS subject format is UTF-8，this parameter could be empty;",
-                        "nullable": true
-                      },
-                      "to_title_array": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "[\"number\", \"title\"]"
-                        },
-                        "description": "Multiple MMS recipients and subject arrays. This field is valid only when smstype=2",
-                        "nullable": true
-                      },
-                      "attachments": {
-                        "type": "string",
-                        "examples": [
-                          "\"txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk\""
-                        ],
-                        "description": "MMS attachment，This field take effect only when smstype=1 or 2\na.There can be a most of 5 attachment,all attachment total length cannot exceed 100K,at present only support jpg、gif、txt、mp3 formatted file.\nb.File type and file content use symbol | separate\nc.Attachment is could be empty,send the content of the SMS filed as a TXT attachment",
-                        "nullable": true
-                      },
-                      "smsc": {
-                        "type": "string",
-                        "description": "Store the SMSC number"
-                      },
-                      "intvl": {
-                        "type": "string",
-                        "default": "0",
-                        "description": "Interval of 2 SMS while device sending them(ms)"
-                      },
-                      "tmo": {
-                        "type": "integer",
-                        "default": 30,
-                        "description": "Max time while waiting sending result(second)"
-                      },
-                      "sdr": {
-                        "type": "integer",
-                        "default": 0,
-                        "examples": [
-                          0,
-                          1
-                        ],
-                        "description": "If enable the successfully send report. \n1:enable,0:disable"
-                      },
-                      "fdr": {
-                        "type": "string",
-                        "default": "1",
-                        "examples": [
-                          "0",
-                          "1"
-                        ],
-                        "description": "If enable the failed report.1:enable,0:disable. "
-                      },
-                      "dr": {
-                        "type": "integer",
-                        "default": 0,
-                        "examples": [
-                          0,
-                          1
-                        ],
-                        "description": "If enable SMS delivery \nreport.1:enable,0:disable. "
-                      },
-                      "sr_prd": {
-                        "type": "integer",
-                        "default": 60,
-                        "description": "Status report period (seconds), 0: not on, >0: \non"
-                      },
-                      "sr_cnt": {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "Single-state report SMS number, less than 1 will \nuse the default value"
-                      }
-                    },
-                    "required": [
-                      "tid",
-                      "from",
-                      "to",
-                      "sms"
-                    ]
-                  }
-                },
-                "required": [
-                  "type",
-                  "task_num",
-                  "tasks"
-                ]
+                "type": "string"
               },
-              "example": ""
+              "example": "{\n    \"type\": \"send-sms\",\n    \"task_num\": 1,\n    \"tasks\": [\n        {\n            \"dr\": 1,\n            \"tid\": 156,\n            \"to_all\": 30,\n            \"to\": \"10086\",\n            \"sms\": \"101\"\n        }\n    ]\n}"
             }
           }
         },
@@ -309,7 +172,7 @@
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
+                    "summary": "Successful Instance",
                     "value": {
                       "type": "send-sms",
                       "task_num": 1,
@@ -350,7 +213,7 @@
                 },
                 "examples": {
                   "1": {
-                    "summary": "异常示例",
+                    "summary": "Exception Example",
                     "value": {
                       "message": {
                         "recipients": "One of parameters: to, contacts, groups is required."
@@ -380,7 +243,7 @@
                 },
                 "examples": {
                   "1": {
-                    "summary": "异常示例",
+                    "summary": "Exception Example",
                     "value": {
                       "message": "Invalid API key."
                     }
@@ -398,7 +261,7 @@
       "post": {
         "summary": "Pause the SMS task",
         "deprecated": false,
-        "description": "When a SMS task is still waiting to be sent in the send queue, one or more SMS can be paused.",
+        "description": "When a SMS task is still waiting to be sent in the send queue, one or more SMS can be paused.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "SMS Sending"
         ],
@@ -406,7 +269,7 @@
           {
             "name": "version",
             "in": "query",
-            "description": "API version",
+            "description": "API version\nThis document describes specification support only",
             "required": false,
             "example": "1.1",
             "schema": {
@@ -436,7 +299,7 @@
         ],
         "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
               "schema": {
                 "type": "string"
               },
@@ -452,44 +315,66 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "code": {
+                      "type": "integer",
+                      "examples": [
+                        200
+                      ],
+                      "description": "Interface processing result code"
+                    },
                     "reason": {
                       "type": "string",
-                      "description": "OK"
+                      "description": "Interface processing results ",
+                      "examples": [
+                        "OK"
+                      ]
                     },
                     "results": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "status": {
-                            "type": "string",
-                            "description": "0 OK"
-                          },
                           "tid": {
                             "type": "string",
-                            "description": "tid_n"
+                            "description": "Task ID"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Task status code",
+                            "enum": [
+                              "0 OK",
+                              "1 Invalid User",
+                              "2 Invalid Port",
+                              "3 USSD Expected",
+                              "4 Pending USSD",
+                              "5 SIM Unregistered",
+                              "6 TImeout",
+                              "7 Server Error",
+                              "8 SMS expected",
+                              "9 TO expected",
+                              "10 Pending Transaction",
+                              "11 TID Expected",
+                              "12 From Expected"
+                            ]
                           }
                         },
                         "required": [
                           "status",
                           "tid"
                         ]
-                      }
-                    },
-                    "code": {
-                      "type": "integer"
+                      },
+                      "description": "Task processing results.\nWhen there is no tids in the request, this field is not included in the result."
                     }
                   },
                   "required": [
                     "reason",
-                    "results",
                     "code"
                   ]
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
-                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\":tid_1,\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\":tid_n,\r\n            \"status\": \"2 Invalid Port\"\r\n        }\r\n    ]\r\n}"
+                    "summary": "Successful Instance",
+                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\": \"1\",\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\": \"2\",\r\n            \"status\": \"9 TO expected\"\r\n        },\r\n        {\r\n            \"tid\": \"3\",\r\n            \"status\": \"3 USSD Expected\"\r\n        },\r\n        ...\r\n    ]\r\n}"
                   }
                 }
               }
@@ -504,7 +389,7 @@
       "post": {
         "summary": "Resume the paused SMS task",
         "deprecated": false,
-        "description": "Resume the sending of one or more suspended SMS tasks. ",
+        "description": "Resume the sending of one or more suspended SMS tasks. \nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "SMS Sending"
         ],
@@ -512,7 +397,7 @@
           {
             "name": "version",
             "in": "query",
-            "description": "API version",
+            "description": "API version\nThis document describes \nspecification support only",
             "required": false,
             "example": "1.1",
             "schema": {
@@ -540,7 +425,7 @@
         ],
         "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
               "schema": {
                 "type": "string"
               },
@@ -556,33 +441,62 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Interface processing result code",
+                      "examples": [
+                        200
+                      ]
+                    },
                     "reason": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Interface processing results ",
+                      "examples": [
+                        "OK"
+                      ]
                     },
                     "results": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "tid": {
+                            "type": "string"
+                          },
                           "status": {
                             "type": "string"
                           }
                         },
                         "required": [
-                          "status"
+                          "status",
+                          "tid"
                         ]
-                      }
+                      },
+                      "description": "Task processing results.\nWhen there is no tids in the request, this field is not included in the result."
                     }
                   },
                   "required": [
                     "reason",
-                    "results"
+                    "code"
                   ]
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
-                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\":tid_1,\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\":tid_n,\r\n            \"status\": \"2 Invalid Port\"\r\n        }\r\n    ]\r\n}"
+                    "summary": "Successful Instance",
+                    "value": {
+                      "code": 200,
+                      "reason": "OK",
+                      "results": [
+                        {
+                          "tid": "1",
+                          "status": "0 OK"
+                        },
+                        {
+                          "tid": "2",
+                          "status": "2 Invalid Port"
+                        }
+                      ]
+                    }
                   }
                 }
               }
@@ -597,7 +511,7 @@
       "post": {
         "summary": "Delete the SMS task",
         "deprecated": false,
-        "description": "Delete one or more SMS tasks waiting to be sent in the send queue.",
+        "description": "Delete one or more SMS tasks waiting to be sent in the send queue.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "SMS Sending"
         ],
@@ -605,7 +519,7 @@
           {
             "name": "version",
             "in": "query",
-            "description": "API version",
+            "description": "API version\nThis document describes specification support only",
             "required": false,
             "example": "1.1",
             "schema": {
@@ -633,7 +547,7 @@
         ],
         "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
               "schema": {
                 "type": "string"
               },
@@ -649,33 +563,67 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Interface processing result code",
+                      "examples": [
+                        200
+                      ]
+                    },
                     "reason": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Interface processing results ",
+                      "examples": [
+                        "OK"
+                      ]
                     },
                     "results": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "tid": {
+                            "type": "string",
+                            "description": "Task ID"
+                          },
                           "status": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "The status code and reason description of \nthe task",
+                            "enum": [
+                              "0 OK",
+                              "1 Invalid User",
+                              "2 Invalid Port",
+                              "3 USSD Expected",
+                              "4 Pending USSD",
+                              "5 SIM Unregistered",
+                              "6 Timeout",
+                              "7 Server Error",
+                              "8 SMS expected",
+                              "9 TO expected",
+                              "10 Pending Transaction",
+                              "11 TID Expected",
+                              "12 From Expected"
+                            ]
                           }
                         },
                         "required": [
-                          "status"
+                          "status",
+                          "tid"
                         ]
-                      }
+                      },
+                      "description": "Task processing results .\nIf there is no TIDS in the request, this field is not included in the result"
                     }
                   },
                   "required": [
                     "reason",
-                    "results"
+                    "results",
+                    "code"
                   ]
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
-                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\":tid_1,\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\":tid_n,\r\n            \"status\": \"2 Invalid Port\"\r\n        }\r\n    ]\r\n}"
+                    "summary": "Successful Instance",
+                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\": \"1\",\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\": \"2\",\r\n            \"status\": \"3 USSD Expected\"\r\n        },\r\n        ...\r\n    ]\r\n}"
                   }
                 }
               }
@@ -690,7 +638,7 @@
       "get": {
         "summary": "Query the SMS task",
         "deprecated": false,
-        "description": "Query the SMS task waiting to be sent in the send queue. ",
+        "description": "Query the SMS task waiting to be sent in the send queue. \nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "SMS Sending"
         ],
@@ -698,7 +646,7 @@
           {
             "name": "version",
             "in": "query",
-            "description": "API Version",
+            "description": "API Version\nThis document describes \nspecification support only",
             "required": false,
             "example": "1.1",
             "schema": {
@@ -740,12 +688,13 @@
           {
             "name": "has_content",
             "in": "query",
-            "description": "Whether to bring a text message in the result\n0 –Do not return text message content\n1 –return text message content",
+            "description": "Whether to bring a text message in the result",
             "required": false,
             "schema": {
               "type": "integer",
               "default": 0,
-              "examples": [
+              "enum": [
+                0,
                 1
               ]
             }
@@ -765,10 +714,42 @@
             "description": "The number of \nRequest messages",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "default": 10
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tids": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tid": {
+                          "type": "integer",
+                          "description": "Task ID"
+                        }
+                      },
+                      "required": [
+                        "tid"
+                      ]
+                    },
+                    "description": "The task ID to be query."
+                  }
+                },
+                "required": [
+                  "tids"
+                ]
+              },
+              "example": "{\n    \"tids\": [tid1,tid2,…,tidn\n    ]\n}"
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "",
@@ -777,9 +758,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "code": {
+                      "type": "integer",
+                      "examples": [
+                        200
+                      ],
+                      "description": "Interface processing result code"
+                    },
                     "reason": {
                       "type": "string",
-                      "description": "Interface processing results "
+                      "description": "Interface processing results ",
+                      "examples": [
+                        "OK"
+                      ]
                     },
                     "total_num": {
                       "type": "integer",
@@ -818,16 +809,21 @@
                           },
                           "coding": {
                             "type": "integer",
-                            "description": "Specifies the encoding of the message sent. \n0：Do not specify \n1：USC2 \n2: 7bit",
+                            "description": "Specifies the encoding of the message sent. ",
                             "default": 0,
-                            "examples": [
-                              1,
-                              2
+                            "enum": [
+                              "0 Do not specify",
+                              "1 USC2",
+                              "2 7bit"
                             ]
                           },
                           "state": {
                             "type": "integer",
-                            "description": "Task status:\n 0 - normal, 1 - suspended"
+                            "description": "Task status",
+                            "enum": [
+                              "0 normal",
+                              "1 suspended"
+                            ]
                           }
                         },
                         "required": [
@@ -843,13 +839,14 @@
                     "reason",
                     "tasks",
                     "total_num",
-                    "task_num"
+                    "task_num",
+                    "code"
                   ]
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
-                    "value": "{\r\n    \"code \": 200,\r\n    \"reason\": \"OK\",\r\n    \"total_num\":n,\r\n    \"task_num\":n,\r\n    \"tasks\": [\r\n        {\r\n            \"tid\":tid_1,\r\n            \"state\": 0,\r\n            \"from\": \"\",\r\n            \"to\": \"13686876820\",\r\n            \"chs\": \"utf-8\",\r\n            \"coding\": 0,\r\n            \"sms\": \"hello123\"\r\n        },\r\n        {\r\n            \"tid\":tid_n,\r\n             …\r\n        }\r\n    ]\r\n}"
+                    "summary": "Successful Instance",
+                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"total_num\": 5,\r\n    \"task_num\": 2,\r\n    \"tasks\": [\r\n        {\r\n            \"tid\": 1,\r\n            \"from\": \"\",\r\n            \"to\": \"\",\r\n            \"sms\": \"hello123\",\r\n            \"chs\": \"utf-8\",\r\n            \"coding\": 0,\r\n            \"state\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
                   }
                 }
               }
@@ -872,8 +869,9 @@
           {
             "name": "version",
             "in": "query",
-            "description": "API version",
+            "description": "API version\nThis document describes specification support only",
             "required": false,
+            "example": "1.1",
             "schema": {
               "type": "string"
             }
@@ -965,8 +963,8 @@
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
-                    "value": "{\r\n    \"type\": \"status-report\",\r\n    \"rpt_num\":n,\r\n    \"rpts\": [\r\n        {\r\n            \"tid\":tid_1,…\r\n        },\r\n        {\r\n            \"tid\":tid_n,…\r\n        }\r\n    ]\r\n}"
+                    "summary": "Successful Instance",
+                    "value": "{\r\n    \"type\": \"status-report\",\r\n    \"rpt_rum\": \"1\",\r\n    \"rpts\": [\r\n        {\r\n            \"tid\": 1,\r\n            ...\r\n        },\r\n        {\r\n            \"tid\": 2,\r\n            ...\r\n        },\r\n        ...\r\n    ]\r\n}"
                   }
                 }
               }
@@ -981,7 +979,7 @@
       "get": {
         "summary": "Query ESIM",
         "deprecated": false,
-        "description": "",
+        "description": "The write and delete operations for ESIM cannot be completed immediately, so when a successful HTTP request is submitted, the status field returned is 1, indicating that the task has been submitted but the operation has not been performed yet. To know the result of the previously submitted operation, it is necessary to use the query ESIM interface regularly to obtain various ESIM information and judge the value of the status field.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "ESIM",
           "ESIM"
@@ -992,9 +990,14 @@
             "in": "query",
             "description": "API version  \n1.0: Compatible with\nprevious API\n1.1: Support for the description of this document",
             "required": false,
-            "example": "1.0",
+            "example": "",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "examples": [
+                "1.0: Compatible with previous API ",
+                "1.1: Support for the description of this document"
+              ],
+              "default": "1.0"
             }
           },
           {
@@ -1020,11 +1023,17 @@
           {
             "name": "ports",
             "in": "query",
-            "description": "The specified port number (valued\nfrom 1). The values are as follows: (4) all: all ports;\n(5) 2: Specify a single port;\n(6) 1-2, 4: Port numbers separated by\nshort numbers, specifying multiple ports, where \"-\" indicates a continuous port number;",
+            "description": "The specified port number (valued\nfrom 1)",
             "required": false,
-            "example": "all",
+            "example": "",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "default": "all",
+              "examples": [
+                "all: all ports",
+                "2: Specify a single port",
+                "1-2, 4: Port numbers separated by short numbers, specifying multiple ports, where \"-\" indicates a continuous port numbe"
+              ]
             }
           }
         ],
@@ -1048,13 +1057,16 @@
                   "type": "object",
                   "properties": {
                     "code": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Interface processing result code"
                     },
                     "reason": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Interface processing result reason"
                     },
                     "count": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Number of statistical results"
                     },
                     "ports": {
                       "type": "array",
@@ -1062,13 +1074,24 @@
                         "type": "object",
                         "properties": {
                           "port": {
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "Port number (value from 1)eUICC ID"
                           },
                           "eid": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "eUICC ID"
                           },
                           "esim_state": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "If or not the eid is obtained correctly",
+                            "examples": [
+                              "0 - no",
+                              "1 - yes"
+                            ],
+                            "enum": [
+                              "0",
+                              "1"
+                            ]
                           },
                           "profiles": {
                             "type": "array",
@@ -1076,32 +1099,53 @@
                               "type": "object",
                               "properties": {
                                 "slot": {
-                                  "type": "integer"
+                                  "type": "integer",
+                                  "description": "Slot number (value from 1)"
                                 },
                                 "enabled": {
-                                  "type": "integer"
+                                  "type": "integer",
+                                  "description": "If or not the current profile is enabled",
+                                  "enum": [
+                                    0,
+                                    1
+                                  ]
                                 },
                                 "iccid": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "description": "ESIM corresponding iccid"
                                 },
                                 "ac": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "description": "Activation code"
                                 },
                                 "cc": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "description": "Confirmation code"
                                 },
                                 "provider": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "description": "Name of service provide"
                                 },
                                 "exust": {
-                                  "type": "integer"
+                                  "type": "integer",
+                                  "description": "If or not the current slot has been written into the profile",
+                                  "enum": [
+                                    0,
+                                    1
+                                  ]
                                 },
                                 "op": {
-                                  "type": "integer"
+                                  "type": "integer",
+                                  "description": "Profile operation of the current slot",
+                                  "enum": [
+                                    0,
+                                    1,
+                                    2
+                                  ]
                                 },
                                 "status": {
                                   "type": "integer",
-                                  "description": "The current esim profile operation status, with\nthe following values The values are as follows: 0 - No operation\n1 - Operation request submitted\n2 - Profile operation is in progress on the\ncurrent port\n3 - Operation error, the specific reason is described in the reason field",
+                                  "description": "The current esim profile operation status",
                                   "enum": [
                                     0,
                                     1,
@@ -1123,10 +1167,13 @@
                                 "provider",
                                 "exust",
                                 "op",
-                                "status",
-                                "reason"
-                              ]
-                            }
+                                "reason",
+                                "01JKF8VV7JBRWYHHFD7G54PRSV",
+                                "status"
+                              ],
+                              "description": "ESIM information array item description"
+                            },
+                            "description": "The array of ESIM information for this port, with each ESIM information as follows"
                           }
                         },
                         "required": [
@@ -1134,8 +1181,10 @@
                           "eid",
                           "esim_state",
                           "profiles"
-                        ]
-                      }
+                        ],
+                        "description": "Description of the query result item"
+                      },
+                      "description": "An array of query results. Each result item in the array is as follows"
                     }
                   },
                   "required": [
@@ -1147,7 +1196,7 @@
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
+                    "summary": "Successful Instance",
                     "value": {
                       "code": 200,
                       "reason": "OK",
@@ -1158,6 +1207,304 @@
                         }
                       ]
                     }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/goip_write_esims.html": {
+      "post": {
+        "summary": "Write ESIM",
+        "deprecated": false,
+        "description": "The write operations for ESIM  cannot be completed immediately.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
+        "tags": [
+          "ESIM"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "description": "API version",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "1.0",
+              "examples": [
+                "1.0: Compatible with previous API",
+                "1.1: Support for the description of this document"
+              ]
+            }
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "port": {
+                    "type": "integer",
+                    "description": "Port number (value from 1)"
+                  },
+                  "slot": {
+                    "type": "integer",
+                    "description": "Slot number (value from 1)"
+                  },
+                  "ac": {
+                    "type": "string",
+                    "description": "Activation code"
+                  },
+                  "cc": {
+                    "type": "string",
+                    "description": "Confirmation code"
+                  }
+                },
+                "required": [
+                  "port",
+                  "slot",
+                  "ac",
+                  "cc"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Interface processing result code",
+                      "examples": [
+                        200
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "Interface processing result reason",
+                      "examples": [
+                        "OK"
+                      ]
+                    },
+                    "ports": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "port": {
+                            "type": "integer",
+                            "description": "Port number (value from 1)",
+                            "examples": [
+                              1,
+                              32,
+                              64
+                            ]
+                          },
+                          "slot": {
+                            "type": "integer",
+                            "description": "slot number (value from 1)",
+                            "examples": [
+                              1,
+                              32,
+                              64
+                            ]
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "The current esim profile submission write operation status,"
+                          }
+                        },
+                        "required": [
+                          "port",
+                          "slot",
+                          "status"
+                        ],
+                        "description": "Description of the query result item"
+                      },
+                      "description": "An array of query results"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "reason",
+                    "ports"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Successful Instance",
+                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"ports\": [\r\n        {\r\n            \"port\": 1,\r\n             ...\r\n        },\r\n        ...\r\n    ]\r\n}"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/goip_delete_esims.html": {
+      "post": {
+        "summary": "Delete ESIM",
+        "deprecated": false,
+        "description": "The delete operations for ESIM cannot be completed immediately.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
+        "tags": [
+          "ESIM"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "description": "API version",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "1.0",
+              "examples": [
+                "1.0: Compatible with previous API",
+                "1.1: Support for the description of this document"
+              ]
+            }
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "port": {
+                    "type": "integer",
+                    "description": "port number (value from 1)",
+                    "examples": [
+                      1,
+                      32,
+                      64
+                    ]
+                  },
+                  "slot": {
+                    "type": "integer",
+                    "description": "slot number (value from 1)",
+                    "examples": [
+                      1,
+                      32,
+                      64
+                    ]
+                  }
+                },
+                "required": [
+                  "port",
+                  "slot"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "examples": [
+                        200
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "examples": [
+                        "OK"
+                      ]
+                    },
+                    "ports": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "port": {
+                            "type": "integer"
+                          },
+                          "slot": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "integer",
+                            "enum": [
+                              1,
+                              2,
+                              3
+                            ]
+                          }
+                        },
+                        "required": [
+                          "port",
+                          "slot",
+                          "status"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "reason",
+                    "ports"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Successful Instance",
+                    "value": "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"ports\": [\r\n        {\r\n            \"port\": 1,\r\n            \"slot\": 1,\r\n            \"status\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
                   }
                 }
               }
@@ -1184,7 +1531,8 @@
             "required": false,
             "example": "1.1",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "default": "1.1"
             }
           }
         ],
@@ -1220,7 +1568,7 @@
                 },
                 "examples": {
                   "1": {
-                    "summary": "成功示例",
+                    "summary": "Successful Instance",
                     "value": "{\r\n    \"type\": \"recv-sms\",\r\n    \"sms_num\":n,\r\n    \"sms\": [\r\n        [],\r\n    …,\r\n        []\r\n    ]\r\n}"
                   }
                 }
@@ -1352,7 +1700,7 @@
       "get": {
         "summary": "Status Notification",
         "deprecated": false,
-        "description": "",
+        "description": "1.This device will send a HTTP POST request which include the device running status information to the SMS server when it reaches either of below conditions.\na.One of device port status changed.\nb.Community period expired.\n2.Message description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "Status Notification"
         ],
@@ -1379,12 +1727,13 @@
           {
             "name": "all_sims",
             "in": "query",
-            "description": "Get all the card status\n0：disable     1：enable",
+            "description": "Get all the card status",
             "required": false,
             "schema": {
               "type": "integer",
               "default": 0,
-              "examples": [
+              "enum": [
+                0,
                 1
               ]
             }
@@ -1392,14 +1741,15 @@
           {
             "name": "all_slots",
             "in": "query",
-            "description": "Get the status of all card slots\n0：disable     1：enable",
+            "description": "Get the status of all card slots",
             "required": false,
             "schema": {
               "type": "integer",
-              "examples": [
+              "default": 0,
+              "enum": [
+                0,
                 1
-              ],
-              "default": 0
+              ]
             }
           }
         ],
@@ -1470,7 +1820,7 @@
                 "examples": {
                   "1": {
                     "summary": "dev-status",
-                    "value": "{\r\n    \"type\": \"dev-status\",\r\n    \"seq\": 1,\r\n    \"expires\": 180,\r\n    \"mac\": \"00-30-f1-01-02-03\",\r\n    \"ip\": \"192.168.1.67\",\r\n    \"max-ports\": 32,\r\n    \"max-slots\": 4,\r\n    \"status\": [\r\n        {\r\n            \"port\": \"1A\",\r\n            \"sim\": \"256.004\",\r\n            \"seq\": 1,\r\n            \"st\": 3,\r\n            \"imei\": \"828325592472501\",\r\n            \"active\": 1,\r\n            \"inserted\": 1,\r\n            \"slot_active\": 1,\r\n            \"led\": 0,\r\n            \"iccid\": \"89861121262031155764\",\r\n            \"imsi\": \"460113384584676\",\r\n            \"sn\": \"\",\r\n            \"opr\": \"46011 CHN-CT\",\r\n            \"bal\": \"0.00\",\r\n            \"sig\": 26\r\n        },\r\n        {\r\n            \"port\": \"2B\",…\r\n        },\r\n        {\r\n            \"port\": \"32D\",…\r\n        }\r\n    ]\r\n}"
+                    "value": "{\r\n    \"type\": \"dev-status\",\r\n    \"seq\": 1,\r\n    \"expires\": 180,\r\n    \"mac\": \"00-30-f1-01-02-03\",\r\n    \"ip\": \"192.168.1.67\",\r\n    \"max-ports\": 32,\r\n    \"max-slots\": \"4\",\r\n    \"status\": [\r\n        {\r\n            \"port\": \"1A\"\r\n            ...\r\n        },\r\n        {\r\n            \"port\": \"2A\"\r\n            ...\r\n        },\r\n        {\r\n            \"port\": \"3A\"\r\n            ...\r\n        },\r\n        ...\r\n    ]\r\n}"
                   }
                 }
               }
@@ -1503,7 +1853,25 @@
                     },
                     "st": {
                       "type": "string",
-                      "description": "Port status code + detail \n0： No SIM card \n1： Exist idel SIM card \n2： Registering \n3： Registered \n4： call connected \n5： no balance or alarm \n6： Register failed \n7： SIM card locked by device \n8： SIM card locked by operator \n9： Recognize SIM card error\n11：Card Detected\n12：User locked\n13：Port inter-calling\n14：Inter-calling holding\n15：Access Mobile Network\n16：module Response timeout"
+                      "description": "Port status code + detail ",
+                      "enum": [
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16"
+                      ]
                     },
                     "bal": {
                       "type": "number",
@@ -1524,8 +1892,8 @@
                     },
                     "active": {
                       "type": "integer",
-                      "description": "Current card\n1:yes; 0:no",
-                      "examples": [
+                      "description": "Current card",
+                      "enum": [
                         0,
                         1
                       ]
@@ -1540,16 +1908,16 @@
                     },
                     "inserted": {
                       "type": "integer",
-                      "description": "A card is inserted into a slot.1:yes; 0:no",
-                      "examples": [
-                        0,
-                        1
+                      "description": "A card is inserted into a slot",
+                      "enum": [
+                        1,
+                        0
                       ]
                     },
                     "slot_active": {
                       "type": "integer",
-                      "description": "Whether the card slot is enabled.1:enabled;0:disabled",
-                      "examples": [
+                      "description": "Whether the card slot is enabled",
+                      "enum": [
                         0,
                         1
                       ]
@@ -1562,7 +1930,11 @@
                     },
                     "led": {
                       "type": "integer",
-                      "description": "Led is enabled or not\n1 is yes, 0 is no"
+                      "description": "Led is enabled or not",
+                      "enum": [
+                        0,
+                        1
+                      ]
                     }
                   },
                   "required": [
@@ -1669,7 +2041,14 @@
             "required": false,
             "example": "0",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "0",
+                "1",
+                "2",
+                "3"
+              ],
+              "default": "0"
             }
           }
         ],
@@ -1766,10 +2145,782 @@
         },
         "security": []
       }
+    },
+    "/goip_get_call_stat.html": {
+      "get": {
+        "summary": "Query call statistics",
+        "deprecated": false,
+        "description": "1.The client can actively query the call statistics of the device through the HTTP GET request.\n2.Message description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
+        "tags": [
+          "Query call statistics"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "description": "API version",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "1.0",
+              "examples": [
+                "1.0: Compatible with previous API",
+                "1.1: Support for the description of this documen"
+              ]
+            }
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ports",
+            "in": "query",
+            "description": "The specified port number (valued from 1)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "all: all ports",
+                "2: Specify a single port",
+                "1-2, 4: Port numbers separated by short numbers, specifying multiple ports, where \"-\" indicates a continuous port number"
+              ],
+              "default": "all"
+            }
+          },
+          {
+            "name": "slots",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Current card",
+              "examples": [
+                "Do not specify: current card",
+                "all: all card slots",
+                "2: Specify a single card slot",
+                "1-2, 4: A card slot number separated by a short number, specifying a plurality of card slots, where \"-\" indicates a continuous card slot number"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "0",
+              "enum": [
+                "0",
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Interface processing result code"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "Interface processing result reason"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Number of statistical results"
+                    },
+                    "stats": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "port": {
+                            "type": "integer",
+                            "description": "Port number (value from 1)"
+                          },
+                          "slot": {
+                            "type": "integer",
+                            "description": "Slot number (value from 1)"
+                          },
+                          "calls": {
+                            "type": "integer",
+                            "description": "Number of calling"
+                          },
+                          "alerted": {
+                            "type": "integer",
+                            "description": "Number of alerting"
+                          },
+                          "connected": {
+                            "type": "integer",
+                            "description": "Number of connected calls"
+                          },
+                          "con_failed": {
+                            "type": "integer",
+                            "description": "Number of failed calls"
+                          },
+                          "nc": {
+                            "type": "string",
+                            "description": "No Carriers success ratio (\"n/m\"), the numerator n is the success number, and the\ndenominator m is the total number"
+                          },
+                          "pdd": {
+                            "type": "integer",
+                            "description": "PDD"
+                          },
+                          "acd": {
+                            "type": "integer",
+                            "description": "ACD"
+                          },
+                          "asr": {
+                            "type": "integer",
+                            "description": "ASR percentage value"
+                          },
+                          "tcd": {
+                            "type": "integer",
+                            "description": "Cumulative call duration\n(minutes)"
+                          },
+                          "act_tcd": {
+                            "type": "integer",
+                            "description": "Actual cumulative call\nduration (seconds)"
+                          }
+                        },
+                        "required": [
+                          "port",
+                          "slot",
+                          "calls",
+                          "alerted",
+                          "connected",
+                          "con_failed",
+                          "nc",
+                          "pdd",
+                          "acd",
+                          "asr",
+                          "tcd",
+                          "act_tcd"
+                        ]
+                      },
+                      "description": "Array of statistical results "
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "reason",
+                    "stats"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Successful Instance",
+                    "value": {
+                      "code": 200,
+                      "reason": "OK",
+                      "stats": [
+                        {
+                          "port": 1,
+                          "slot": 1,
+                          "calls": 1,
+                          "alerted": 1,
+                          "connected": 1,
+                          "con_failed": 0,
+                          "nc": "0/0",
+                          "pdd": 0,
+                          "acd": 32,
+                          "asr": 100,
+                          "tcd": 1,
+                          "act_tcd": 32
+                        },
+                        {
+                          "port": 2,
+                          "slot": 1,
+                          "calls": 0,
+                          "alerted": 0,
+                          "connected": 0,
+                          "con_failed": 0,
+                          "nc": "0/0",
+                          "pdd": 0,
+                          "acd": 0,
+                          "asr": 0,
+                          "tcd": 0,
+                          "act_tcd": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/goip_send_cmd.html": {
+      "post": {
+        "summary": "Add SIM Card Numbers",
+        "deprecated": false,
+        "description": "Reference： \ninformation in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_number(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter\nExample:\nsim_number(192)=1358021178&sim_number(196)=123456762221\n192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1. \nSo, 25.01=(25 - 1)*8+(1-1) =192.\n196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. \nSo, \t25.05=(25-1)*8+(5-1)=196.",
+        "tags": [
+          "Add SIM Card Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device Username",
+            "required": true,
+            "example": "root",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device Password",
+            "required": true,
+            "example": "root",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "op",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "set",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              },
+              "example": "sim_number(n)=xxx&sim_number(n)=xxx"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "reason": {
+                      "type": "string"
+                    },
+                    "par_set": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Successful Instance",
+                    "value": {
+                      "code": 0,
+                      "reason": "OK",
+                      "par_set": 2
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/In the 'SMS/MMS Settings' menu of the device, the 'MMS Inbox' page allows you to configure the push receiving server address": {
+      "post": {
+        "summary": "MMS receiving",
+        "deprecated": false,
+        "description": "At this stage, the main function is to push the received MMS content to the configured server address via HTTP.\nMMS content is pushed via HTTP POST. Please refer to the HTTP standard for details. Only special HTTP header fields are explained below (Note: header fields may not exist). In addition, header fields starting with 'Emms-' are custom fields, while others are standard HTTP fields:",
+        "tags": [
+          "MMS receiving"
+        ],
+        "parameters": [
+          {
+            "name": "Emms-Subject",
+            "in": "header",
+            "description": "MMS subject",
+            "required": false,
+            "example": "chatset=US-ASCII",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "charset：Character set, such as UTF-8"
+              ]
+            }
+          },
+          {
+            "name": "Emms-From",
+            "in": "header",
+            "description": "MMS sending address",
+            "required": false,
+            "example": "type=PLMN;chartset=utf-8",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "charset: Character set, such as UTF-8",
+                "type: Sender address type, usually a phone number, known as PLMN"
+              ]
+            }
+          },
+          {
+            "name": "Emms-To",
+            "in": "header",
+            "description": "MMS receiving address",
+            "required": false,
+            "example": "type=PLMN;chartset=utf-8",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "charset: Character set, such as UTF-8 ",
+                "type: Sender address type, usually a phone number, known as PLMN"
+              ]
+            }
+          },
+          {
+            "name": "Date",
+            "in": "header",
+            "description": "MMS sending time",
+            "required": false,
+            "example": "Thu,28 Mar 2024 09:47:10 GMT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "The specifics need to be decided according to the operator, but attention should be paid to the processing of multipart related types",
+            "required": false,
+            "example": "application/smil",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Related to specific types"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/goip_send_at.html": {
+      "get": {
+        "summary": "AT Command",
+        "deprecated": false,
+        "description": "1.Application will send a HTTP GET request to the device, device will return HTTP 200 OK response to the application.\n2.Request URL\nhttp://host[:port]/goip_send_at.html\nhost: device IP address\nport: web port，default is 80，(Optiona)",
+        "tags": [
+          "AT Command"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device Usuername ",
+            "required": true,
+            "example": "root",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device Password",
+            "required": true,
+            "example": "root",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "port",
+            "in": "query",
+            "description": "Which port to send AT(begin with port 1)",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "at",
+            "in": "query",
+            "description": "AT command code",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeout",
+            "in": "query",
+            "description": "timeout(second)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "120"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "Return code，0 means success",
+                      "enum": [
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "Reason describe"
+                    },
+                    "resp": {
+                      "type": "string",
+                      "description": "AT command response"
+                    },
+                    "max-port": {
+                      "type": "string",
+                      "description": "Specify the max port"
+                    },
+                    "port": {
+                      "type": "string",
+                      "description": "Means available port\nNotes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available"
+                    }
+                  }
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Successful instance",
+                    "value": "Example:\nhttp://192.168.1.67/goip_send_at.html?username=root&password=root&port=5&at=ati\n\nResponse information as follow:\n\n{\n    \"code\": 0,\n    \"reason\": \"OK\",\n    \"resp\": \"ati\\r\\nQuectel_Ltd\\r\\nQuectel_M35\\r\\nRevision: M35FAR01A03\\r\\nOK\\r\\n\"\n}\n\n\nNotes: # and % will be ignore by the browser, they need to replace by %23 and %2B"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/goip_send_ussd.html": {
+      "get": {
+        "summary": "USSD API",
+        "deprecated": false,
+        "description": "1.Application will send a HTTP GET request to the device, device will return HTTP 200 OK response to the application.\n2.Request URL\n",
+        "tags": [
+          "USSD API"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Device Username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Device Password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "port",
+            "in": "query",
+            "description": "Which port to send ussd(begin with port 1)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ussd",
+            "in": "query",
+            "description": "Ussd command code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeout",
+            "in": "query",
+            "description": "timeout (second)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "120"
+            }
+          },
+          {
+            "name": "retries",
+            "in": "query",
+            "description": "Number of failed retries.\nNote: the top-up service should set this field to 0 and check if success by USSD query.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "Return code，0 means success",
+                      "enum": [
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "Reason describe"
+                    },
+                    "ussd": {
+                      "type": "string",
+                      "description": "Ussd command response"
+                    },
+                    "max-port": {
+                      "type": "string",
+                      "description": "Specify the max port"
+                    },
+                    "port": {
+                      "type": "string",
+                      "description": "Means available port\nNotes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "reason",
+                    "ussd",
+                    "max-port",
+                    "port"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Successful instance",
+                    "value": "Example:\r\n\r\nhttp://192.168.1.67/goip_send_ussd.html?username=root&passowrd=root&port=5&ussd=123\r\n\r\nResponse information as follow：\r\n{code:0,reason:”OK”,resp:”your balance is 50.00$”}"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Pet": {
+        "required": [
+          "name",
+          "photoUrls",
+          "id",
+          "category",
+          "tags",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "宠物ID编号"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category",
+            "description": "分组"
+          },
+          "name": {
+            "type": "string",
+            "description": "名称",
+            "examples": [
+              "doggie"
+            ]
+          },
+          "photoUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "照片URL"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "标签"
+          },
+          "status": {
+            "type": "string",
+            "description": "宠物销售状态",
+            "enum": [
+              "available",
+              "pending",
+              "sold"
+            ]
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "分组ID编号"
+          },
+          "name": {
+            "type": "string",
+            "description": "分组名称"
+          }
+        },
+        "xml": {
+          "name": "Category"
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "标签ID编号"
+          },
+          "name": {
+            "type": "string",
+            "description": "标签名称"
+          }
+        },
+        "xml": {
+          "name": "Tag"
+        }
+      },
+      "tasks": {
+        "type": "object",
+        "properties": {
+          "tid": {
+            "type": "integer",
+            "description": "Task ID"
+          },
+          "from": {
+            "type": "string",
+            "description": "Use‘,’‘-’to assign more than one port(from\nchannel 1)"
+          },
+          "to": {
+            "type": "string"
+          },
+          "to_all": {
+            "type": "string"
+          },
+          "sms": {
+            "type": "string"
+          },
+          "chs": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "to_all",
+          "sms",
+          "chs"
+        ]
+      }
+    },
     "securitySchemes": {}
   },
   "servers": [],
