@@ -981,7 +981,6 @@
         "description": "The write and delete operations for ESIM cannot be completed immediately, so when a successful HTTP request is submitted, the status field returned is 1, indicating that the task has been submitted but the operation has not been performed yet. To know the result of the previously submitted operation, it is necessary to use the query ESIM interface regularly to obtain various ESIM information and judge the value of the status field.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
           "ESIM",
-          "ESIM"
         ],
         "parameters": [
           {
