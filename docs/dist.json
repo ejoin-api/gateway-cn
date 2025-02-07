@@ -59,7 +59,6 @@
         "description": "Message description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.\nTips:\n1. While not choose a port, device will pick up a random port to send SMS to every recipient.\n2. While chose more than one ports, and just one SMS recipient , then device will use all chose port to\nsend SMS to this recipient.\n3. If more ports, and more recipient designed, then every port will send SMS to every recipient\nseparately.",
         "tags": [
           "SMS Sending",
-          "SMS Sending"
         ],
         "parameters": [
           {
