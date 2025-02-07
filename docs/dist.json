@@ -18,7 +18,7 @@
       "name": "ESIM"
     },
     {
-      "name": "Receive the SMS"
+      "name": "Receive SMS"
     },
     {
       "name": "Query SMS"
@@ -27,19 +27,19 @@
       "name": "Status Notification"
     },
     {
-      "name": "Query SMS statistics"
+      "name": "Query SMS Statistics"
     },
     {
-      "name": "Query call statistics"
+      "name": "Query Call Statistics"
     },
     {
-      "name": "Operate command sending"
+      "name": "Operate Command Sending"
     },
     {
-      "name": "MMS receiving"
+      "name": "MMS Receiving"
     },
     {
-      "name": "Modify IMEI parameters "
+      "name": "Modify IMEI Parameters "
     },
     {
       "name": "Add SIM Card Numbers"
@@ -258,7 +258,7 @@
     },
     "/goip_pause_sms.html": {
       "post": {
-        "summary": "Pause the SMS task",
+        "summary": "Pause SMS task",
         "deprecated": false,
         "description": "When a SMS task is still waiting to be sent in the send queue, one or more SMS can be paused.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
@@ -386,7 +386,7 @@
     },
     "/goip_resume_sms.html": {
       "post": {
-        "summary": "Resume the paused SMS task",
+        "summary": "Resume paused SMS task",
         "deprecated": false,
         "description": "Resume the sending of one or more suspended SMS tasks. \nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
@@ -508,7 +508,7 @@
     },
     "/goip_remove_sms.html": {
       "post": {
-        "summary": "Delete the SMS task",
+        "summary": "Delete SMS task",
         "deprecated": false,
         "description": "Delete one or more SMS tasks waiting to be sent in the send queue.\nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
@@ -635,7 +635,7 @@
     },
     "/goip_get_tasks.html": {
       "get": {
-        "summary": "Query the SMS task",
+        "summary": "Query SMS task",
         "deprecated": false,
         "description": "Query the SMS task waiting to be sent in the send queue. \nMessage description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
@@ -1515,7 +1515,7 @@
     },
     "/": {
       "get": {
-        "summary": "Receive the SMS",
+        "summary": "Receive SMS",
         "deprecated": false,
         "description": "1.Device will send SMS to server by POST request, while it get SMS from operator. \n2.While forwarding SMS, device send a request to server first, so even device in LAN, and server in a public net, it also can work effectively\n3.URL：Default set by device，server can revise it in SMS sending quest message.",
         "tags": [
@@ -1975,7 +1975,7 @@
     },
     "/goip_get_sms_stat.html": {
       "get": {
-        "summary": "Query SMS statistics",
+        "summary": "Query SMS Statistics",
         "deprecated": false,
         "description": "1.The client can actively query the short message statistics of the device through the HTTP GET request.\n2.host: Device IP address\n   port: Device webpage management port, default value is 80.",
         "tags": [
@@ -2146,7 +2146,7 @@
     },
     "/goip_get_call_stat.html": {
       "get": {
-        "summary": "Query call statistics",
+        "summary": "Query Call Statistics",
         "deprecated": false,
         "description": "1.The client can actively query the call statistics of the device through the HTTP GET request.\n2.Message description :\nhost: Device IP address\nport: Device webpage management port, default value is 80.",
         "tags": [
