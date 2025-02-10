@@ -7,58 +7,42 @@ info:
     to learn about, try, and implement Ejoin Gateway HTTP API.
 
 
-    The Ejoin Gateway HTTP APIv2.4.0 is available in SMSEagle software version
+    # Overview
 
-    5.0 and higher.
-
-
-    # SDKs
-
-    SMSEagle API is built on OpenAPI 3.0 Specification. You may download the API
-    specification using **Download** button at the top of the page. The
-    specification file can be used to generate SDK in your preffered programming
-    language using open source tools like [OpenAPI
-    Generator](https://openapi-generator.tech/) or  [Swagger
-    Codegen](https://swagger.io/tools/swagger-codegen/).
+    This document specifies HTTP SMS API of Ejoin device, include SMS receiving, single sending, group-sending and status of Sending task querying.
+    Based on‘Ejoin SMS sending API’, this document extra support Group-Sending and multi task and status report support in one message.This SMS API is still base on HTTP and add POST request support, enabling multi-tasking and status reporting through a JSON array format. For detailed specifications on the JSON array format, please refer to the standardization guidelines.
 
 
     # Examples
 
     For each API endpoint, we provide basic use case examples. Each example has
     sample payload parameters in JSON format showing how to complete a task (for
-    example send SMS, create Phonebook contact, Get modem signal strength,
+    example send SMS, send AT command, get status notification,
     etc.). Each example is accompanied with API response sample.
 
 
-    # Webhooks
-
-    If you want to be notified about certain events like incoming message or
-    change of delivery status, use webhooks. Webhooks are standard HTTP
-    endpoints implemented in your application that will accept HTTP requests
-    from SMSEagle device. Webhooks save you from having to continuously send
-    requests to the SMSEagle device asking for message status. Webhooks can be
-    configured via feature named **Callback URL** (Web-GUI > menu CallbackURL).
   version: v2.4.1
   x-logo:
     url: ./EAPI-logo.png
     backgroundColor: '#FAFAFA'
     altText: SMS logo
 tags:
-  - name: SMS Sending
-  - name: Receive the SMS
+  - name: Send message
+  - name: ESIM
+  - name: Receive SMS
   - name: Query SMS
+  - name: Status notification
   - name: Query SMS statistics
   - name: Query call statistics
-  - name: ESIM
-  - name: Add SIM Card Numbers
+  - name: 'Send operate command '
+  - name: Receive MMS
   - name: AT Command
   - name: USSD API
-  - name: Status Notification
-  - name: MMS receiving
+  - name: SMS Sending
 paths:
   /goip_post_sms.html:
     post:
-      summary: SMS Sending
+      summary: Send message
       deprecated: false
       description: >-
         Message description :
@@ -82,7 +66,7 @@ paths:
 
         separately.
       tags:
-        - SMS Sending
+        - Send message
       parameters:
         - name: version
           in: query
@@ -111,195 +95,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                type:
-                  type: string
-                  title: ''
-                  description: Message type.
-                sr_url:
-                  type: string
-                  description: Status report forward url
-                sr_cnt:
-                  type: string
-                  description: |-
-                    Max num of SMS
-                    result can keep in
-                    cache.
-                  default: '100'
-                sr_prd:
-                  type: integer
-                  default: 30
-                  description: |-
-                    The max time SMS
-                    result can keep in
-                    cache
-                sms_url:
-                  type: string
-                  description: SMS forward URL
-                sms_cnt:
-                  type: integer
-                  description: |-
-                    Max num of SMS can
-                    keep in cache
-                  default: 1
-                sms_prd:
-                  type: integer
-                  default: 30
-                  description: Max time SMS can
-                task_num:
-                  type: string
-                  default: '1'
-                  description: Total task
-                tasks:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      tid:
-                        type: integer
-                        description: Task ID
-                      from:
-                        type: string
-                        description: |-
-                          Use‘,’‘-’to assign more than one port(from
-                          channel 1)
-                      to:
-                        type: string
-                        description: one or more(use ‘,’to distinguish) recipients
-                      to_all:
-                        type: string
-                        default: '1'
-                        description: 1 represents all ports
-                      sms:
-                        type: string
-                        description: SMS content
-                      chs:
-                        type: string
-                        description: Character coding set (utf8|base64)
-                        default: utf8
-                        enum:
-                          - utf8
-                          - base64
-                      coding:
-                        type: integer
-                        description: >-
-                          <ul><li>'0' = not assign<br></li><li>'1' =
-                          USC2</li><li>'2' = 7bit</li></ul>
-                        default: 0
-                        enum:
-                          - 0
-                          - 1
-                          - 2
-                      smstype:
-                        type: integer
-                        default: 0
-                        enum:
-                          - 0
-                          - 1
-                          - 2
-                        description: >-
-                          <p>SMS type</p><ul><li>'0' = SMS<br></li><li>'1' =
-                          MMS</li><li>'2' = MMS with multiple numbers and
-                          multiple
-
-                          subject</li></ul>
-                      smstitle:
-                        type: string
-                        description: >-
-                          MMS subject：MMS subject format is UTF-8，this parameter
-                          could be empty;
-                      to_title_arr ay:
-                        type: array
-                        items:
-                          type: array
-                          items:
-                            type: string
-                            description: number,title
-                            examples:
-                              - >-
-                                [["number1","titile1"],["number2","titile2"],
-                                ...["number n","titile n"]]
-                        description: >-
-                          Multiple MMS recipients and subject arrays. This field
-                          is valid only when smstype=2;
-
-                          Format：
-
-                          "to_title_array":[["number1","titile1"],["number2","titile2"],
-
-                          ...["number n","titile n"]]
-                      attachments:
-                        type: string
-                        description: >-
-                          1. MMS attachment，This field take effect only when smstype=1 or 2.
-                          2. Field content format: 
-                             1. File type1|base64 code file content 1
-                             2. File type2|base64 code file content 2
-                             3. File type n|base64 code file content n
-                          3. Remarks： 
-                             1. There can be a most of 5 attachment,all attachment total length cannot exceed 100K,at present only support jpg、gif、txt、mp3 formatted file.
-                             2. File type and file content use symbol | separate
-                             3. Attachment is could be empty,send the content of the SMS filed as a TXT attachment
-                          4. example：
-                             1. txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk
-                      smsc:
-                        type: string
-                        description: Store the SMSC number.
-                      intvl:
-                        type: string
-                        default: '0'
-                        description: Interval of 2 SMS while device sending them(ms)
-                      tmo:
-                        type: string
-                        default: '30'
-                        description: Max time while waiting sending result(second).
-                      sdr:
-                        type: integer
-                        default: 0
-                        enum:
-                          - 0
-                          - 1
-                        description: >-
-                          <p>If enable the successfully send report.
-                          </p><ul><li>'0' = disable<br></li><li>'1' =
-                          enable</li></ul>
-                      fdr:
-                        type: integer
-                        default: 1
-                        enum:
-                          - 0
-                          - 1
-                        description: >-
-                          <p>If enable the failed report.</p><ul><li>'0' =
-                          disable<br></li><li>'1' = enable</li></ul>
-                      sr_prd:
-                        type: integer
-                        description: >-
-                          <p>Status report period (seconds). </p><ul><li>'0' =
-                          not on<br></li><li>'>0' = onControl only the period in
-                          which a single task</li></ul>
-                        default: 60
-                        enum:
-                          - 0
-                          - '>0'
-                      sr_cnt:
-                        type: integer
-                        default: 10
-                        description: >-
-                          Single-state report SMS number, less than 1 will use
-                          the default value Control only the number of processed
-                          messages
-
-                          that have been reported by a single task
-                    required:
-                      - tid
-                      - to
-                      - to_all
-                      - sms
-              required:
-                - task_num
-                - tasks
+              type: string
             example:
               type: “send-sms
               sr_url: https://xxxxx.com/
@@ -427,7 +223,7 @@ paths:
                   - task_num
               examples:
                 '1':
-                  summary: Successful Instance
+                  summary: Successful instance
                   value:
                     type: send-sms
                     task_num: 1
@@ -452,7 +248,7 @@ paths:
                   - message
               examples:
                 '1':
-                  summary: Exception Example
+                  summary: Exception instance
                   value:
                     message:
                       recipients: 'One of parameters: to, contacts, groups is required.'
@@ -471,7 +267,7 @@ paths:
                   - message
               examples:
                 '1':
-                  summary: Exception Example
+                  summary: Exception instance
                   value:
                     message: Invalid API key.
           headers: {}
@@ -774,390 +570,160 @@ paths:
                     }
                 }
             }
-  /:
-    get:
-      summary: Receive SMS
+      
+  /goip_pause_sms.html:
+    post:
+      summary: Pause message task
       deprecated: false
       description: >-
-        1.Device will send SMS to server by POST request, while it get SMS from
-        operator. 
-
-        2.While forwarding SMS, device send a request to server first, so even
-        device in LAN, and server in a public net, it also can work effectively
-
-        3.URL：Default set by device，server can revise it in SMS sending quest
-        message.
-      tags:
-        - Receive the SMS
-      parameters:
-        - name: version
-          in: query
-          description: API version
-          required: false
-          example: '1.1'
-          schema:
-            type: string
-            default: '1.1'
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: Data type
-                  sms_num:
-                    type: string
-                    description: Total SMS num
-                  sms:
-                    type: array
-                    items:
-                      type: string
-                    description: >-
-                      For saving the bandwidth, SMS content also storage in a
-                      array. 
-
-                      [0]: Delivery report flag,0:normal SMS, 1:This is a
-                      delivery report 
-
-                      [1]: Receive report(‘1.01’,’1.02’) 
-
-                      [2]: timestamp while device got this SMS 
-
-                      [3]: Sender(If Delivery report flag set to 1, then sender
-                      should be SMCC) 
-
-                      [4]: Recipient(If Delivery report flag set to 1,then
-                      recipient should be the 
-
-                      original recipient. ) 
-
-                      [5]: SMS content： 
-
-                      Delivery report: "code scts", code is 0 for successful
-                      delivery, utf-8 
-
-                      Ordinary SMS: BASE64 encoding of utf-8 
-                required:
-                  - sms
-                  - type
-                  - sms_num
-              examples:
-                '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"type\": \"recv-sms\",\r\n    \"sms_num\":n,\r\n    \"sms\": [\r\n        [],\r\n    …,\r\n        []\r\n    ]\r\n}"
-          headers: {}
-      security: []
-  /goip_get_sms.html:
-    get:
-      summary: Query SMS
-      deprecated: false
-      description: >-
-        1.Customers can actively query the SMS received by the device through
-        HTTP GET/POST request.
-
-        2.Query process：
-
-        1).Query all messages received by the device without the query
-        parameters (except for user-verified parameters). 
-
-        2).Use the value of next_sms returned by the device as the value of the
-        sms_id parameter to query subsequent SMS messages. 
-
-        3).If the device restarts, return a different ssrc synchronization
-        source ID and return to step 1. 
-
-        4).Repeat step 2
-
-        3.Message description :
-
-        host: Device IP address 
-
-        port: Device webpage management port, default value is 80.
-      tags:
-        - Query SMS
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          example: root
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device  Password
-          required: true
-          example: root
-          schema:
-            type: string
-        - name: sms_id
-          in: query
-          description: Start SMS ID
-          required: false
-          example: '1'
-          schema:
-            type: string
-        - name: sms_num
-          in: query
-          description: 'Specify the number of SMS to be queried '
-          required: false
-          example: 0：Query all SMS
-          schema:
-            type: string
-        - name: sms_del
-          in: query
-          description: Delete the SMS that has been returned by the query
-          required: false
-          example: "0：Do not delete，\_1：delete"
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: Operation code
-                  reason:
-                    type: string
-                    description: Reason description
-                  ssrc:
-                    type: string
-                    description: >-
-                      Synchronization source identifier The device generates a
-                      new ssrc each time it runs.So the value changes, re-query
-                  sms_num:
-                    type: integer
-                    description: Number of SMS queried
-                  next_sms:
-                    type: integer
-                    description: The next SMS ID
-                  data:
-                    type: integer
-                    description: >-
-                      Queryed SMS content
-
-                      For saving the bandwidth, SMS content also storage in a
-                      array. [0]: Delivery report flag,0:normal SMS, 1:This is a
-                      delivery report [1]: Receive report(‘1.01’,’1.02’)
-
-                      [2]: timestamp while device got this SMS
-
-                      [3]: Sender(If Delivery report flag set to 1, then sender
-                      should be SMCC)
-
-                      [4]: Recipient(If Delivery report flag set to 1,then
-                      recipient should be the original recipient. )
-
-                      [5]: SMS content：
-
-                      Delivery report: "code scts", code is 0 for successful
-                      delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
-                required:
-                  - code
-                  - reason
-                  - ssrc
-                  - sms_num
-                  - next_sms
-                  - data
-              examples:
-                '1':
-                  summary: Data
-                  value: "{\r\n  \"code\": 0,\r\n  \"reason\": \"OK\",\r\n  \"ssrc\": \"0123456789abcdef\",\r\n  \"sms_num\": 2,\r\n  \"next_sms\": 3,\r\n  \"data\": [\r\n    [\r\n      0,\r\n      \"1B\",\r\n      1466506477,\r\n      \"10010\",\r\n      \"13265825775\",\r\n      \"5bCK5pWs55qE55So5oi377yM5oKo5aW977yB5o6o6I2Q5oKo5L2/55So44CQ5omL5py66JCl5Lia5Y6F44CR5LiA56uZ5byP5YWN5rWB6YeP5pyN5Yqh5bmz5Y+wIGh0dHA6Ly91LjEwMDEwLmNuL2R0Y2Qg77yM6L275p2+5p+l6K+i6K+d6LS544CB5L2Z6aKd5Y+K6K+m5Y2V77yb5oiW5Zue5aSN5Lul5LiL5pWw5a2X5Luj56CB6I635Y+W5oKo6ZyA6KaB55qE5pyN5Yqh77yaDQoxMDEu5b2T5pyI6K+d6LS577ybDQoxMDIu5Y+v55So5L2Z6aKd77ybDQowLuWNh+e6pzRH77ybDQoxLuivnei0ueWPiuenr+WIhu+8mw0KMi7otKbmiLfmn6Xor6LvvJsNCjMu5YWF5YC877ybDQo0LuWuouaIt+acjeWKoe+8mw0KNS7kuJrliqHlip7nkIbvvJsNCjYu5aKe5YC85Lia5Yqh77ybDQo3LuecgeS7veS4k+WMuu+8mw0KOS7ng63ngrnkv4PplIDjgIINCuW5v+S4nOiBlOmAmuOAggAAAAA=\"\r\n    ],\r\n    [\r\n      0\r\n     \"1B\",\r\n      1466506670,\r\n      \"10010\",\r\n      \"13265825775\",\r\n      \"5bCK5pWs55qE55So5oi377yM5oKo5aW977yB5o6o6I2Q5oKo5L2/55So44CQ5omL5py66JCl5Lia5Y6F44CR5LiA56uZ5byP5YWN5rWB6YeP5pyN5Yqh5bmz5Y+wIGh0dHA6Ly91LjEwMDEwLmNuL2R0Y2Qg77yM6L275p2+5p+l6K+i6K+d6LS544CB5L2Z6aKd5Y+K6K+m5Y2V77yb5oiW5Zue5aSN5Lul5LiL5pWw5a2X5Luj56CB6I635Y+W5oKo6ZyA6KaB55qE5pyN5Yqh77yaDQoxMDEu5b2T5pyI6K+d6LS577ybDQoxMDIu5Y+v55So5L2Z6aKd77ybDQowLuWNh+e6pzRH77ybDQoxLuivnei0ueWPiuenr+WIhu+8mw0KMi7otKbmiLfmn6Xor6LvvJsNCjMu5YWF5YC877ybDQo0LuWuouaIt+acjeWKoe+8mw0KNS7kuJrliqHlip7nkIbvvJsNCjYu5aKe5YC85Lia5Yqh77ybDQo3LuecgeS7veS4k+WMuu+8mw0KOS7ng63ngrnkv4PplIDjgIINCuW5v+S4nOiBlOmAmuOAggAAAAA=\"\r\n    ]\r\n  ]\r\n}"
-          headers: {}
-      security: []
-  /goip_get_sms_stat.html:
-    get:
-      summary: Query SMS Statistics
-      deprecated: false
-      description: >-
-        1.The client can actively query the short message statistics of the
-        device through the HTTP GET request.
-
-        2.host: Device IP address
-           port: Device webpage management port, default value is 80.
-      tags:
-        - Query SMS statistics
-      parameters:
-        - name: version
-          in: query
-          description: API version
-          required: false
-          example: '1.0'
-          schema:
-            type: string
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          example: xxx
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device Password
-          required: true
-          example: xxx
-          schema:
-            type: string
-        - name: ports
-          in: query
-          description: >-
-            The specified port number (valued from 1). The values are as
-            follows:
-
-            1)all: all ports;
-
-            2)Specify a single port;
-
-            1-2, 4: Port numbers separated by short numbers, specifying multiple
-            ports, where "-" indicates a continuous port number;
-          required: false
-          example: all
-          schema:
-            type: string
-        - name: slots
-          in: query
-          description: >-
-            The specified card slot number (value from 1). The values are as
-            follows:
-
-            1).Do not specify: current card
-
-            2)all: all card slots;
-
-            3)2: Specify a single card slot;
-
-            1-2, 4: A card slot number separated by a short number, specifying a
-            plurality of card slots, where "-" indicates a continuous card slot
-            number;
-          required: false
-          example: Current card
-          schema:
-            type: string
-        - name: type
-          in: query
-          description: |-
-            Statistic type. The values are as follows:
-            1)0: The last hour;
-            2)1: The last two hours;
-            3)2: today;
-            3: cumulative;
-          required: false
-          example: '0'
-          schema:
-            type: string
-            enum:
-              - '0'
-              - '1'
-              - '2'
-              - '3'
-            default: '0'
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: Interface processing result code
-                  reason:
-                    type: string
-                    description: Interface processing result reason
-                  count:
-                    type: integer
-                    description: Number of statistical results
-                  stats:
-                    type: array
-                    items:
-                      type: string
-                    description: |-
-                      Array of statistical results (stat
-                      results are as follows)
-                  port:
-                    type: integer
-                    description: Port number (value from 1)
-                  slot:
-                    type: integer
-                    description: Slot number (value from 1)
-                  received:
-                    type: integer
-                    description: Number of SMS received
-                  sent:
-                    type: integer
-                    description: Number of SMS sent
-                  sent_ok:
-                    type: integer
-                    description: Number of successful SMS sent
-                  sent_failed:
-                    type: integer
-                    description: Number of failed SMS sent
-                  con_failed:
-                    type: integer
-                    description: Number of consecutive failed SMS
-                  unsent:
-                    type: integer
-                    description: Number of unsent SMS
-                  sending:
-                    type: integer
-                    description: Number of SMS being sent
-                required:
-                  - code
-                  - reason
-                  - count
-                  - stats
-                  - port
-                  - slot
-                  - received
-                  - sent
-                  - sent_ok
-                  - sent_failed
-                  - con_failed
-                  - unsent
-                  - sending
-              examples:
-                '1':
-                  summary: Response
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"count\":n,\r\n    \"stats\": [\r\n        {\r\n            \"port\":xxx,…\r\n        },…\r\n    ]\r\n}"
-          headers: {}
-      security: []
-  /goip_get_call_stat.html:
-    get:
-      summary: Query Call Statistics
-      deprecated: false
-      description: >-
-        1.The client can actively query the call statistics of the device
-        through the HTTP GET request.
-
-        2.Message description :
+        Message description :
 
         host: Device IP address
 
         port: Device webpage management port, default value is 80.
+
+                
+
+        When a SMS task is still waiting to be sent in the send queue, one or
+        more SMS can be paused.
+
+
       tags:
-        - Query call statistics
+        - Send message
       parameters:
         - name: version
           in: query
-          description: API version
+          description: |-
+            API version
+            This document describes specification support only
           required: false
+          example: '1.1'
           schema:
             type: string
-            default: '1.0'
-            examples:
-              - '1.0: Compatible with previous API'
-              - '1.1: Support for the description of this documen'
+        - name: username
+          in: query
+          description: ''
+          required: true
+          example: Device username
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: ''
+          required: true
+          example: Device password
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              tids:
+                - - tid1
+                - - tid2
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: integer
+                        description: Task ID
+                  description: Restore one or more tasks ID that are sent.When there is no field, all send tasks are suspended
+              
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    examples:
+                      - 200
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: string
+                          description: Task ID
+                        status:
+                          type: string
+                          description: Task status code
+                          enum:
+                            - 0 OK
+                            - 1 Invalid User
+                            - 2 Invalid Port
+                            - 3 USSD Expected
+                            - 4 Pending USSD
+                            - 5 SIM Unregistered
+                            - 6 TImeout
+                            - 7 Server Error
+                            - 8 SMS expected
+                            - 9 TO expected
+                            - 10 Pending Transaction
+                            - 11 TID Expected
+                            - 12 From Expected
+                      required:
+                        - status
+                        - tid
+                    description: >-
+                      Task processing results.
+
+                      When there is no tids in the request, this field is not
+                      included in the result.
+                required:
+                  - reason
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 200
+                    reason: OK
+                    result:
+                      - - tid: 1
+                          status: 0 OK
+                      - - tid: 2
+                          status: 3 USSD Expected
+                      
+          headers: {}
+      security: []
+  /goip_resume_sms.html:
+    post:
+      summary: Resume paused message task
+      deprecated: false
+      description: |-
+        Resume the sending of one or more suspended SMS tasks. 
+        Message description :
+        host: Device IP address
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes 
+            specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
         - name: username
           in: query
           description: Device username
@@ -1170,46 +736,26 @@ paths:
           required: true
           schema:
             type: string
-        - name: ports
-          in: query
-          description: The specified port number (valued from 1)
-          required: false
-          schema:
-            type: string
-            examples:
-              - 'all: all ports'
-              - '2: Specify a single port'
-              - >-
-                1-2, 4: Port numbers separated by short numbers, specifying
-                multiple ports, where "-" indicates a continuous port number
-            default: all
-        - name: slots
-          in: query
-          description: ''
-          required: false
-          schema:
-            type: string
-            default: Current card
-            examples:
-              - 'Do not specify: current card'
-              - 'all: all card slots'
-              - '2: Specify a single card slot'
-              - >-
-                1-2, 4: A card slot number separated by a short number,
-                specifying a plurality of card slots, where "-" indicates a
-                continuous card slot number
-        - name: type
-          in: query
-          description: ''
-          required: false
-          schema:
-            type: string
-            default: '0'
-            enum:
-              - '0'
-              - '1'
-              - '2'
-              - '3'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: string
+                        description: Task ID
+                    required:
+                      - tid
+                  description: The task ID to be restored
+              required:
+                - tids
+            example: ''
       responses:
         '200':
           description: ''
@@ -1221,110 +767,450 @@ paths:
                   code:
                     type: integer
                     description: Interface processing result code
+                    examples:
+                      - 200
                   reason:
                     type: string
-                    description: Interface processing result reason
-                  count:
-                    type: integer
-                    description: Number of statistical results
-                  stats:
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  results:
                     type: array
                     items:
                       type: object
                       properties:
-                        port:
-                          type: integer
-                          description: Port number (value from 1)
-                        slot:
-                          type: integer
-                          description: Slot number (value from 1)
-                        calls:
-                          type: integer
-                          description: Number of calling
-                        alerted:
-                          type: integer
-                          description: Number of alerting
-                        connected:
-                          type: integer
-                          description: Number of connected calls
-                        con_failed:
-                          type: integer
-                          description: Number of failed calls
-                        nc:
+                        tid:
                           type: string
-                          description: >-
-                            No Carriers success ratio ("n/m"), the numerator n
-                            is the success number, and the
-
-                            denominator m is the total number
-                        pdd:
-                          type: integer
-                          description: PDD
-                        acd:
-                          type: integer
-                          description: ACD
-                        asr:
-                          type: integer
-                          description: ASR percentage value
-                        tcd:
-                          type: integer
-                          description: |-
-                            Cumulative call duration
-                            (minutes)
-                        act_tcd:
-                          type: integer
-                          description: |-
-                            Actual cumulative call
-                            duration (seconds)
+                        status:
+                          type: string
                       required:
-                        - port
-                        - slot
-                        - calls
-                        - alerted
-                        - connected
-                        - con_failed
-                        - nc
-                        - pdd
-                        - acd
-                        - asr
-                        - tcd
-                        - act_tcd
-                    description: 'Array of statistical results '
+                        - status
+                        - tid
+                    description: >-
+                      Task processing results.
+
+                      When there is no tids in the request, this field is not
+                      included in the result.
                 required:
-                  - code
                   - reason
-                  - stats
+                  - code
               examples:
                 '1':
-                  summary: Successful Instance
+                  summary: Successful instance
                   value:
                     code: 200
                     reason: OK
-                    stats:
-                      - port: 1
-                        slot: 1
-                        calls: 1
-                        alerted: 1
-                        connected: 1
-                        con_failed: 0
-                        nc: 0/0
-                        pdd: 0
-                        acd: 32
-                        asr: 100
-                        tcd: 1
-                        act_tcd: 32
-                      - port: 2
-                        slot: 1
-                        calls: 0
-                        alerted: 0
-                        connected: 0
-                        con_failed: 0
-                        nc: 0/0
-                        pdd: 0
-                        acd: 0
-                        asr: 0
-                        tcd: 0
-                        act_tcd: 0
+                    results:
+                      - tid: '1'
+                        status: 0 OK
+                      - tid: '2'
+                        status: 2 Invalid Port
+          headers: {}
+      security: []
+  /goip_remove_sms.html:
+    post:
+      summary: Delete message task
+      deprecated: false
+      description: |-
+        Delete one or more SMS tasks waiting to be sent in the send queue.
+        Message description :
+        host: Device IP address
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+            example: ''
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                    examples:
+                      - 200
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: string
+                          description: Task ID
+                        status:
+                          type: string
+                          description: |-
+                            The status code and reason description of 
+                            the task
+                          enum:
+                            - 0 OK
+                            - 1 Invalid User
+                            - 2 Invalid Port
+                            - 3 USSD Expected
+                            - 4 Pending USSD
+                            - 5 SIM Unregistered
+                            - 6 Timeout
+                            - 7 Server Error
+                            - 8 SMS expected
+                            - 9 TO expected
+                            - 10 Pending Transaction
+                            - 11 TID Expected
+                            - 12 From Expected
+                      required:
+                        - status
+                        - tid
+                    description: >-
+                      Task processing results .
+
+                      If there is no TIDS in the request, this field is not
+                      included in the result
+                required:
+                  - reason
+                  - results
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\": \"1\",\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\": \"2\",\r\n            \"status\": \"3 USSD Expected\"\r\n        },\r\n        ...\r\n    ]\r\n}"
+          headers: {}
+      security: []
+  /goip_get_tasks.html:
+    get:
+      summary: Query message task
+      deprecated: false
+      description: |-
+        Query the SMS task waiting to be sent in the send queue. 
+        Message description :
+        host: Device IP address
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API Version
+            This document describes 
+            specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+        - name: port
+          in: query
+          description: Send port. Starting from 1
+          required: true
+          schema:
+            type: integer
+            examples:
+              - 1
+              - 32
+              - 64
+        - name: has_content
+          in: query
+          description: Whether to bring a text message in the result
+          required: false
+          schema:
+            type: integer
+            default: 0
+            enum:
+              - 0
+              - 1
+        - name: pos
+          in: query
+          description: |-
+            The starting position of the request. 
+            0 represents the 
+            beginning of the first task
+          required: true
+          schema:
+            type: integer
+        - name: num
+          in: query
+          description: |-
+            The number of 
+            Request messages
+          required: false
+          schema:
+            type: integer
+            default: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: integer
+                        description: Task ID
+                    required:
+                      - tid
+                  description: The task ID to be query.
+              required:
+                - tids
+            example: ''
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    examples:
+                      - 200
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  total_num:
+                    type: integer
+                    description: The number of tasks
+                  task_num:
+                    type: integer
+                    description: Query the number of tasks returned
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: integer
+                          description: Task id
+                        from:
+                          type: string
+                          description: |-
+                            One or more (commas, short horizontal 
+                            connections) send ports (from 1)
+                          default: Device selection
+                        to:
+                          type: string
+                          description: |-
+                            One or more (comma connected) message 
+                            receiver number.
+                        sms:
+                          type: string
+                          description: Message content
+                        chs:
+                          type: string
+                          description: Code set（utf8|base64）
+                          default: Utf-8
+                        coding:
+                          type: integer
+                          description: 'Specifies the encoding of the message sent. '
+                          default: 0
+                          enum:
+                            - 0 Do not specify
+                            - 1 USC2
+                            - 2 7bit
+                        state:
+                          type: integer
+                          description: Task status
+                          enum:
+                            - 0 normal
+                            - 1 suspended
+                      required:
+                        - tid
+                        - to
+                        - state
+                    description: Query the returned array of tasks
+                required:
+                  - reason
+                  - tasks
+                  - total_num
+                  - task_num
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"total_num\": 5,\r\n    \"task_num\": 2,\r\n    \"tasks\": [\r\n        {\r\n            \"tid\": 1,\r\n            \"from\": \"\",\r\n            \"to\": \"\",\r\n            \"sms\": \"hello123\",\r\n            \"chs\": \"utf-8\",\r\n            \"coding\": 0,\r\n            \"state\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
+          headers: {}
+      security: []
+  Server or device configuration decision:
+    post:
+      summary: Sending status report
+      deprecated: false
+      description: >-
+        While SMS send successfully/failed/timeout, device will put the result
+        in cache, after meet condition(cache storage full or cache time reached
+        ),device will send POST request to report one or more task execute
+        result. If it is group sending, device will report execute result
+        periodically until all num in this group sending task get a result. 
+
+        Tips： 
+
+        1.tid related to the task ID in the send-sms message. 
+
+        2.sending, sent, failed are accumulated num in one task. 
+
+        3.Sdr(successfully send record) list records between 2 status-report,
+        server should keep before details. 
+
+        4.fdr(failed detail record) list records between 2 status-report, server
+        should keep before details.
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    const: status-report
+                    description: Message type
+                  rpt_rum:
+                    type: string
+                    description: Report num
+                    default: '1'
+                    examples:
+                      - '1'
+                  rpts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: integer
+                          description: Related task ID
+                        sending:
+                          type: integer
+                          description: Total num of SMS in sending
+                        sent:
+                          type: integer
+                          description: Total num of SMS successfully send
+                        failed:
+                          type: integer
+                          description: Total num of SMS failed send
+                        unsent:
+                          type: integer
+                          description: 'Total SMS in cache waiting for send '
+                        sdr:
+                          type: array
+                          items:
+                            type: object
+                            properties: {}
+                            description: |-
+                              Success report is a array, 
+                              [0]: recipients num index(based on 
+                              group sending),int 
+                              [1]: num, string 
+                              [2]: SMS sending port(1.01,2.02,...), 
+                              string 
+                              [3]: SMS send timestamp in UTC time, int
+                          description: |-
+                            Successfully send details(one list for 
+                            one num)
+                        fdr:
+                          type: array
+                          items:
+                            type: object
+                            properties: {}
+                            description: >-
+                              [0]: recipients num index(based on 
+
+                              group sending),int 
+
+                              [1]: num, string 
+
+                              [2]: SMS sending port(1.01,2.02,...), 
+
+                              string 
+
+                              [3]: SMS send timestamp in UTC time.int
+
+                              [4]: Progress reason, code+details[refer to 1.0
+                              API] 
+
+                              [5]: Carrier reason, code+ description. Valid when
+                              [4] is failed to send
+                          description: Fail send details(one num one list)
+                      required:
+                        - tid
+                        - sending
+                        - sent
+                        - failed
+                        - unsent
+                        - sdr
+                        - fdr
+                    description: Detail status report
+                required:
+                  - type
+                  - rpt_rum
+                  - rpts
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: "{\r\n    \"type\": \"status-report\",\r\n    \"rpt_rum\": \"1\",\r\n    \"rpts\": [\r\n        {\r\n            \"tid\": 1,\r\n            ...\r\n        },\r\n        {\r\n            \"tid\": 2,\r\n            ...\r\n        },\r\n        ...\r\n    ]\r\n}"
           headers: {}
       security: []
   /goip_get_esims.html:
@@ -1499,6 +1385,7 @@ paths:
                               - exust
                               - op
                               - reason
+                              - 01JKF8VV7JBRWYHHFD7G54PRSV
                               - status
                             description: ESIM information array item description
                           description: >-
@@ -1520,7 +1407,7 @@ paths:
                   - ports
               examples:
                 '1':
-                  summary: Successful Instance
+                  summary: Successful instance
                   value:
                     code: 200
                     reason: OK
@@ -1529,41 +1416,63 @@ paths:
                       - port: 5
           headers: {}
       security: []
-  /goip_send_cmd.html:
+  /goip_write_esims.html:
     post:
-      summary: Add SIM Card Numbers
+      summary: Write ESIM
       deprecated: false
-      description: "Reference： \ninformation in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_number(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter\nExample:\nsim_number(192)=1358021178&sim_number(196)=123456762221\n192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1. \nSo, 25.01=(25 - 1)*8+(1-1) =192.\n196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. \nSo, \t25.05=(25-1)*8+(5-1)=196."
+      description: |-
+        The write operations for ESIM  cannot be completed immediately.
+        Message description :
+        host: Device IP address
+        port: Device webpage management port, default value is 80.
       tags:
-        - Add SIM Card Numbers
+        - ESIM
       parameters:
+        - name: version
+          in: query
+          description: API version
+          required: true
+          schema:
+            type: string
+            default: '1.0'
+            examples:
+              - '1.0: Compatible with previous API'
+              - '1.1: Support for the description of this document'
         - name: username
           in: query
-          description: Device Username
+          description: Device username
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
-          description: Device Password
+          description: Device password
           required: true
-          example: root
-          schema:
-            type: string
-        - name: op
-          in: query
-          description: ''
-          required: true
-          example: set
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              type: string
-            example: sim_number(n)=xxx&sim_number(n)=xxx
+              type: object
+              properties:
+                port:
+                  type: integer
+                  description: Port number (value from 1)
+                slot:
+                  type: integer
+                  description: Slot number (value from 1)
+                ac:
+                  type: string
+                  description: Activation code
+                cc:
+                  type: string
+                  description: Confirmation code
+              required:
+                - port
+                - slot
+                - ac
+                - cc
       responses:
         '200':
           description: ''
@@ -1574,72 +1483,111 @@ paths:
                 properties:
                   code:
                     type: integer
+                    description: Interface processing result code
+                    examples:
+                      - 200
                   reason:
                     type: string
-                  par_set:
-                    type: integer
+                    description: Interface processing result reason
+                    examples:
+                      - OK
+                  ports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                          description: Port number (value from 1)
+                          examples:
+                            - 1
+                            - 32
+                            - 64
+                        slot:
+                          type: integer
+                          description: slot number (value from 1)
+                          examples:
+                            - 1
+                            - 32
+                            - 64
+                        status:
+                          type: integer
+                          description: >-
+                            The current esim profile submission write operation
+                            status,
+                      required:
+                        - port
+                        - slot
+                        - status
+                      description: Description of the query result item
+                    description: An array of query results
+                required:
+                  - code
+                  - reason
+                  - ports
               examples:
                 '1':
-                  summary: Successful Instance
-                  value:
-                    code: 0
-                    reason: OK
-                    par_set: 2
+                  summary: Successful instance
+                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"ports\": [\r\n        {\r\n            \"port\": 1,\r\n             ...\r\n        },\r\n        ...\r\n    ]\r\n}"
           headers: {}
       security: []
-  /goip_send_at.html:
-    get:
-      summary: AT Command
+  /goip_delete_esims.html:
+    post:
+      summary: Delete ESIM
       deprecated: false
-      description: >-
-        1.Application will send a HTTP GET request to the device, device will
-        return HTTP 200 OK response to the application.
-
-        2.Request URL
-
-        http://host[:port]/goip_send_at.html
-
-        host: device IP address
-
-        port: web port，default is 80，(Optiona)
+      description: |-
+        The delete operations for ESIM cannot be completed immediately.
+        Message description :
+        host: Device IP address
+        port: Device webpage management port, default value is 80.
       tags:
-        - AT Command
+        - ESIM
       parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: '1.0'
+            examples:
+              - '1.0: Compatible with previous API'
+              - '1.1: Support for the description of this document'
         - name: username
           in: query
-          description: 'Device Usuername '
+          description: Device username
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
-          description: Device Password
+          description: Device password
           required: true
-          example: root
           schema:
             type: string
-        - name: port
-          in: query
-          description: Which port to send AT(begin with port 1)
-          required: true
-          example: ''
-          schema:
-            type: string
-        - name: at
-          in: query
-          description: AT command code
-          required: true
-          example: ''
-          schema:
-            type: string
-        - name: timeout
-          in: query
-          description: timeout(second)
-          required: false
-          schema:
-            type: string
-            default: '120'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                port:
+                  type: integer
+                  description: port number (value from 1)
+                  examples:
+                    - 1
+                    - 32
+                    - 64
+                slot:
+                  type: integer
+                  description: slot number (value from 1)
+                  examples:
+                    - 1
+                    - 32
+                    - 64
+              required:
+                - port
+                - slot
       responses:
         '200':
           description: ''
@@ -1649,89 +1597,183 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: string
-                    description: Return code，0 means success
-                    enum:
-                      - '0'
-                      - '1'
-                      - '2'
-                      - '3'
-                      - '4'
-                      - '5'
+                    type: integer
+                    examples:
+                      - 200
                   reason:
                     type: string
-                    description: Reason describe
-                  resp:
-                    type: string
-                    description: AT command response
-                  max-port:
-                    type: string
-                    description: Specify the max port
-                  port:
-                    type: string
-                    description: |-
-                      Means available port
-                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
+                    examples:
+                      - OK
+                  ports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                        slot:
+                          type: integer
+                        status:
+                          type: integer
+                          enum:
+                            - 1
+                            - 2
+                            - 3
+                      required:
+                        - port
+                        - slot
+                        - status
+                required:
+                  - code
+                  - reason
+                  - ports
               examples:
                 '1':
                   summary: Successful instance
-                  value: "Example:\nhttp://192.168.1.67/goip_send_at.html?username=root&password=root&port=5&at=ati\n\nResponse information as follow:\n\n{\n    \"code\": 0,\n    \"reason\": \"OK\",\n    \"resp\": \"ati\r\nQuectel_Ltd\r\nQuectel_M35\r\nRevision: M35FAR01A03\r\nOK\r\n\"\n}\n\n\nNotes: # and % will be ignore by the browser, they need to replace by %23 and %2B"
+                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"ports\": [\r\n        {\r\n            \"port\": 1,\r\n            \"slot\": 1,\r\n            \"status\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
           headers: {}
       security: []
-  /goip_send_ussd.html:
+  /:
     get:
-      summary: USSD API
+      summary: Receive SMS
       deprecated: false
-      description: >
-        1.Application will send a HTTP GET request to the device, device will
-        return HTTP 200 OK response to the application.
+      description: >-
+        1.Device will send SMS to server by POST request, while it get SMS from
+        operator. 
 
-        2.Request URL
+        2.While forwarding SMS, device send a request to server first, so even
+        device in LAN, and server in a public net, it also can work effectively
+
+        3.URL：Default set by device，server can revise it in SMS sending quest
+        message.
       tags:
-        - USSD API
+        - Receive SMS
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+            default: '1.1'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Data type
+                  sms_num:
+                    type: string
+                    description: Total SMS num
+                  sms:
+                    type: array
+                    items:
+                      type: string
+                    description: >-
+                      For saving the bandwidth, SMS content also storage in a
+                      array. 
+
+                      [0]: Delivery report flag,0:normal SMS, 1:This is a
+                      delivery report 
+
+                      [1]: Receive report(‘1.01’,’1.02’) 
+
+                      [2]: timestamp while device got this SMS 
+
+                      [3]: Sender(If Delivery report flag set to 1, then sender
+                      should be SMCC) 
+
+                      [4]: Recipient(If Delivery report flag set to 1,then
+                      recipient should be the 
+
+                      original recipient. ) 
+
+                      [5]: SMS content： 
+
+                      Delivery report: "code scts", code is 0 for successful
+                      delivery, utf-8 
+
+                      Ordinary SMS: BASE64 encoding of utf-8 
+                required:
+                  - sms
+                  - type
+                  - sms_num
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: "{\r\n    \"type\": \"recv-sms\",\r\n    \"sms_num\":n,\r\n    \"sms\": [\r\n        [],\r\n    …,\r\n        []\r\n    ]\r\n}"
+          headers: {}
+      security: []
+  /goip_get_sms.html:
+    get:
+      summary: Query SMS
+      deprecated: false
+      description: >-
+        1.Customers can actively query the SMS received by the device through
+        HTTP GET/POST request.
+
+        2.Query process：
+
+        1).Query all messages received by the device without the query
+        parameters (except for user-verified parameters). 
+
+        2).Use the value of next_sms returned by the device as the value of the
+        sms_id parameter to query subsequent SMS messages. 
+
+        3).If the device restarts, return a different ssrc synchronization
+        source ID and return to step 1. 
+
+        4).Repeat step 2
+
+        3.Message description :
+
+        host: Device IP address 
+
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Query SMS
       parameters:
         - name: username
           in: query
           description: Device Username
           required: true
+          example: root
           schema:
             type: string
         - name: password
           in: query
-          description: Device Password
+          description: Device  Password
           required: true
+          example: root
           schema:
             type: string
-        - name: port
+        - name: sms_id
           in: query
-          description: Which port to send ussd(begin with port 1)
-          required: true
-          schema:
-            type: string
-        - name: ussd
-          in: query
-          description: Ussd command code
-          required: true
-          schema:
-            type: string
-        - name: timeout
-          in: query
-          description: timeout (second)
+          description: Start SMS ID
           required: false
+          example: '1'
           schema:
             type: string
-            default: '120'
-        - name: retries
+        - name: sms_num
           in: query
-          description: >-
-            Number of failed retries.
-
-            Note: the top-up service should set this field to 0 and check if
-            success by USSD query.
+          description: 'Specify the number of SMS to be queried '
           required: false
+          example: 0：Query all SMS
           schema:
             type: string
-            default: '3'
+        - name: sms_del
+          in: query
+          description: Delete the SMS that has been returned by the query
+          required: false
+          example: "0：Do not delete，\_1：delete"
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -1741,45 +1783,59 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: string
-                    description: Return code，0 means success
-                    enum:
-                      - '0'
-                      - '1'
-                      - '2'
-                      - '3'
-                      - '4'
-                      - '5'
-                      - '6'
+                    type: integer
+                    description: Operation code
                   reason:
                     type: string
-                    description: Reason describe
-                  ussd:
+                    description: Reason description
+                  ssrc:
                     type: string
-                    description: Ussd command response
-                  max-port:
-                    type: string
-                    description: Specify the max port
-                  port:
-                    type: string
-                    description: |-
-                      Means available port
-                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
+                    description: >-
+                      Synchronization source identifier The device generates a
+                      new ssrc each time it runs.So the value changes, re-query
+                  sms_num:
+                    type: integer
+                    description: Number of SMS queried
+                  next_sms:
+                    type: integer
+                    description: The next SMS ID
+                  data:
+                    type: integer
+                    description: >-
+                      Queryed SMS content
+
+                      For saving the bandwidth, SMS content also storage in a
+                      array. [0]: Delivery report flag,0:normal SMS, 1:This is a
+                      delivery report [1]: Receive report(‘1.01’,’1.02’)
+
+                      [2]: timestamp while device got this SMS
+
+                      [3]: Sender(If Delivery report flag set to 1, then sender
+                      should be SMCC)
+
+                      [4]: Recipient(If Delivery report flag set to 1,then
+                      recipient should be the original recipient. )
+
+                      [5]: SMS content：
+
+                      Delivery report: "code scts", code is 0 for successful
+                      delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
                 required:
                   - code
                   - reason
-                  - ussd
-                  - max-port
-                  - port
+                  - ssrc
+                  - sms_num
+                  - next_sms
+                  - data
               examples:
                 '1':
-                  summary: Successful instance
-                  value: "Example:\r\n\r\nhttp://192.168.1.67/goip_send_ussd.html?username=root&passowrd=root&port=5&ussd=123\r\n\r\nResponse information as follow：\r\n{code:0,reason:”OK”,resp:”your balance is 50.00$”}"
+                  summary: Data
+                  value: "{\r\n  \"code\": 0,\r\n  \"reason\": \"OK\",\r\n  \"ssrc\": \"0123456789abcdef\",\r\n  \"sms_num\": 2,\r\n  \"next_sms\": 3,\r\n  \"data\": [\r\n    [\r\n      0,\r\n      \"1B\",\r\n      1466506477,\r\n      \"10010\",\r\n      \"13265825775\",\r\n      \"5bCK5pWs55qE55So5oi377yM5oKo5aW977yB5o6o6I2Q5oKo5L2/55So44CQ5omL5py66JCl5Lia5Y6F44CR5LiA56uZ5byP5YWN5rWB6YeP5pyN5Yqh5bmz5Y+wIGh0dHA6Ly91LjEwMDEwLmNuL2R0Y2Qg77yM6L275p2+5p+l6K+i6K+d6LS544CB5L2Z6aKd5Y+K6K+m5Y2V77yb5oiW5Zue5aSN5Lul5LiL5pWw5a2X5Luj56CB6I635Y+W5oKo6ZyA6KaB55qE5pyN5Yqh77yaDQoxMDEu5b2T5pyI6K+d6LS577ybDQoxMDIu5Y+v55So5L2Z6aKd77ybDQowLuWNh+e6pzRH77ybDQoxLuivnei0ueWPiuenr+WIhu+8mw0KMi7otKbmiLfmn6Xor6LvvJsNCjMu5YWF5YC877ybDQo0LuWuouaIt+acjeWKoe+8mw0KNS7kuJrliqHlip7nkIbvvJsNCjYu5aKe5YC85Lia5Yqh77ybDQo3LuecgeS7veS4k+WMuu+8mw0KOS7ng63ngrnkv4PplIDjgIINCuW5v+S4nOiBlOmAmuOAggAAAAA=\"\r\n    ],\r\n    [\r\n      0\r\n     \"1B\",\r\n      1466506670,\r\n      \"10010\",\r\n      \"13265825775\",\r\n      \"5bCK5pWs55qE55So5oi377yM5oKo5aW977yB5o6o6I2Q5oKo5L2/55So44CQ5omL5py66JCl5Lia5Y6F44CR5LiA56uZ5byP5YWN5rWB6YeP5pyN5Yqh5bmz5Y+wIGh0dHA6Ly91LjEwMDEwLmNuL2R0Y2Qg77yM6L275p2+5p+l6K+i6K+d6LS544CB5L2Z6aKd5Y+K6K+m5Y2V77yb5oiW5Zue5aSN5Lul5LiL5pWw5a2X5Luj56CB6I635Y+W5oKo6ZyA6KaB55qE5pyN5Yqh77yaDQoxMDEu5b2T5pyI6K+d6LS577ybDQoxMDIu5Y+v55So5L2Z6aKd77ybDQowLuWNh+e6pzRH77ybDQoxLuivnei0ueWPiuenr+WIhu+8mw0KMi7otKbmiLfmn6Xor6LvvJsNCjMu5YWF5YC877ybDQo0LuWuouaIt+acjeWKoe+8mw0KNS7kuJrliqHlip7nkIbvvJsNCjYu5aKe5YC85Lia5Yqh77ybDQo3LuecgeS7veS4k+WMuu+8mw0KOS7ng63ngrnkv4PplIDjgIINCuW5v+S4nOiBlOmAmuOAggAAAAA=\"\r\n    ]\r\n  ]\r\n}"
           headers: {}
       security: []
   /goip_get_status.html:
     get:
-      summary: Status Notification
+      summary: Status notification
       deprecated: false
       description: >-
         1.This device will send a HTTP POST request which include the device
@@ -1796,7 +1852,7 @@ paths:
 
         port: Device webpage management port, default value is 80.
       tags:
-        - Status Notification
+        - Status notification
       parameters:
         - name: url
           in: query
@@ -1895,7 +1951,7 @@ paths:
                   summary: dev-status
                   value: "{\r\n    \"type\": \"dev-status\",\r\n    \"seq\": 1,\r\n    \"expires\": 180,\r\n    \"mac\": \"00-30-f1-01-02-03\",\r\n    \"ip\": \"192.168.1.67\",\r\n    \"max-ports\": 32,\r\n    \"max-slots\": \"4\",\r\n    \"status\": [\r\n        {\r\n            \"port\": \"1A\"\r\n            ...\r\n        },\r\n        {\r\n            \"port\": \"2A\"\r\n            ...\r\n        },\r\n        {\r\n            \"port\": \"3A\"\r\n            ...\r\n        },\r\n        ...\r\n    ]\r\n}"
           headers: {}
-        x-200:成功:
+        '201':
           description: ''
           content:
             application/json:
@@ -2014,9 +2070,425 @@ paths:
                     led: 1
           headers: {}
       security: []
+  /goip_get_sms_stat.html:
+    get:
+      summary: Query SMS statistics
+      deprecated: false
+      description: >-
+        1.The client can actively query the short message statistics of the
+        device through the HTTP GET request.
+
+        2.host: Device IP address
+           port: Device webpage management port, default value is 80.
+      tags:
+        - Query SMS statistics
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          example: '1.0'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: xxx
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          example: xxx
+          schema:
+            type: string
+        - name: ports
+          in: query
+          description: >-
+            The specified port number (valued from 1). The values are as
+            follows:
+
+            1)all: all ports;
+
+            2)Specify a single port;
+
+            1-2, 4: Port numbers separated by short numbers, specifying multiple
+            ports, where "-" indicates a continuous port number;
+          required: false
+          example: all
+          schema:
+            type: string
+        - name: slots
+          in: query
+          description: >-
+            The specified card slot number (value from 1). The values are as
+            follows:
+
+            1).Do not specify: current card
+
+            2)all: all card slots;
+
+            3)2: Specify a single card slot;
+
+            1-2, 4: A card slot number separated by a short number, specifying a
+            plurality of card slots, where "-" indicates a continuous card slot
+            number;
+          required: false
+          example: Current card
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: |-
+            Statistic type. The values are as follows:
+            1)0: The last hour;
+            2)1: The last two hours;
+            3)2: today;
+            3: cumulative;
+          required: false
+          example: '0'
+          schema:
+            type: string
+            enum:
+              - '0'
+              - '1'
+              - '2'
+              - '3'
+            default: '0'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                  count:
+                    type: integer
+                    description: Number of statistical results
+                  stats:
+                    type: array
+                    items:
+                      type: string
+                    description: |-
+                      Array of statistical results (stat
+                      results are as follows)
+                  port:
+                    type: integer
+                    description: Port number (value from 1)
+                  slot:
+                    type: integer
+                    description: Slot number (value from 1)
+                  received:
+                    type: integer
+                    description: Number of SMS received
+                  sent:
+                    type: integer
+                    description: Number of SMS sent
+                  sent_ok:
+                    type: integer
+                    description: Number of successful SMS sent
+                  sent_failed:
+                    type: integer
+                    description: Number of failed SMS sent
+                  con_failed:
+                    type: integer
+                    description: Number of consecutive failed SMS
+                  unsent:
+                    type: integer
+                    description: Number of unsent SMS
+                  sending:
+                    type: integer
+                    description: Number of SMS being sent
+                required:
+                  - code
+                  - reason
+                  - count
+                  - stats
+                  - port
+                  - slot
+                  - received
+                  - sent
+                  - sent_ok
+                  - sent_failed
+                  - con_failed
+                  - unsent
+                  - sending
+              examples:
+                '1':
+                  summary: Response
+                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"count\":n,\r\n    \"stats\": [\r\n        {\r\n            \"port\":xxx,…\r\n        },…\r\n    ]\r\n}"
+          headers: {}
+      security: []
+  /goip_get_call_stat.html:
+    get:
+      summary: Query call statistics
+      deprecated: false
+      description: >-
+        1.The client can actively query the call statistics of the device
+        through the HTTP GET request.
+
+        2.Message description :
+
+        host: Device IP address
+
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Query call statistics
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: '1.0'
+            examples:
+              - '1.0: Compatible with previous API'
+              - '1.1: Support for the description of this documen'
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+        - name: ports
+          in: query
+          description: The specified port number (valued from 1)
+          required: false
+          schema:
+            type: string
+            examples:
+              - 'all: all ports'
+              - '2: Specify a single port'
+              - >-
+                1-2, 4: Port numbers separated by short numbers, specifying
+                multiple ports, where "-" indicates a continuous port number
+            default: all
+        - name: slots
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: Current card
+            examples:
+              - 'Do not specify: current card'
+              - 'all: all card slots'
+              - '2: Specify a single card slot'
+              - >-
+                1-2, 4: A card slot number separated by a short number,
+                specifying a plurality of card slots, where "-" indicates a
+                continuous card slot number
+        - name: type
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: '0'
+            enum:
+              - '0'
+              - '1'
+              - '2'
+              - '3'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                  count:
+                    type: integer
+                    description: Number of statistical results
+                  stats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                          description: Port number (value from 1)
+                        slot:
+                          type: integer
+                          description: Slot number (value from 1)
+                        calls:
+                          type: integer
+                          description: Number of calling
+                        alerted:
+                          type: integer
+                          description: Number of alerting
+                        connected:
+                          type: integer
+                          description: Number of connected calls
+                        con_failed:
+                          type: integer
+                          description: Number of failed calls
+                        nc:
+                          type: string
+                          description: >-
+                            No Carriers success ratio ("n/m"), the numerator n
+                            is the success number, and the
+
+                            denominator m is the total number
+                        pdd:
+                          type: integer
+                          description: PDD
+                        acd:
+                          type: integer
+                          description: ACD
+                        asr:
+                          type: integer
+                          description: ASR percentage value
+                        tcd:
+                          type: integer
+                          description: |-
+                            Cumulative call duration
+                            (minutes)
+                        act_tcd:
+                          type: integer
+                          description: |-
+                            Actual cumulative call
+                            duration (seconds)
+                      required:
+                        - port
+                        - slot
+                        - calls
+                        - alerted
+                        - connected
+                        - con_failed
+                        - nc
+                        - pdd
+                        - acd
+                        - asr
+                        - tcd
+                        - act_tcd
+                    description: 'Array of statistical results '
+                required:
+                  - code
+                  - reason
+                  - stats
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+                    stats:
+                      - port: 1
+                        slot: 1
+                        calls: 1
+                        alerted: 1
+                        connected: 1
+                        con_failed: 0
+                        nc: 0/0
+                        pdd: 0
+                        acd: 32
+                        asr: 100
+                        tcd: 1
+                        act_tcd: 32
+                      - port: 2
+                        slot: 1
+                        calls: 0
+                        alerted: 0
+                        connected: 0
+                        con_failed: 0
+                        nc: 0/0
+                        pdd: 0
+                        acd: 0
+                        asr: 0
+                        tcd: 0
+                        act_tcd: 0
+          headers: {}
+      security: []
+  /goip_send_cmd.html:
+    post:
+      summary: Add SIM Card Numbers
+      deprecated: false
+      description: "Reference： \ninformation in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_number(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter\nExample:\nsim_number(192)=1358021178&sim_number(196)=123456762221\n192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1. \nSo, 25.01=(25 - 1)*8+(1-1) =192.\n196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. \nSo, \t25.05=(25-1)*8+(5-1)=196."
+      tags:
+        - 'Send operate command '
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: op
+          in: query
+          description: ''
+          required: true
+          example: set
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sim_number(n):
+                  type: string
+              required:
+                - sim_number(n)
+            example: ''
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  reason:
+                    type: string
+                  par_set:
+                    type: integer
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 0
+                    reason: OK
+                    par_set: 2
+          headers: {}
+      security: []
   /In the 'SMS/MMS Settings' menu of the device, the 'MMS Inbox' page allows you to configure the push receiving server address:
     post:
-      summary: MMS receiving
+      summary: Receive MMS
       deprecated: false
       description: >-
         At this stage, the main function is to push the received MMS content to
@@ -2027,7 +2499,7 @@ paths:
         header fields may not exist). In addition, header fields starting with
         'Emms-' are custom fields, while others are standard HTTP fields:
       tags:
-        - MMS receiving
+        - Receive MMS
       parameters:
         - name: Emms-Subject
           in: header
@@ -2087,384 +2559,59 @@ paths:
                 properties: {}
           headers: {}
       security: []
-  /goip_pause_sms.html:
-    post:
-      summary: Pause SMS task
+  /goip_send_at.html:
+    get:
+      summary: AT Command
       deprecated: false
       description: >-
-        When a SMS task is still waiting to be sent in the send queue, one or
-        more SMS can be paused.
+        1.Application will send a HTTP GET request to the device, device will
+        return HTTP 200 OK response to the application.
 
-        Message description :
+        2.Request URL
 
-        host: Device IP address
+        http://host[:port]/goip_send_at.html
 
-        port: Device webpage management port, default value is 80.
+        host: device IP address
+
+        port: web port，default is 80，(Optional)
       tags:
-        - SMS Sending
+        - AT Command
       parameters:
-        - name: version
-          in: query
-          description: |-
-            API version
-            This document describes specification support only
-          required: false
-          example: '1.1'
-          schema:
-            type: string
         - name: username
           in: query
-          description: ''
+          description: 'Device Usuername '
           required: true
-          example: Device username
+          example: root
           schema:
             type: string
         - name: password
           in: query
-          description: ''
+          description: Device Password
           required: true
-          example: Device password
+          example: root
           schema:
             type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: string
-            example: |-
-              {
-                  "tids": [tid1,tid2,…,tidn
-                  ]
-              }
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    examples:
-                      - 200
-                    description: Interface processing result code
-                  reason:
-                    type: string
-                    description: 'Interface processing results '
-                    examples:
-                      - OK
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        tid:
-                          type: string
-                          description: Task ID
-                        status:
-                          type: string
-                          description: Task status code
-                          enum:
-                            - 0 OK
-                            - 1 Invalid User
-                            - 2 Invalid Port
-                            - 3 USSD Expected
-                            - 4 Pending USSD
-                            - 5 SIM Unregistered
-                            - 6 TImeout
-                            - 7 Server Error
-                            - 8 SMS expected
-                            - 9 TO expected
-                            - 10 Pending Transaction
-                            - 11 TID Expected
-                            - 12 From Expected
-                      required:
-                        - status
-                        - tid
-                    description: >-
-                      Task processing results.
-
-                      When there is no tids in the request, this field is not
-                      included in the result.
-                required:
-                  - reason
-                  - code
-              examples:
-                '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\": \"1\",\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\": \"2\",\r\n            \"status\": \"9 TO expected\"\r\n        },\r\n        {\r\n            \"tid\": \"3\",\r\n            \"status\": \"3 USSD Expected\"\r\n        },\r\n        ...\r\n    ]\r\n}"
-          headers: {}
-      security: []
-  /goip_write_esims.html:
-    post:
-      summary: Write ESIM
-      deprecated: false
-      description: |-
-        The write operations for ESIM  cannot be completed immediately.
-        Message description :
-        host: Device IP address
-        port: Device webpage management port, default value is 80.
-      tags:
-        - ESIM
-      parameters:
-        - name: version
+        - name: port
           in: query
-          description: API version
+          description: Which port to send AT(begin with port 1)
           required: true
+          example: ''
           schema:
             type: string
-            default: '1.0'
-            examples:
-              - '1.0: Compatible with previous API'
-              - '1.1: Support for the description of this document'
-        - name: username
+        - name: at
           in: query
-          description: Device username
+          description: AT command code
           required: true
+          example: ''
           schema:
             type: string
-        - name: password
+        - name: timeout
           in: query
-          description: Device password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                port:
-                  type: integer
-                  description: Port number (value from 1)
-                slot:
-                  type: integer
-                  description: Slot number (value from 1)
-                ac:
-                  type: string
-                  description: Activation code
-                cc:
-                  type: string
-                  description: Confirmation code
-              required:
-                - port
-                - slot
-                - ac
-                - cc
-            example: ''
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: Interface processing result code
-                    examples:
-                      - 200
-                  reason:
-                    type: string
-                    description: Interface processing result reason
-                    examples:
-                      - OK
-                  ports:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        port:
-                          type: integer
-                          description: Port number (value from 1)
-                          examples:
-                            - 1
-                            - 32
-                            - 64
-                        slot:
-                          type: integer
-                          description: slot number (value from 1)
-                          examples:
-                            - 1
-                            - 32
-                            - 64
-                        status:
-                          type: integer
-                          description: >-
-                            The current esim profile submission write operation
-                            status,
-                      required:
-                        - port
-                        - slot
-                        - status
-                      description: Description of the query result item
-                    description: An array of query results
-                required:
-                  - code
-                  - reason
-                  - ports
-              examples:
-                '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"ports\": [\r\n        {\r\n            \"port\": 1,\r\n             ...\r\n        },\r\n        ...\r\n    ]\r\n}"
-          headers: {}
-      security: []
-  /goip_resume_sms.html:
-    post:
-      summary: Resume paused SMS task
-      deprecated: false
-      description: |-
-        Resume the sending of one or more suspended SMS tasks. 
-        Message description :
-        host: Device IP address
-        port: Device webpage management port, default value is 80.
-      tags:
-        - SMS Sending
-      parameters:
-        - name: version
-          in: query
-          description: |-
-            API version
-            This document describes 
-            specification support only
-          required: false
-          example: '1.1'
-          schema:
-            type: string
-        - name: username
-          in: query
-          description: Device username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: string
-            example: |-
-              {
-                  "tids": [tid1,tid2,…,tidn
-                  ]
-              }
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: Interface processing result code
-                    examples:
-                      - 200
-                  reason:
-                    type: string
-                    description: 'Interface processing results '
-                    examples:
-                      - OK
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        tid:
-                          type: string
-                        status:
-                          type: string
-                      required:
-                        - status
-                        - tid
-                    description: >-
-                      Task processing results.
-
-                      When there is no tids in the request, this field is not
-                      included in the result.
-                required:
-                  - reason
-                  - code
-              examples:
-                '1':
-                  summary: Successful Instance
-                  value:
-                    code: 200
-                    reason: OK
-                    results:
-                      - tid: '1'
-                        status: 0 OK
-                      - tid: '2'
-                        status: 2 Invalid Port
-          headers: {}
-      security: []
-  /goip_delete_esims.html:
-    post:
-      summary: Delete ESIM
-      deprecated: false
-      description: |-
-        The delete operations for ESIM cannot be completed immediately.
-        Message description :
-        host: Device IP address
-        port: Device webpage management port, default value is 80.
-      tags:
-        - ESIM
-      parameters:
-        - name: version
-          in: query
-          description: API version
+          description: timeout(second)
           required: false
           schema:
             type: string
-            default: '1.0'
-            examples:
-              - '1.0: Compatible with previous API'
-              - '1.1: Support for the description of this document'
-        - name: username
-          in: query
-          description: Device username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                port:
-                  type: integer
-                  description: port number (value from 1)
-                  examples:
-                    - 1
-                    - 32
-                    - 64
-                slot:
-                  type: integer
-                  description: slot number (value from 1)
-                  examples:
-                    - 1
-                    - 32
-                    - 64
-              required:
-                - port
-                - slot
-            example: ''
+            default: '120'
       responses:
         '200':
           description: ''
@@ -2474,244 +2621,113 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: integer
-                    examples:
-                      - 200
+                    type: string
+                    description: Return code，0 means success
+                    enum:
+                      - '0'
+                      - '1'
+                      - '2'
+                      - '3'
+                      - '4'
+                      - '5'
                   reason:
                     type: string
-                    examples:
-                      - OK
-                  ports:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        port:
-                          type: integer
-                        slot:
-                          type: integer
-                        status:
-                          type: integer
-                          enum:
-                            - 1
-                            - 2
-                            - 3
-                      required:
-                        - port
-                        - slot
-                        - status
-                required:
-                  - code
-                  - reason
-                  - ports
+                    description: Reason describe
+                  resp:
+                    type: string
+                    description: AT command response
+                  max-port:
+                    type: string
+                    description: Specify the max port
+                  port:
+                    type: string
+                    description: |-
+                      Means available port
+                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
               examples:
                 '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"ports\": [\r\n        {\r\n            \"port\": 1,\r\n            \"slot\": 1,\r\n            \"status\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
-          headers: {}
-      security: []
-  /goip_remove_sms.html:
-    post:
-      summary: Delete SMS task
-      deprecated: false
-      description: |-
-        Delete one or more SMS tasks waiting to be sent in the send queue.
-        Message description :
-        host: Device IP address
-        port: Device webpage management port, default value is 80.
-      tags:
-        - SMS Sending
-      parameters:
-        - name: version
-          in: query
-          description: |-
-            API version
-            This document describes specification support only
-          required: false
-          example: '1.1'
-          schema:
-            type: string
-        - name: username
-          in: query
-          description: Device username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: string
-            example: |-
-              {
-                  "tids": [tid1,tid2,…,tidn
-                  ]
-              }
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: Interface processing result code
-                    examples:
-                      - 200
-                  reason:
-                    type: string
-                    description: 'Interface processing results '
-                    examples:
-                      - OK
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        tid:
-                          type: string
-                          description: Task ID
-                        status:
-                          type: string
-                          description: |-
-                            The status code and reason description of 
-                            the task
-                          enum:
-                            - 0 OK
-                            - 1 Invalid User
-                            - 2 Invalid Port
-                            - 3 USSD Expected
-                            - 4 Pending USSD
-                            - 5 SIM Unregistered
-                            - 6 Timeout
-                            - 7 Server Error
-                            - 8 SMS expected
-                            - 9 TO expected
-                            - 10 Pending Transaction
-                            - 11 TID Expected
-                            - 12 From Expected
-                      required:
-                        - status
-                        - tid
-                    description: >-
-                      Task processing results .
+                  summary: Successful instance
+                  value: >-
+                    Example:
 
-                      If there is no TIDS in the request, this field is not
-                      included in the result
-                required:
-                  - reason
-                  - results
-                  - code
-              examples:
-                '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\": \"1\",\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\": \"2\",\r\n            \"status\": \"3 USSD Expected\"\r\n        },\r\n        ...\r\n    ]\r\n}"
+                    http://192.168.1.67/goip_send_at.html?username=root&password=root&port=5&at=ati
+
+
+                    Response information as follow:
+
+
+                    {
+                        "code": 0,
+                        "reason": "OK",
+                        "resp": "ati\r\nQuectel_Ltd\r\nQuectel_M35\r\nRevision: M35FAR01A03\r\nOK\r\n"
+                    }
+
+
+
+                    Notes: # and % will be ignore by the browser, they need to
+                    replace by %23 and %2B
           headers: {}
       security: []
-  /goip_get_tasks.html:
+  /goip_send_ussd.html:
     get:
-      summary: Query SMS task
+      summary: USSD API
       deprecated: false
-      description: |-
-        Query the SMS task waiting to be sent in the send queue. 
-        Message description :
-        host: Device IP address
-        port: Device webpage management port, default value is 80.
+      description: >
+        1.Application will send a HTTP GET request to the device, device will
+        return HTTP 200 OK response to the application.
+
+        2.Request URL
+
+        http://host[:port]/goip_send_ussd.html
+
+        host: device IP address
+
+        port: web port，default is 80，(Optional)
       tags:
-        - SMS Sending
+        - USSD API
       parameters:
-        - name: version
-          in: query
-          description: |-
-            API Version
-            This document describes 
-            specification support only
-          required: false
-          example: '1.1'
-          schema:
-            type: string
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
         - name: port
           in: query
-          description: Send port. Starting from 1
+          description: Which port to send ussd(begin with port 1)
           required: true
           schema:
-            type: integer
-            examples:
-              - 1
-              - 32
-              - 64
-        - name: has_content
+            type: string
+        - name: ussd
           in: query
-          description: Whether to bring a text message in the result
-          required: false
-          schema:
-            type: integer
-            default: 0
-            enum:
-              - 0
-              - 1
-        - name: pos
-          in: query
-          description: |-
-            The starting position of the request. 
-            0 represents the 
-            beginning of the first task
+          description: Ussd command code
           required: true
           schema:
-            type: integer
-        - name: num
+            type: string
+        - name: timeout
           in: query
-          description: |-
-            The number of 
-            Request messages
+          description: timeout (second)
           required: false
           schema:
-            type: integer
-            default: 10
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                tids:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      tid:
-                        type: integer
-                        description: Task ID
-                    required:
-                      - tid
-                  description: The task ID to be query.
-              required:
-                - tids
-            example: |-
-              {
-                  "tids": [tid1,tid2,…,tidn
-                  ]
-              }
+            type: string
+            default: '120'
+        - name: retries
+          in: query
+          description: >-
+            Number of failed retries.
+
+            Note: the top-up service should set this field to 0 and check if
+            success by USSD query.
+          required: false
+          schema:
+            type: string
+            default: '3'
       responses:
         '200':
           description: ''
@@ -2721,251 +2737,44 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: integer
-                    examples:
-                      - 200
-                    description: Interface processing result code
+                    type: string
+                    description: Return code，0 means success
+                    enum:
+                      - '0'
+                      - '1'
+                      - '2'
+                      - '3'
+                      - '4'
+                      - '5'
+                      - '6'
                   reason:
                     type: string
-                    description: 'Interface processing results '
-                    examples:
-                      - OK
-                  total_num:
-                    type: integer
-                    description: The number of tasks
-                  task_num:
-                    type: integer
-                    description: Query the number of tasks returned
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        tid:
-                          type: integer
-                          description: Task id
-                        from:
-                          type: string
-                          description: |-
-                            One or more (commas, short horizontal 
-                            connections) send ports (from 1)
-                          default: Device selection
-                        to:
-                          type: string
-                          description: |-
-                            One or more (comma connected) message 
-                            receiver number.
-                        sms:
-                          type: string
-                          description: Message content
-                        chs:
-                          type: string
-                          description: Code set（utf8|base64）
-                          default: Utf-8
-                        coding:
-                          type: integer
-                          description: 'Specifies the encoding of the message sent. '
-                          default: 0
-                          enum:
-                            - 0 Do not specify
-                            - 1 USC2
-                            - 2 7bit
-                        state:
-                          type: integer
-                          description: Task status
-                          enum:
-                            - 0 normal
-                            - 1 suspended
-                      required:
-                        - tid
-                        - to
-                        - state
-                    description: Query the returned array of tasks
+                    description: Reason describe
+                  ussd:
+                    type: string
+                    description: Ussd command response
+                  max-port:
+                    type: string
+                    description: Specify the max port
+                  port:
+                    type: string
+                    description: |-
+                      Means available port
+                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
                 required:
-                  - reason
-                  - tasks
-                  - total_num
-                  - task_num
                   - code
+                  - reason
+                  - ussd
+                  - max-port
+                  - port
               examples:
                 '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"total_num\": 5,\r\n    \"task_num\": 2,\r\n    \"tasks\": [\r\n        {\r\n            \"tid\": 1,\r\n            \"from\": \"\",\r\n            \"to\": \"\",\r\n            \"sms\": \"hello123\",\r\n            \"chs\": \"utf-8\",\r\n            \"coding\": 0,\r\n            \"state\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
-          headers: {}
-      security: []
-  /Server or device configuration decision:
-    post:
-      summary: Sending status report
-      deprecated: false
-      description: >-
-        While SMS send successfully/failed/timeout, device will put the result
-        in cache, after meet condition(cache storage full or cache time reached
-        ),device will send POST request to report one or more task execute
-        result. If it is group sending, device will report execute result
-        periodically until all num in this group sending task get a result. 
-
-        Tips： 
-
-        1.tid related to the task ID in the send-sms message. 
-
-        2.sending, sent, failed are accumulated num in one task. 
-
-        3.Sdr(successfully send record) list records between 2 status-report,
-        server should keep before details. 
-
-        4.fdr(failed detail record) list records between 2 status-report, server
-        should keep before details.
-      tags:
-        - SMS Sending
-      parameters:
-        - name: version
-          in: query
-          description: |-
-            API version
-            This document describes specification support only
-          required: false
-          example: '1.1'
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    const: status-report
-                    description: Message type
-                  rpt_rum:
-                    type: string
-                    description: Report num
-                    default: '1'
-                    examples:
-                      - '1'
-                  rpts:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        tid:
-                          type: integer
-                          description: Related task ID
-                        sending:
-                          type: integer
-                          description: Total num of SMS in sending
-                        sent:
-                          type: integer
-                          description: Total num of SMS successfully send
-                        failed:
-                          type: integer
-                          description: Total num of SMS failed send
-                        unsent:
-                          type: integer
-                          description: 'Total SMS in cache waiting for send '
-                        sdr:
-                          type: array
-                          items:
-                            type: object
-                            properties: {}
-                            description: |-
-                              Success report is a array, 
-                              [0]: recipients num index(based on 
-                              group sending),int 
-                              [1]: num, string 
-                              [2]: SMS sending port(1.01,2.02,...), 
-                              string 
-                              [3]: SMS send timestamp in UTC time, int
-                          description: |-
-                            Successfully send details(one list for 
-                            one num)
-                        fdr:
-                          type: array
-                          items:
-                            type: object
-                            properties: {}
-                            description: >-
-                              [0]: recipients num index(based on 
-
-                              group sending),int 
-
-                              [1]: num, string 
-
-                              [2]: SMS sending port(1.01,2.02,...), 
-
-                              string 
-
-                              [3]: SMS send timestamp in UTC time.int
-
-                              [4]: Progress reason, code+details[refer to 1.0
-                              API] 
-
-                              [5]: Carrier reason, code+ description. Valid when
-                              [4] is failed to send
-                          description: Fail send details(one num one list)
-                      required:
-                        - tid
-                        - sending
-                        - sent
-                        - failed
-                        - unsent
-                        - sdr
-                        - fdr
-                    description: Detail status report
-                required:
-                  - type
-                  - rpt_rum
-                  - rpts
-              examples:
-                '1':
-                  summary: Successful Instance
-                  value: "{\r\n    \"type\": \"status-report\",\r\n    \"rpt_rum\": \"1\",\r\n    \"rpts\": [\r\n        {\r\n            \"tid\": 1,\r\n            ...\r\n        },\r\n        {\r\n            \"tid\": 2,\r\n            ...\r\n        },\r\n        ...\r\n    ]\r\n}"
+                  summary: Successful instance
+                  value: "Example:\r\n\r\nhttp://192.168.1.67/goip_send_ussd.html?username=root&passowrd=root&port=5&ussd=123\r\n\r\nResponse information as follow：\r\n{code:0,reason:”OK”,resp:”your balance is 50.00$”}"
           headers: {}
       security: []
 components:
   schemas:
-    Pet:
-      required:
-        - name
-        - photoUrls
-        - id
-        - category
-        - tags
-        - status
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          minimum: 1
-          description: 宠物ID编号
-        category:
-          $ref: '#/components/schemas/Category'
-          description: 分组
-        name:
-          type: string
-          description: 名称
-          examples:
-            - doggie
-        photoUrls:
-          type: array
-          items:
-            type: string
-          description: 照片URL
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tag'
-          description: 标签
-        status:
-          type: string
-          description: 宠物销售状态
-          enum:
-            - available
-            - pending
-            - sold
     Category:
       type: object
       properties:
