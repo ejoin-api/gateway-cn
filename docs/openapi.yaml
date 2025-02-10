@@ -40,7 +40,7 @@ info:
     configured via feature named **Callback URL** (Web-GUI > menu CallbackURL).
   version: v2.4.1
   x-logo:
-    url: ./img/EAPI-logo.png
+    url: ./EAPI-logo.png
     backgroundColor: '#FAFAFA'
     altText: SMS logo
 tags:
