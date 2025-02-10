@@ -38,7 +38,6 @@ tags:
   - name: Receive MMS
   - name: AT Command
   - name: USSD API
-  - name: SMS Sending
 paths:
   /goip_post_sms.html:
     post:
