@@ -47,9 +47,12 @@ paths:
       description: >-
         Message description :
 
+
         host: Device IP address
 
+
         port: Device webpage management port, default value is 80.
+
 
         Tips:
 
@@ -322,9 +325,7 @@ paths:
               }
               return 0;
             }
-        - lang: Payload
-          label: Payload
-          source: "<?php\n$base_url = 'https://smseagleip/index.php/api/v2/';\n$method = 'messages/sms';\n$url = $base_url.$method;\n\n$params = json_encode([            \t\n\t'to' => ['123456789'],\n\t'contacts' => [12,15],\n    'groups' => [57,35],\n    'text' => 'My message',\n    'date' => '2022-12-27T12:20:31+05:01',\n    'priority' => 5,\n    'encoding' => 'unicode',\n    'flash' => true,\n    'oid' => '123abc456def789ghi123abc456def789ghi',\n    'validity' => '30m',\n    'send_after' => '12:05',\n    'send_before' => '17:15',\n    'test' => true,\n    'modem_no' => 2\n]);\n\n$options = [\n\t'http' => [\n\t\t'header' => [\n            'Content-Type: application/json',\n            'access-token: 0005gOjCOlMH8F2BP8'\n        ],\n\t\t'method' => 'POST',\n\t\t'content' => $params\n\t]\n];\n\n$context  = stream_context_create($options);\n\n$ret = fopen($url,'r', false, $context);\n\n$result = fread($ret,1024);\n\nfclose($ret);\n\nif (strpos($http_response_header[0], '200') !== false) {\n\techo \"Message has been sent successfully!\";\n} else {\n\techo \"Send message failed!\";\n}\n"
+
         - lang: PHP
           label: PHP
           source: "<?php\n$base_url = 'https://smseagleip/index.php/api/v2/';\n$method = 'messages/sms';\n$url = $base_url.$method;\n\n$params = json_encode([            \t\n\t'to' => ['123456789'],\n\t'contacts' => [12,15],\n    'groups' => [57,35],\n    'text' => 'My message',\n    'date' => '2022-12-27T12:20:31+05:01',\n    'priority' => 5,\n    'encoding' => 'unicode',\n    'flash' => true,\n    'oid' => '123abc456def789ghi123abc456def789ghi',\n    'validity' => '30m',\n    'send_after' => '12:05',\n    'send_before' => '17:15',\n    'test' => true,\n    'modem_no' => 2\n]);\n\n$options = [\n\t'http' => [\n\t\t'header' => [\n            'Content-Type: application/json',\n            'access-token: 0005gOjCOlMH8F2BP8'\n        ],\n\t\t'method' => 'POST',\n\t\t'content' => $params\n\t]\n];\n\n$context  = stream_context_create($options);\n\n$ret = fopen($url,'r', false, $context);\n\n$result = fread($ret,1024);\n\nfclose($ret);\n\nif (strpos($http_response_header[0], '200') !== false) {\n\techo \"Message has been sent successfully!\";\n} else {\n\techo \"Send message failed!\";\n}\n"
@@ -578,7 +579,9 @@ paths:
       description: >-
         Message description :
 
+
         host: Device IP address
+
 
         port: Device webpage management port, default value is 80.
 
@@ -632,7 +635,7 @@ paths:
                       tid:
                         type: integer
                         description: Task ID
-                  description: Restore one or more tasks ID that are sent.When there is no field, all send tasks are suspended
+                  description: When there is no field, all send tasks are suspended
               
       responses:
         '200':
@@ -706,7 +709,7 @@ paths:
         - lang: C++
           label: C++
           source: |
-
+            
             #include <iostream>
             #include <curl/curl.h>
             #include <string>
@@ -725,7 +728,7 @@ paths:
                 curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
                 curl_easy_setopt(curl, CURLOPT_URL, url);
-                curl_easy_setopt(curl,CURLOPT_POSTFIELDS, jsonPayload.c_str());
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonPayload.c_str());
 
                 res = curl_easy_perform(curl);
                 if(res != CURLE_OK) {
@@ -884,16 +887,23 @@ paths:
               }
             }
 
-            
+
   /goip_resume_sms.html:
     post:
       summary: Resume paused message task
       deprecated: false
-      description: |-
-        Resume the sending of one or more suspended SMS tasks. 
+      description: >
         Message description :
+
+
         host: Device IP address
+
+
         port: Device webpage management port, default value is 80.
+
+
+        Resume the sending of one or more suspended SMS tasks. 
+        
       tags:
         - Send message
       parameters:
@@ -933,12 +943,13 @@ paths:
                       tid:
                         type: string
                         description: Task ID
-                    required:
-                      - tid
-                  description: The task ID to be restored
-              required:
-                - tids
-            example: ''
+                  description: >
+                    The task ID to be restored
+                    Restore all sending tasks when  there is no field
+            example: 
+              tids:
+                - - tid1
+                - - tid2
       responses:
         '200':
           description: ''
@@ -990,15 +1001,202 @@ paths:
                         status: 2 Invalid Port
           headers: {}
       security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+            
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
+            
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root"
+                std::string jsonPayload = R"({"tids : [["tid1"],["tid2"]]"});
+
+                struct curl_slist *headers = NULL;
+                headers = curl_slist_append(headers,"Content-Type: application/json");
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+                curl_easy_setopt(curl,CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                res = curl_easy_perform(curl);
+                if(res != CURLE_OK) {
+                  std::cerr << "curl_easy_perform failed: " << curl_easy_strerror(res) << std:: endl;
+                }
+
+                curl_easy_cleanup(curl);
+                curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+        - lang: php
+          label: php
+          source: |
+            
+            <?php
+            $url = 'http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root';
+            $data = json_encode([
+              'tids' => [
+                ['tid1'],
+                ['tid2']
+              ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' = "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+              $content = stream_context_create($options);
+              $result = file_get_contents($url, false, $context);
+
+              if ($result === FALSE) {
+                echo "Request failed!";
+              } else {
+                echo $result;
+              }
+            ?>
+        - lang: C#
+          label: C#
+          source: |
+            
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program {
+              static async Task Main(string[] args) {
+                var url = "htttp://192.168.1.67:80/goip_resume_sms,html?username=root&password=root";
+                var payload = new{
+                  tids = new[] { new[] { "tid1" }, { "tid2" }};
+
+                  var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                  var content = new StringContent(json, encoding utf8, "application/json");
+
+                  using (var client = new HttpClient()) {
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                  }
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"tids: [["tid1"],["tid2"]]"}' \
+              http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root
+        - lang: PowerShell
+          label: PowerShell
+          source: >
+            
+            $url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            $headers = @{
+              "Content-Type" = "application/json"
+            }
+            $body = @{
+              tids = @(
+                @("tid1")
+                @("tid2")
+              )
+            } | ConvertTo-Json
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+            url = "http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root"
+            jsonPayload = "{""tids"": [[""tid1""],[""tid2""]]}"
+            objHTTP.Open "POST", url, False
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            objHTTP.Send jsonPayload
+
+            Debug.Print objHTTP.ResponseText
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import Json
+
+            url = "http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root"
+            payload = {
+              "tids" : {
+                ["tid1"],
+                ["tid2"]
+              }
+            }
+            headers = {
+              "Content-Type" : "application/json"
+            }
+
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+              --body-data '{"tids": [["tid1"],["tid2"]]}' \
+              http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root
+        - lang: Java
+          label: Java
+          souce: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                URL url = new URL("http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root");
+                HttpURLContention conn = (HttpURLContent) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String jsonPayload = "{\"tids\": [[\"tid1\"], [\"tid2\"]]}";
+
+                try (OutputStream os = conn.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes("utf-8");
+                  os.write(input, 0, input.length);
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                }
+              }
+            }
+
+
   /goip_remove_sms.html:
     post:
       summary: Delete message task
       deprecated: false
       description: |-
-        Delete one or more SMS tasks waiting to be sent in the send queue.
         Message description :
+
         host: Device IP address
+
         port: Device webpage management port, default value is 80.
+
+        Delete one or more SMS tasks waiting to be sent in the send queue.
+       
       tags:
         - Send message
       parameters:
@@ -1026,9 +1224,22 @@ paths:
       requestBody:
         content:
           application/json:
+            example:
+              tids:
+                - - tid1
+                - - tid2
             schema:
-              type: string
-            example: ''
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: integer
+                        description: Task ID
+                  description: The task ID to be deleted
       responses:
         '200':
           description: ''
@@ -1089,18 +1300,211 @@ paths:
               examples:
                 '1':
                   summary: Successful instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"results\": [\r\n        {\r\n            \"tid\": \"1\",\r\n            \"status\": \"0 OK\"\r\n        },\r\n        {\r\n            \"tid\": \"2\",\r\n            \"status\": \"3 USSD Expected\"\r\n        },\r\n        ...\r\n    ]\r\n}"
+                  value: 
+                    code: 200
+                    reason: OK
+                    results:
+                      - - tid: 1
+                          status: 0 OK
+                      - - tid: 2
+                          status: 2 Invalid Port
           headers: {}
       security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+            
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
+            
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+                std::string jsonPayload = R"({"tids : [["tid1"],["tid2"]]"});
+
+                struct curl_slist *headers = NULL;
+                headers = curl_slist_append(headers,"Content-Type: application/json");
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+                curl_easy_setopt(curl,CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                res = curl_easy_perform(curl);
+                if(res != CURLE_OK) {
+                  std::cerr << "curl_easy_perform failed: " << curl_easy_strerror(res) << std:: endl;
+                }
+
+                curl_easy_cleanup(curl);
+                curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+        - lang: php
+          label: php
+          source: |
+            
+            <?php
+            $url = 'http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root';
+            $data = json_encode([
+              'tids' => [
+                ['tid1'],
+                ['tid2']
+              ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' = "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+              $content = stream_context_create($options);
+              $result = file_get_contents($url, false, $context);
+
+              if ($result === FALSE) {
+                echo "Request failed!";
+              } else {
+                echo $result;
+              }
+            ?>
+        - lang: C#
+          label: C#
+          source: |
+            
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program {
+              static async Task Main(string[] args) {
+                var url = "htttp://192.168.1.67:80/goip_remove_sms,html?username=root&password=root";
+                var payload = new{
+                  tids = new[] { new[] { "tid1" }, { "tid2" }};
+
+                  var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                  var content = new StringContent(json, encoding utf8, "application/json");
+
+                  using (var client = new HttpClient()) {
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                  }
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"tids: [["tid1"],["tid2"]]"}' \
+              http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root
+        - lang: PowerShell
+          label: PowerShell
+          source: >
+            
+            $url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+            $headers = @{
+              "Content-Type" = "application/json"
+            }
+            $body = @{
+              tids = @(
+                @("tid1")
+                @("tid2")
+              )
+            } | ConvertTo-Json
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+            url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+            jsonPayload = "{""tids"": [[""tid1""],[""tid2""]]}"
+            objHTTP.Open "POST", url, False
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            objHTTP.Send jsonPayload
+
+            Debug.Print objHTTP.ResponseText
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import Json
+
+            url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+            payload = {
+              "tids" : {
+                ["tid1"],
+                ["tid2"]
+              }
+            }
+            headers = {
+              "Content-Type" : "application/json"
+            }
+
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+              --body-data '{"tids": [["tid1"],["tid2"]]}' \
+              http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root
+        - lang: Java
+          label: Java
+          souce: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                URL url = new URL("http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root");
+                HttpURLContention conn = (HttpURLContent) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String jsonPayload = "{\"tids\": [[\"tid1\"], [\"tid2\"]]}";
+
+                try (OutputStream os = conn.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes("utf-8");
+                  os.write(input, 0, input.length);
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                }
+              }
+            }
+
+
   /goip_get_tasks.html:
     get:
       summary: Query message task
       deprecated: false
       description: |-
-        Query the SMS task waiting to be sent in the send queue. 
         Message description :
+
         host: Device IP address
+
         port: Device webpage management port, default value is 80.
+
+        Query the SMS task waiting to be sent in the send queue. 
       tags:
         - Send message
       parameters:
@@ -1183,7 +1587,10 @@ paths:
                   description: The task ID to be query.
               required:
                 - tids
-            example: ''
+            example: 
+              tids:
+                - - tid1
+                - - tid2
       responses:
         '200':
           description: ''
@@ -1262,7 +1669,25 @@ paths:
               examples:
                 '1':
                   summary: Successful instance
-                  value: "{\r\n    \"code\": 200,\r\n    \"reason\": \"OK\",\r\n    \"total_num\": 5,\r\n    \"task_num\": 2,\r\n    \"tasks\": [\r\n        {\r\n            \"tid\": 1,\r\n            \"from\": \"\",\r\n            \"to\": \"\",\r\n            \"sms\": \"hello123\",\r\n            \"chs\": \"utf-8\",\r\n            \"coding\": 0,\r\n            \"state\": 1\r\n        },\r\n        ...\r\n    ]\r\n}"
+                  value: 
+                    code: 200
+                    reason: OK
+                    total_num: n
+                    task: 
+                      - - tid: 1
+                          from: 1
+                          to: 10086
+                          sms: hello123
+                          chs: utf-8
+                          coding: 0
+                          state: 0
+                      - - tid: 2
+                          from: 2
+                          to: 10001
+                          sms: hello123
+                          chs: utf-8
+                          coding: 0
+                          state: 0
           headers: {}
       security: []
   Server or device configuration decision:
@@ -1276,14 +1701,19 @@ paths:
         result. If it is group sending, device will report execute result
         periodically until all num in this group sending task get a result. 
 
+
         Tips： 
+
 
         1.tid related to the task ID in the send-sms message. 
 
+
         2.sending, sent, failed are accumulated num in one task. 
+
 
         3.Sdr(successfully send record) list records between 2 status-report,
         server should keep before details. 
+
 
         4.fdr(failed detail record) list records between 2 status-report, server
         should keep before details.
@@ -1393,7 +1823,30 @@ paths:
               examples:
                 '1':
                   summary: Successful instance
-                  value: "{\r\n    \"type\": \"status-report\",\r\n    \"rpt_rum\": \"1\",\r\n    \"rpts\": [\r\n        {\r\n            \"tid\": 1,\r\n            ...\r\n        },\r\n        {\r\n            \"tid\": 2,\r\n            ...\r\n        },\r\n        ...\r\n    ]\r\n}"
+                  value: 
+                    type: status-report
+                    rpt_num: n
+                    rpts:
+                      - - tid: 1
+                          sending: 1
+                          sent: 1
+                          failed: 0
+                          unsent: 1
+                          sdr:
+                            - recipients_num_index: 13xxxxxxxxx(Base on group sending)
+                              num: 13xxxxxxxxx
+                              SMS_sending_port: 1.01
+                              SMS_sending_timestamp_inUTCtime: 1739269711
+
+                               
+                          fdr: 
+                            - recipients_num_index: 13xxxxxxxxx(Base on group sending)
+                              num: 13xxxxxxxxx
+                              SMS_sending_port: 1.01
+                              SMS_sending_timestamp_inUTCtime: 1739269711 
+                              progress_reason: code+details
+                              carrier_reason: code+ description.Valid when [4] is failed to send
+
           headers: {}
       security: []
   /goip_get_esims.html:
