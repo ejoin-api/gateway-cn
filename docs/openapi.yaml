@@ -706,6 +706,10 @@ paths:
         - lang: C++
           label: C++
           source: |
+
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
             
             int main(void) {
               CURL *curl;
@@ -763,8 +767,8 @@ paths:
                 echo $result;
               }
             ?>
-        - lang: c#
-          label: c#
+        - lang: C#
+          label: C#
           source: |
             
             using System;
