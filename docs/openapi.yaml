@@ -38,6 +38,7 @@ tags:
   - name: Receive MMS
   - name: AT Command
   - name: USSD API
+  - name: SMS Sending
 paths:
   /goip_post_sms.html:
     post:
@@ -701,6 +702,184 @@ paths:
                       
           headers: {}
       security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+            
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+                std::string jsonPayload = R"({"tids : [["tid1"],["tid2"]]"});
+
+                struct curl_slist *headers = NULL;
+                headers = curl_slist_append(headers,"Content-Type: application/json");
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+                curl_easy_setopt(curl,CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                res = curl_easy_perform(curl);
+                if(res != CURLE_OK) {
+                  std::cerr << "curl_easy_perform failed: " << curl_easy_strerror(res) << std:: endl;
+                }
+
+                curl_easy_cleanup(curl);
+                curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+        - lang: php
+          label: php
+          source: |
+            
+            <?php
+            $url = 'http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root';
+            $data = json_encode([
+              'tids' => [
+                ['tid1'],
+                ['tid2']
+              ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' = "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+              $content = stream_context_create($options);
+              $result = file_get_contents($url, false, $context);
+
+              if ($result === FALSE) {
+                echo "Request failed!";
+              } else {
+                echo $result;
+              }
+            ?>
+        - lang: c#
+          label: c#
+          source: |
+            
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program {
+              static async Task Main(string[] args) {
+                var url = "htttp://192.168.1.67:80/goip_pause_sms,html?username=root&password=root";
+                var payload = new{
+                  tids = new[] { new[] { "tid1" }, { "tid2" }};
+
+                  var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                  var content = new StringContent(json, encoding utf8, "application/json");
+
+                  using (var client = new HttpClient()) {
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                  }
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"tids: [["tid1"],["tid2"]]"}' \
+              http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root
+        - lang: PowerShell
+          label: PowerShell
+          source: >
+            
+            $url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            $headers = @{
+              "Content-Type" = "application/json"
+            }
+            $body = @{
+              tids = @(
+                @("tid1")
+                @("tid2")
+              )
+            } | ConvertTo-Json
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+            url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            jsonPayload = "{""tids"": [[""tid1""],[""tid2""]]}"
+            objHTTP.Open "POST", url, False
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            objHTTP.Send jsonPayload
+
+            Debug.Print objHTTP.ResponseText
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import Json
+
+            url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            payload = {
+              "tids" : {
+                ["tid1"],
+                ["tid2"]
+              }
+            }
+            headers = {
+              "Content-Type" : "application/json"
+            }
+
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+              --body-data '{"tids": [["tid1"],["tid2"]]}' \
+              http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root
+        - lang: Java
+          label: Java
+          souce: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                URL url = new URL("http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root");
+                HttpURLContention conn = (HttpURLContent) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String jsonPayload = "{\"tids\": [[\"tid1\"], [\"tid2\"]]}";
+
+                try (OutputStream os = conn.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes("utf-8");
+                  os.write(input, 0, input.length);
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                }
+              }
+            }
   /goip_resume_sms.html:
     post:
       summary: Resume paused message task
