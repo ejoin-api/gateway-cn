@@ -867,7 +867,7 @@ paths:
             public class Main {
               public static void main(String[] args) throws Exception {
                 URL url = new URL("http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root");
-                HttpURLContention conn = (HttpURLContent) url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
