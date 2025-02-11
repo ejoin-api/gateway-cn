@@ -792,7 +792,6 @@ paths:
         - lang: cURL
           label: cURL
           source: |
-            
             curl -X POST \
               -H "Content-Type: application/json" \
               -d '{"tids: [["tid1"],["tid2"]]"}' \
@@ -880,6 +879,8 @@ paths:
                 }
               }
             }
+
+            
   /goip_resume_sms.html:
     post:
       summary: Resume paused message task
