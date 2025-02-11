@@ -877,10 +877,10 @@ paths:
                 try (OutputStream os = conn.getOutputStream()) {
                   byte[] input = jsonPayload.getBytes("utf-8");
                   os.write(input, 0, input.length);
-
-                  int responseCode = conn.getResponseCode();
-                  System.out.println("Response Code: " + responseCode);
                 }
+                
+                int responseCode = conn.getResponseCode();
+                System.out.println("Response Code: " + responseCode);
               }
             }
 
