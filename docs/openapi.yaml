@@ -96,10 +96,167 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              type: string
+            schema: 
+              type: object
+              properties:
+                type: 
+
+                  type: string
+                  description: Message type
+                  const: send-sms
+                  example: send-sms
+                sr_url:
+                  type: string
+                  description: Status report forward url
+                  default: System configuration
+                sr_cnt: 
+                  type: string
+                  description: Max num of SMS result can keep in cache
+                  default: 100
+                sr_prd:
+                  type: integer
+                  description: The max time SMS result can keep in cache
+                  default: 30
+                sms_url: 
+                  type: string
+                  description: SMS forward URL 
+                  default: System configuration
+                sms_cnt: 
+                  type: integer
+                  description: Max num of SMS can keep in cache
+                  default: 1
+                sms_prd: 
+                  type: integer
+                  description: Max time SMS can keep in cache
+                  default: 30
+                task_num: 
+                  type: string
+                  description: Total task
+                  default: 1
+                tasks: 
+                  type: array
+                  description: Specific SMS send task
+                  items: 
+                    type: object
+                    properties:
+                      tid:
+                        type: string
+                        description: Task ID
+                      from: 
+                        type: string
+                        description: Use‘,’‘-’to assign more than one port(from channel 1) 
+                        default: CHoose of Device
+                      to:
+                        type: string
+                        description: one or more(use ‘,’to distinguish) recipients
+                      to_all: 
+                        type: string
+                        description: 1 represents all ports
+                        default: 1
+                      sms:
+                        type: string
+                        description: SMS content
+                      chs: 
+                        type: string 
+                        description: Character coding set (utf8|base64)
+                        default: utf8
+                      coding: 
+                        type: integer
+                        description: Pecific the SMS codec
+                        enum: 
+                          - 0 not assign
+                          - 1 USC2
+                          - 2 7bit
+                        default: 0
+                      smstype: 
+                        type: integer
+                        description: SMS type
+                        enum: 
+                          - 0 SMS
+                          - 1 MMS
+                          - 2 MMS with multiple numbers and multiple subject
+                        default: 0
+                      smstitle: 
+                        type: string
+                        description: MMS subject,MMS subject format is UTF-8
+                        nullable: true
+                      to_title_array: 
+                        type: array
+                        description: Multiple MMS recipients and subject arrays. This field is valid only when smstype=2
+                        item: 
+                          type: object
+                          properties:
+                            number:
+                              type: string
+                            title:
+                              type: string
+                      attachments:
+                        type: string
+                        nullable: true
+                        description: >-
+                          1.MMS attachment,This field take effect only when smstype=1 or 2
+
+                          2.Field  content format:“File type1|base64 code file content 1;File type2|base64 code file content 2;......File type n|base64 code file content n”
+
+
+                          3.
+                          a.There can be a most of 5 attachment,all attachment total length cannot exceed 100K,at present only support jpg、gif、txt、mp3 formatted file.
+                          
+                          b.File type and file content use symbol | separate
+                          
+                          c.Attachment is could be empty,send the content of the SMS filed as a TXT attachment
+
+                          4.example:“txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk”
+                          
+                      smsc: 
+                        type: string
+                        description: Store the SMSC number.
+                      intvl:
+                        type: string
+                        default: 0
+                        description: Interval of 2 SMS while device sending them(ms)
+                      tmo: 
+                        type: integer
+                        default: 30
+                        description: Max time while waiting sending result(second)
+                      sdr: 
+                        type: integer
+                        description: If enable the successfully send report
+                        default: 1
+                        enum: 
+                          - 0 disable
+                          - 1 enbale
+                      fdr: 
+                        type: integer
+                        default: 0
+                        description: If enable the failed report
+                        enum:
+                          - 0 disable
+                          - 1 enable
+                      sr_prd:
+                        type: integer
+                        description: 
+                          Status report period (seconds)
+                        enum: 
+                          - 0 not on
+                          - Greater than 0:Control only the period in which a single task generates a report
+                        default: 60
+                      sr_cnt:
+                        type: integer
+                        description: >-
+                          Single-state report SMS number, less than 1 will use the default value
+
+                          Control only the number of processed messages that have been reported by a single task
+                  required: 
+                    - tid
+                    - to
+                    - sms
+              required: 
+                - type
+                - task_num
+                - tasks
             example:
-              type: “send-sms
+              type: send-sms
               sr_url: https://xxxxx.com/
               sr_cnt: '100'
               sr_prd: 60
@@ -167,54 +324,36 @@ paths:
                           description: >-
                             Task status code
 
-                            0：OK
-
-                            1：Invalid User
-
-                            2：Invalid Port
-
-                            3：USSD Expected
-
-                            4：Pending USSD
-
-                            5：SIM Unregistered
-
-                            6：Timeout
-
-                            7：Server Error
-
-                            8：SMS expected
-
-                            9：TO expected
-
-                            10：Pending Transaction
-
-                            11：TID Expected
-
-                            12：FROM Expected
-
-                            13：Duplicated TaskId
-
-                            14：Unauthorized
-
-                            15：Invalid CMD
-
-                            16：Too Many Task
-
-                            17：MMS Title expected
-
-                            18：Too Many MMS Attachments
-
-                            19：MMS Attachments expected
 
                             If task status ID not equal to 0, then means this
                             task not received by device
                           minimum: 0
-                          maximum: 20
+                          maximum: 19
+                          enum: 
+                            - 0 OK
+                            - 1 Invalid User
+                            - 2 Invalid Port
+                            - 3 USSD Expected
+                            - 4 Pending USSD
+                            - 5 SIM Unregistered
+                            - 6 Timeout
+                            - 7 Server Error
+                            - 8 SMS Expected
+                            - 9 TO Expected
+                            - 10 Pending Transaction
+                            - 11 TID Expected
+                            - 12 FROM Expected
+                            - 13 Duplicated TaskID
+                            - 14 Unauthorized
+                            - 15 Invalid CMD
+                            - 16 Too Many Task
+                            - 17 MMS Title Expected
+                            - 18 Too Many MMS Attachments
+                            - 19 MMS Attachments Expected
                           examples:
                             - 0
                             - 1
-                            - 20
+                            - 19
                       required:
                         - tid
                         - status
@@ -300,7 +439,7 @@ paths:
                     "task_num": "1",
                     "tasks": [{
                       "tid": 5,
-                      "from": 1,
+                      "from": "1",
                       "to": "133xxxxxx",
                       "to_all": "1",
                       "sms": "SMS content",
@@ -359,9 +498,9 @@ paths:
                "tasks" => [
                 [
                   "tid" => 5,
-                  "from" => 1,
+                  "from" => "1",
                   "to" => "133xxxxxx",
-                  "to_all" => 1,
+                  "to_all" => "1",
                   "sms" => "SMS content",
                   "chs" => "utf8",
                   "coding" => 2,
@@ -374,7 +513,7 @@ paths:
                   ],
                   "attachments" => "MMS attachment",
                   "smsc" => "Store the SMSC number",
-                  "intvl" => 0,
+                  "intvl" => "0",
                   "tmo" => "30",
                   "sdr" => 0,
                   "fdr" => 1,
@@ -403,7 +542,62 @@ paths:
             ?>
         - lang: C#
           label: C#
-          source: "using System.Net;\nusing System.Text.Json;\n\nstring baseUrl = \"https://smseagleip/api/v2/\";\nstring method = \"messages/sms\";\n\nstring url = baseUrl + method;\n\nstring[] numbers =\n{\n\t\"+481234567\"\n};\n\nint[] contacts = \n{\n  12,\n  15\n};\n\nint[] groups =\n{\n  57,\n  35\n};\n\nstring date = \"2022-12-27T12:20:31+05:01\";\nint priority = 1;\nstring encoding = \"unicode\";\nbool flash = true;\nstring oid = \"123abc456def789ghi123abc456def789ghi\";\nstring validity = \"30m\";\nstring send_after = \"12:05\";\nstring send_before = \"17:15\";\nbool test = true;\nint modem_no = 2;\n\nstring message = \"My message\";\n\nWebClient client = new WebClient();\n\nstring json = JsonSerializer.Serialize(new\n{\n\tto = numbers,\n    contacts = contacts,\n    groups = groups,\n\ttext = message,\n    date = date,\n    priority = priority,\n    encoding = encoding,\n    flash = flash,\n    oid = oid,\n    validity = validity,\n    send_after = send_after,\n    send_before = send_before,\n    test = test,\n    modem_no = modem_no\n});\n\nclient.Headers[HttpRequestHeader.ContentType] = \"application/json\";\nclient.Headers.Add(\"access-token\", \"0005gOjCOlMH8F2BP8\");\nstring response = client.UploadString(new Uri(url), \"POST\", json);\n\nreturn response;\n"
+          source: |
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program{
+              static async Task Main(string[] args){
+                var url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root";
+                var payload = new {
+                  type = "send-sms",
+                  sr_url = "https://xxxxx.com/",
+                  sr_cnt = 100,
+                  sr_prd = 60,
+                  sms_url = "https://xxxxx.com/",
+                  sms_cnt = 1,
+                  sms_prd = 30,
+                  task_num = 1
+                  tasks = new[] {
+                    new{
+                      tid = 5,
+                      from = "1",
+                      to = "133xxxxxx",
+                      to_all = "1",
+                      sms = "SMS content",
+                      chs = "utf8",
+                      coding = 2,
+                      smstype = 0,
+                      smstitle = "sms title",
+                      too_title_array = new[]{
+                        new[] {"number1", "titile1"},
+                        new[] {"number2", "titile2"},
+                        new[] {"number3", "titile3"}
+                      },
+                      attachments = "MMS attachment",
+                      smsc = "Store the SMSC number",
+                      intvl = "0",
+                      tmo = "30",
+                      sdr = 0,
+                      fdr = 1,
+                      sr_prd = "",
+                      sr_cnt = 21
+                    }
+                  }
+                };
+
+                var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient()) {
+                  var response = await client.PostAsync(url, content);
+                  var result = await response.Content.ReadAsStringAsync();
+                  Console.WriteLine(result);
+                }
+              }
+            }
         - lang: cURL
           label: cURL
           source: |
@@ -421,7 +615,7 @@ paths:
                         "tasks": [
                           {
                             "tid": 5,
-                            "from": 1,
+                            "from": "1",
                             "to": "133xxxxxx",
                             "to_all": "1",
                             "sms": "SMS content",
@@ -436,11 +630,11 @@ paths:
                             ],
                             "attachments": "MMS attachment",
                             "smsc": "Store the SMSC number",
-                            "intvl": 0,
-                            "tmo": 30,
+                            "intvl": "0",
+                            "tmo": "30",
                             "sdr": 0,
                             "fdr": 1,
-                            "sr_prd": null,
+                            "sr_prd": "",
                             "sr_cnt": 21
                           }
                         ]
@@ -450,220 +644,284 @@ paths:
         - lang: Powershell
           label: Powershell
           source: >
-            $smseagleUrl='https://smseagleip/api/v2/messages/sms'
-
-            $smseagleToken='0005gOjCOlMH8F2BP8'
-
-            $msgTo=@('123456789')
-
-            $msgContacts=@(12,15)
-
-            $msgGroups=@(57,35)
-
-            $msgText='My message'
+            $url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root"
 
             $headers = @{
-                "Content-Type"="text/plain"
-                "access-token"="0005gOjCOlMH8F2BP8"
+                "Content-Type" = "application/json"
             }
+            $Body=@{
+                type = "send-sms"
+                sr_url = "https://xxxxx.com/"
+                sr_cnt = 100
+                sr_prd = 60
+                sms_url = "https://xxxxxx.com/"
+                sms_cnt = 1
+                sms_prd = 30
+                task_num = "1"
+                tasks = @(
+                  @{
+                    tid = 5
+                    from = "channel 1"
+                    to = "133xxxxxx"
+                    to_all = "1"
+                    sms = "SMS content"
+                    chs = "utf8"
+                    coding = 2
+                    smstype = 0
+                    smstitle = "sms title"
+                    to_title_array = @(
+                      @("number1", "titile1"),
+                      @("number2", "titile2"),
+                      @("number3", "titile3")
+                    )
+                    attachments = "MMS attachment"
+                    smsc = "Store the SMSC number"
+                    intvl = "0"
+                    tmo = "30"
+                    sdr = 0
+                    fdr = 1
+                    sr_prd = ""
+                    sr_cnt = 21
+                  }
+                )
+                
+            } | ConvertTo-Json -Depth 10
 
-
-            $jsonBody=@{
-                to=$msgTo;
-                contacts=$msgContacts;
-                groups=$msgGroups;
-                text=$msgText;
-                date='2022-12-27T12:20:31+05:01';
-                priority=5;
-                encoding='unicode';
-                flash=$true;
-                oid='123abc456def789ghi123abc456def789ghi';
-                validity='30m';
-                send_after='12:05';
-                send_before='17:15';
-                test=$true;
-                modem_no=2;
-            } | ConvertTo-Json -Compress
-
-
-            Invoke-RestMethod -Uri $smseagleUrl -Headers $headers -Body
-            $jsonBody -Method Post
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
         - lang: VBA
           label: VBA
           source: >
+            Sub SendRequest()
             Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
 
-            Url = "https://smseagleip/api/v2/"
+            Url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root"
 
-
-            numbers = Array("""123456789""", """987654321""")
-
-            NumbersTxt = Join(numbers, ",")
-
-
-            contacts = Array("12", "15")
-
-            ContactsTxt = Join(contacts, ",")
-
-
-            groups = Array("57", "35")
-
-            GroupsTxt = Join(groups, ",")
-
-
-            Message = """My message"""
-
-
-            Url = Url & "messages/sms"
-
-
+            JSONString = "{"
+            JSONString = JSONString & """type"": ""send-sms"","
+            JSONString = JSONString & """sr_url"": ""https://xxxxx.com/"","
+            JSONString = JSONString & """sr_cnt"": ""100"","
+            JSONString = JSONString & """sr_prd"": 60,"
+            JSONString = JSONString & """sms_url"": ""https://xxxxxx.com/"","
+            JSONString = JSONString & """sms_cnt"": 1,"
+            JSONString = JSONString & """sms_prd"": 30,"
+            JSONString = JSONString & """task_num"": ""1"","
+            JSONString = JSONString & """tasks"": ["
+            JSONString = JSONString & "{"
+            JSONString = JSONString & """tid"": 5,"
+            JSONString = JSONString & """from"": ""channel 1"","
+            JSONString = JSONString & """to"": ""133xxxxxx"","
+            JSONString = JSONString & """to_all"": ""1"","
+            JSONString = JSONString & """sms"": ""SMS content"","
+            JSONString = JSONString & """chs"": ""utf8"","
+            JSONString = JSONString & """coding"": 2,"
+            JSONString = JSONString & """smstype"": 0,"
+            JSONString = JSONString & """smstitle"": ""sms title"","
+            JSONString = JSONString & """to_title_array"": ["
+            JSONString = JSONString & "[""number1"", ""titile1""],"
+            JSONString = JSONString & "[""number2"", ""titile2""],"
+            JSONString = JSONString & "[""number3"", ""titile3""]"
+            JSONString = JSONString & "],"
+            JSONString = JSONString & """attachments"": ""MMS attachment"","
+            JSONString = JSONString & """smsc"": ""Store the SMSC number"","
+            JSONString = JSONString & """intvl"": ""0"","
+            JSONString = JSONString & """tmo"": ""30"","
+            JSONString = JSONString & """sdr"": 0,"
+            JSONString = JSONString & """fdr"": 1,"
+            JSONString = JSONString & """sr_prd"": null,"
+            JSONString = JSONString & """sr_cnt"": 21"
+            JSONString = JSONString & "}"
+            JSONString = JSONString & "]"
+            JSONString = JSONString & "}"
+            
             objHTTP.Open "POST", Url, False
 
             objHTTP.setRequestHeader "Content-Type", "application/json"
-
-            objHTTP.setRequestHeader "access-token", "0005gOjCOlMH8F2BP8"
-
-
-            JSONString = "{""to"":[" & NumbersTxt & "],""contacts"":[" &
-            ContactsTxt & "],""groups"":[" & GroupsTxt & "],""text"":" & Message
-            & ",""date"": ""2022-12-27T12:20:31+05:01"",""priority"":
-            5,""encoding"": ""unicode"",""flash"": true,""oid"":
-            ""123abc456def789ghi123abc456def789ghi"",""validity"":
-            ""30m"",""send_after"": ""12:05"",""send_before"":
-            ""17:15"",""test"": true,""modem_no"": 2}"
-
+            
             objHTTP.send JSONString
 
-            Debug.Print objHTTP.ResponseText
+            Debug.Print "Response: " & objHTTP.ResponseText
+            End Sub
         - lang: Python
           label: Python
           source: >
             import requests
-
             import json
 
 
-            url = "http://smseagleip/api/v2/messages/sms"
+            url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root"
 
-
-            payload = json.dumps({
-              "to": [
-                "+48123456789"
-              ],
-              "contacts": [
-                12, 15
-              ],
-              "groups": [
-                57, 35
-              ],
-              "text": "My message",
-              "date": "2022-12-27T12:20:31+05:01",
-              "priority": 5,
-              "encoding": "unicode",
-              "flash": True,
-              "oid": "123abc456def789ghi123abc456def789ghi",
-              "validity": "30m",
-              "send_after": "12:05",
-              "send_before": "17:15",
-              "test": True,
-              "modem_no": 2
-            })
+            payload = {
+              "type": "send-sms",
+              "sr_url": "https://xxxxx.com/",
+              "sr_cnt": "100",
+              "sr_prd": 60,
+              "sms_url": "https://xxxxxx.com/",
+              "sms_cnt": 1,
+              "sms_prd": 30,
+              "task_num": "1",
+              "tasks": [{
+                "tid": 5,
+                "from": "channel 1",
+                "to": "133xxxxxx",
+                "to_all": "1",
+                "sms": "SMS content",
+                "chs": "utf8",
+                "coding": 2,
+                "smstype": 0,
+                "smstitle": "sms title",
+                "to_title_array": [
+                  ["number1","title1"],
+                  ["number2","title2"],
+                  ["number3","title3"]
+                ],
+                "attachments": "MMS attachment",
+                "smsc": "Store the SMSC number",
+                "intvl": "0",
+                "tmo": "30",
+                "sdr": 0,
+                "fdr": 1,
+                "sr_prd": None,
+                "sr_cnt": 21
+              }]
+            }
 
             headers = {
-              'Content-Type': 'application/json',
-              'access-token': '0005gOjCOlMH8F2BP8'
+              "Content-Type": "application/json",
             }
 
 
-            response = requests.request("POST", url, headers=headers,
-            data=payload)
-
-
+            response = requests.post( url, headers=headers,
+            data=json.dumps(payload))
             print(response.text)
         - lang: Shell
           label: Shell
           source: |
             wget --no-check-certificate --quiet \
               --method POST \
-              --timeout=0 \
               --header 'Content-Type: application/json' \
-              --header 'Accept: application/json' \
-              --header 'access-token: 0005gOjCOlMH8F2BP8' \
+
               --body-data '{
-              "to": [
-                "+48123456789"
-              ],
-              "contacts": [
-                12, 15
-              ],
-              "groups": [
-                57, 35
-              ],
-              "text": "My message",
-              "date": "2022-12-27T12:20:31+05:01",
-              "priority": 5,
-              "encoding": "unicode",
-              "flash": true,
-              "oid": "123abc456def789ghi123abc456def789ghi",
-              "validity": "30m",
-              "send_after": "12:05",
-              "send_before": "17:15",
-              "test": true,
-              "modem_no": 2
+                "type": "send-sms",
+                "sr_url": "https://xxxxx.com/",
+                "sr_cnt": "100",
+                "sr_prd": 60,
+                "sms_url": "https://xxxxxx.com/",
+                "sms_cnt": 1,
+                "sms_prd": 30,
+                "task_num": "1",
+                "tasks": [{
+                  "tid": 5,
+                  "from": "channel 1",
+                  "to": "133xxxxxx",
+                  "to_all": "1",
+                  "sms": "SMS content",
+                  "chs": "utf8",
+                  "coding": 2,
+                  "smstype": 0,
+                  "smstitle": "sms title",
+                  "to_title_array": [
+                    ["number1", "titile1"],
+                    ["number2", "titile2"],
+                    ["number3", "titile3"]
+                  ],
+                  "attachments": "MMS attachment",
+                  "smsc": "Store the SMSC number",
+                  "intvl": "0",
+                  "tmo": "30",
+                  "sdr": 0,
+                  "fdr": 1,
+                  "sr_prd": null,
+                  "sr_cnt": 21
+                }]
+              
             }' \
-            'http://smseagleip/api/v2/messages/sms'
+            'http://192.168.1.67:80/goip_send_sms.html?username=root&password=root'
         - lang: Java
           label: Java
           source: |
-            import java.io.*;
-            import java.net.*;
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+            import org.json.JSONArray;
             import org.json.JSONObject;
 
-            public class Main {
-                public static void main(String[] args) {
-                    try {
-                        HttpURLConnection connection = null;
-                        OutputStreamWriter writer = null;
-                        BufferedReader reader = null;
-                        StringBuilder sbuilder = null;
-                        URL serverAddress = null;
-                        serverAddress = new URL("https://url-of-smseagle/index.php/api/v2/messages/sms");
-                        connection = (HttpURLConnection) serverAddress.openConnection();
-                        connection.setRequestProperty("Content-Type", "application/json");
-                        connection.setRequestProperty("Accept", "application/json");
-                        connection.setRequestProperty("access-token", "0005gOjCOlMH8F2BP8");
-                        connection.setRequestMethod("POST");
-                        connection.setDoOutput(true);
-                        connection.connect();
-            //
-                        writer = new OutputStreamWriter(connection.getOutputStream());
+            public class main{
+              public static void main(String args[]) {
+                try{
+                  URL url = new URL("http://192.168.1.67:80/goip_send_sms?username=root&password=root");
 
-                        JSONObject json = new JSONObject();
+                  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                  conn.setRequestMethod("POST");
+                  conn.setRequestProperty("Content-Type", "application/json");
+                  conn.setDoOutput(true);
 
-                        String[] to = {"481234567"};
-                        json.put("to", to);
-                        json.put("text", "My message");
+                  JSONObject requestBody = new JSONObject();
+                  requestBody.put("type","send-sms");
+                  requestBody.put("sr_url", "https://xxxxx.com/");
+                  requestBody.put("sr_cnt", "100");
+                  requestBody.put("sr_prd", 60);
+                  requestBody.put("sms_url", "https://xxxxxx.com/");
+                  requestBody.put("sms_cnt", 1);
+                  requestBody.put("sms_prd", 30);
+                  requestBody.put("task_num", "1");
 
-                        System.out.println(json);
-                        writer.write(json.toString());
-                        writer.close();
-            //
-                        reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        sbuilder = new StringBuilder();
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            sbuilder.append(line + 'n');
+                  JSONArray tasks = new JSONArray();
+                  JSONObject task = new JSONObject();
+                  task.put("tid", 5);
+                  task.put("from", "channel 1");
+                  task.put("to", "133xxxxxx");
+                  task.put("to_all", "1");
+                  task.put("sms", "SMS content");
+                  task.put("chs", "utf8");
+                  task.put("coding", 2);
+                  task.put("smstype", 0);
+                  task.put("smstitle", "sms title");
+
+                  JSONArray toTitleArray = new JSONArray();
+                  toTitleArray.put(new JSONArray().put("number1").put("titile1"));
+                  toTitleArray.put(new JSONArray().put("number2").put("titile2"));
+                  toTitleArray.put(new JSONArray().put("number3").put("titile3"));
+                  task.put("to_title_array", toTitleArray);
+
+                  task.put("attachments", "MMS attachment");
+                  task.put("smsc", "Store the SMSC number");
+                  task.put("intvl", "0");
+                  task.put("tmo", "30");
+                  task.put("sdr", 0);
+                  task.put("fdr", 1);
+                  task.put("sr_prd", JSONObject.NULL);
+                  task.put("sr_cnt", 21);
+
+                  tasks.put(task);
+                  requestBody.put("tasks",tasks);
+
+                  try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = requestBody.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                  }
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                  
+                  if (responseCode == HttpURLConnection.HTTp_OK) {
+                    StringBuilder response = new StringBuilder();
+                    try (java.io.BufferedReader in = new java.io.BufferedReader(
+                      new java.io.InputStreamReader(conn.getInputStream()))) {
+                        String inputLine;
+                        while ((inputLine = in.readLine()) != null) {
+                          response.append(inputLine);
                         }
-                        connection.disconnect();
-                        reader.close();
-                        String result = sbuilder.toString();
-                        System.out.println(result);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
+                      }
+                      System.out.println("Response: " + response.toString());
+                  }else {
+                    System.out.println("Request failed with response code: " + responseCode);
+                  }
+                } catch (Expection e) {
+                  e.printStactTrace();
                 }
+              }
             }
-      
   http://host:port/goip_pause_sms.html:
     post:
       summary: Pause message task
