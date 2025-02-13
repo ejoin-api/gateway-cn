@@ -100,7 +100,6 @@ paths:
               type: object
               properties:
                 type: 
-
                   type: string
                   description: Message type
                   const: send-sms
@@ -2701,29 +2700,15 @@ paths:
                       type: string
                     description: >-
                       For saving the bandwidth, SMS content also storage in a
-                      array. 
-
-                      [0]: Delivery report flag,0:normal SMS, 1:This is a
-                      delivery report 
-
-                      [1]: Receive report(‘1.01’,’1.02’) 
-
-                      [2]: timestamp while device got this SMS 
-
-                      [3]: Sender(If Delivery report flag set to 1, then sender
-                      should be SMCC) 
-
-                      [4]: Recipient(If Delivery report flag set to 1,then
-                      recipient should be the 
-
-                      original recipient. ) 
-
-                      [5]: SMS content： 
-
-                      Delivery report: "code scts", code is 0 for successful
-                      delivery, utf-8 
-
-                      Ordinary SMS: BASE64 encoding of utf-8 
+                      array.
+                      enum:
+                        - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report
+                        - [1]: Receive report(‘1.01’,’1.02’)
+                        - [2]: timestamp while device got this SMS
+                        - [3]: Sender(If Delivery report flag set to 1, then sender
+                      should be SMCC)
+                        - [4]: Recipient(If Delivery report flag set to 1,then recipient should be the original recipient. )
+                        - [5]: SMS content: Delivery report: "code scts", code is 0 for successful delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
                 required:
                   - sms
                   - type
@@ -2845,21 +2830,13 @@ paths:
                       Queryed SMS content
 
                       For saving the bandwidth, SMS content also storage in a
-                      array. [0]: Delivery report flag,0:normal SMS, 1:This is a
-                      delivery report [1]: Receive report(‘1.01’,’1.02’)
-
-                      [2]: timestamp while device got this SMS
-
-                      [3]: Sender(If Delivery report flag set to 1, then sender
-                      should be SMCC)
-
-                      [4]: Recipient(If Delivery report flag set to 1,then
-                      recipient should be the original recipient. )
-
-                      [5]: SMS content:
-
-                      Delivery report: "code scts", code is 0 for successful
-                      delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
+                      array. 
+                      enum: 
+                        - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report [1]: Receive report(‘1.01’,’1.02’)
+                        - [2]: timestamp while device got this SMS
+                        - [3]: Sender(If Delivery report flag set to 1, then sender should be SMCC)
+                        - [4]: Recipient(If Delivery report flag set to 1,then recipient should be the original recipient.)
+                        - [5]: SMS content: Delivery report: "code scts", code is 0 for successful delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
                 required:
                   - code
                   - reason
@@ -3212,13 +3189,11 @@ paths:
           description: >-
             The specified port number (valued from 1). The values are as
             follows:
+              enum: 
+                - 1)all: all ports;
+                - 2)Specify a single port;
+                - 3)1-2, 4: Port numbers separated by short numbers, specifying multiple ports, where "-" indicates a continuous port number;
 
-            1)all: all ports;
-
-            2)Specify a single port;
-
-            1-2, 4: Port numbers separated by short numbers, specifying multiple
-            ports, where "-" indicates a continuous port number;
           required: false
           example: all
           schema:
@@ -3228,16 +3203,12 @@ paths:
           description: >-
             The specified card slot number (value from 1). The values are as
             follows:
+              enum: 
+                - 1).Do not specify: current card
+                - 2)all: all card slots;
+                - 3)2: Specify a single card slot;
+                - 4)1-2, 4: A card slot number separated by a short number, specifying a plurality of card slots, where "-" indicates a continuous card slot number;
 
-            1).Do not specify: current card
-
-            2)all: all card slots;
-
-            3)2: Specify a single card slot;
-
-            1-2, 4: A card slot number separated by a short number, specifying a
-            plurality of card slots, where "-" indicates a continuous card slot
-            number;
           required: false
           example: Current card
           schema:
