@@ -1510,7 +1510,7 @@ paths:
               http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root
         - lang: Java
           label: Java
-          souce: |
+          source: |
             import java.io.OutputStream;
             import java.net.HttpURLConnection;
             import java.net.URL;
@@ -1818,7 +1818,7 @@ paths:
               http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root
         - lang: Java
           label: Java
-          souce: |
+          source: |
             import java.io.OutputStream;
             import java.net.HttpURLConnection;
             import java.net.URL;
