@@ -297,6 +297,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  code: 
+                    type: integer
+                    description: Interface processing result code
                   reason:
                     type: string
                   type:
