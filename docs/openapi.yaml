@@ -361,6 +361,7 @@ paths:
                         - tid
                         - status
                 required:
+                  - code
                   - reason
                   - type
                   - status
