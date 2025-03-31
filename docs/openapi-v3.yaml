@@ -1,0 +1,4813 @@
+openapi: 3.0.1
+info:
+  title: Ejoin Gateway HTTP API
+  description: >
+    Welcome to Ejoin Gateway HTTP API documentation. Here you will find details
+
+    to learn about, try, and implement Ejoin Gateway HTTP API.
+
+
+    # Overview
+
+    This document specifies HTTP SMS API of Ejoin device, include SMS receiving, single sending, group-sending and status of Sending task querying.
+    Based on‘Ejoin SMS sending API’, this document extra support Group-Sending and multi task and status report support in one message.This SMS API is still base on HTTP and add POST request support, enabling multi-tasking and status reporting through a JSON array format. For detailed specifications on the JSON array format, please refer to the standardization guidelines.
+
+
+    # Examples
+
+    For each API endpoint, we provide basic use case examples. Each example has
+    sample payload parameters in JSON format showing how to complete a task (for
+    example send SMS, send AT command, get status notification,
+    etc.). Each example is accompanied with API response sample.
+
+
+  version: v2.5.0
+  x-logo:
+    url: ./EAPI-logo.png
+    backgroundColor: '#FAFAFA'
+    altText: SMS logo
+tags:
+  - name: Send message
+  - name: ESIM
+  - name: Receive SMS
+  - name: Query SMS
+  - name: Status notification
+  - name: Query SMS statistics
+  - name: Query call statistics
+  - name: 'Send operate command '
+  - name: Receive MMS
+  - name: AT Command
+  - name: USSD API
+  - name: CellLock
+paths:
+  http://host:port/set_network_type:
+    post:
+      summary: SetNetworkType
+      deprecated: false
+      description:
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: number
+                  description: Network type
+                  example: lte
+                  enum:
+                    - auto
+                    - gsm
+                    - wcdma
+                    - lte
+
+      responses:
+        '200':
+          description: 'OK'
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+              
+  http://host:port/get_network_type:
+    post:
+      summary: GetNetworkType
+      deprecated: false
+      description:
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: number
+                    description: Network type
+                    example: lte
+                    enum:
+                    - auto
+                    - gsm
+                    - wcdma
+                    - lte
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+          
+  http://host:port/scan_serving_cells:
+    post:
+      summary: ScanServingCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Ports
+              type: array
+              items:
+               description: Port
+               type: number
+               example: 1
+      
+      responses:
+        '202':
+          description: 'Accepted'
+
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+
+  http://host:port/get_serving_cells:
+    get:
+      summary: GetServingCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Ports
+              type: array
+              items:
+                descroption: Port
+                type: int 
+                example: 1
+      
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  port:
+                    type: number
+                    description: Port number
+                  status:
+                    type: string
+                    description: The status of the most recent service base station scan operation
+                    default: completed
+                    enum: 
+                      - idle: No operation
+                      - waitting: In progress
+                      - completed: Completed
+                      - timeout: Timeout
+                  operator:
+                    type: string
+                    description: Operator ID
+                  earfcn:
+                    type: number
+                    description: The ARFCN or UARFCN of cell
+                  pci:
+                    type: number
+                    description: Physical cell ID
+                  cid:
+                    type: string
+                    description: Cell ID, HEX string
+                  rsrp: 
+                    type: number
+                    description: Reference Signal Receiving Power
+              examples:
+                  '1':
+                    summary: Successful instance
+                    value:
+                      port: 1
+                      status: completed
+                      operator: 46001
+                      earfcn: 1650
+                      pci: 114
+                      cid: 6161001
+                      rsrp: -86
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/scan_neighbour_cells:
+    post:
+      summary: ScanNeighbourCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                port:
+                  type: number
+                  description: Port number
+                  example: 1
+                  enum: 
+                    Device max port
+                range:
+                  type: string
+                  description: Scan range
+                  example: current
+                  enum: 
+                    - all: All operator
+                    - current: The operator corresponding to the SIM card
+      responses:
+        '202':
+          description: 'Accepted'
+
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/get_neighbor_cells:
+    get:
+      summary: GetNeighborCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Ports
+              type: array
+              items:
+               description: Port
+               type: int
+               example: 1
+      
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  port:
+                    type: number
+                    description: Port number
+                  status:
+                    type: string
+                    description: The status of the most recent service base station scan operation
+                    default: completed
+                    enum: 
+                      - idle: No operation
+                      - waitting: In progress
+                      - completed: Completed
+                      - timeout: Timeout
+                  cells: 
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        operator:
+                          type: string
+                          description: Operator ID
+                        earfcn:
+                          type: number
+                          description: The ARFCN or UARFCN of cell
+                        pci:
+                          type: number
+                          description: Physical cell ID
+                        cid: 
+                          type: string
+                          description: Cell ID,HEX string
+                        rsrp:
+                          type: number
+                          description: Reference signal receiving power
+                  
+              examples:
+                  '1':
+                    summary: Successful instance
+                    value:
+                      port: 1
+                      status: completed
+                      cells:
+                        - operator: 46000
+                          earfcn: 3590
+                          pci: 98
+                          cid: AC22D0E
+                          rsrp: -87
+                        - operator: 46000
+                          earfcn: 38400
+                          pci: 173
+                          cid: 919349
+                          rsrp: -75
+                        - operator: 46000
+                          earfcn: 1300
+                          pci: 300
+                          cid: AC22D0B
+                          rsrp: -77
+                        
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/lock_cells:
+    post:
+      summary: LockCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                port:
+                  type: number
+                  description: Port number
+                  example: 1
+                  enum: 
+                    Device max port
+                earfcn:
+                  type: number
+                  description: EARFCN
+                  example: 1850
+                pci:
+                  type: number
+                  description: PCI
+                  example: 227
+      responses:
+        '202':
+          description: 'Accepted'
+
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/query_cells_locking_status:
+    post:
+      summary: QueryLockCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Port number
+              type: array
+              items:
+               type: number
+               description: Port
+               example: 1
+
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  port: 
+                    type: number
+                    description: Port number
+                  status:
+                    type: string
+                    description: 
+                    default: completed
+                    enum: 
+                      - idle: No operation
+                      - waitting: In progress
+                      - completed: Completed
+                      - timeout: Timeout
+                  action:
+                    type: number
+                    description: Locking action
+                    enum:
+                      - 0: Unlock cell
+                      - 1: Lock cell through EARFCN
+                      - 2: Lock cell through EARFCN and PCI
+                  earfcn:
+                    type: number
+                    description: EARFCN
+                  pci:
+                    type: number
+                    description: Physical cell ID
+                  action_status:
+                    type: number
+                    description: Locking action status
+                    enum:
+                      - 0: Finish
+                      - 1: Not finish
+                
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/unlock_cells:
+    post:
+      summary: UnLockCells
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                port:
+                  type: number
+                  description: Port number
+                  example: 1
+                  enum: 
+                    Device max port
+                earfcn:
+                  type: number
+                  description: EARFCN
+                  example: 1850
+                pci:
+                  type: number
+                  description: PCI
+                  example: 227
+      responses:
+        '202':
+          description: 'Accepted'
+
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/set_cell_config:
+    post:
+      summary: SetCellConfig
+      deprecated: false
+      description: >-
+         If **report_url** is set, when the requested base station operation is completed or times out, the device will push content to the **report_url**.
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                report_url:
+                  type: string
+                  description: Report/Result Push URL
+                  example: 192.168.1.156
+                timeout:
+                  type: number
+                  description: Cell operation timeout, in seconds. If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
+                  default: 120
+                  example: 180
+              
+      responses:
+        '200':
+          description: 'The content pushed by the device to **report_url** is as follows:'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  serving_cells:
+                    type: array
+                    description: A serving cells array
+                    items: 
+                     type: object
+                     properties:
+                       port:
+                         type: number
+                       status:
+                         type: string
+                       operator: 
+                         type: string
+                       earfcn:
+                         type: number
+                       pci:
+                         type: number
+                       cid:
+                         type: string
+                       rsrp:
+                         type: number
+                  neighbour_cells:
+                    type: array
+                    description: A neighbour cells array
+                    items: 
+                     type: object
+                     properties:
+                       port:
+                         type: number
+                       status:
+                         type: array
+                         items:
+                           type: object
+                           properties:
+                             operator:
+                               type: string
+                             earfcn:
+                               type: number
+                             pci:
+                               type: number
+                             cid:
+                               type: string
+                             rsrp:
+                               type: number
+                  locking_status:
+                    type: array
+                    description: A status array
+                    items: 
+                     type: object
+                     properties:
+                       port:
+                         type: number
+                       status:
+                         type: number
+                       action:
+                         type: number
+                       earfcn:
+                         type: number
+                       pci:
+                         type: number
+                       action_status:
+                         type: number
+              examples:
+                '1': 
+                  summary: Example
+                  value:
+                    serving_cells:
+                      - port: 1
+                        status: completed
+                        operator: 46000
+                        earfcn: 1300
+                        pci: 300
+                        cid: AC22D0B
+                        rsrp: -86
+                    neighbour_cells:
+                      - port: 1
+                        status: completed
+                        cells:
+                          - operator: 46000
+                            earfcn: 3590
+                            pci: 98
+                            cid: AC22D0E
+                            rsrp: -67
+                    locking_cells:
+                      - port: 1
+                        status: completed
+                        action: 0
+                        earfcn: ""
+                        pci: ""
+                        action_status: 0
+        '400':
+          description: 'Bad Request'
+          headers: {}
+      security: []
+  http://host:port/get_cell_config:
+    get:
+      summary: GetCellConfig
+      deprecated: false
+      description: >-
+         Retry-After: 120
+      tags: 
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      
+      responses:
+        '202':
+          description: 'Accepted'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  report_url:
+                    type: string
+                    description: Report/Result Push URL
+                  timeout:
+                    type: number
+                    description: Cell operation timeout, in seconds. If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
+                    default: 120
+          headers: {}
+      security: []                  
+
+  http://host:port/goip_post_sms.html:
+    post:
+      summary: Send message
+      deprecated: false
+      description: >-
+        Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+
+
+        Tips:
+
+        1. While not choose a port, device will pick up a random port to send
+        SMS to every recipient.
+
+        2. While chose more than one ports, and just one SMS recipient , then
+        device will use all chose port to
+
+        send SMS to this recipient.
+
+        3. If more ports, and more recipient designed, then every port will send
+        SMS to every recipient
+
+        separately.
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          example: ''
+          schema:
+            type: string
+            examples:
+              - 1.0：Compatible with previous API
+              - '1.1: Support for the description of  this document'
+            default: '1.0'
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                type: 
+                  type: string
+                  description: Message type
+                  const: send-sms
+                  example: send-sms
+                sr_url:
+                  type: string
+                  description: Status report forward url
+                  default: System configuration
+                sr_cnt: 
+                  type: string
+                  description: Max num of SMS result can keep in cache
+                  default: 100
+                sr_prd:
+                  type: integer
+                  description: The max time SMS result can keep in cache
+                  default: 30
+                sms_url: 
+                  type: string
+                  description: SMS forward URL 
+                  default: System configuration
+                sms_cnt: 
+                  type: integer
+                  description: Max num of SMS can keep in cache
+                  default: 1
+                sms_prd: 
+                  type: integer
+                  description: Max time SMS can keep in cache
+                  default: 30
+                task_num: 
+                  type: string
+                  description: Total task
+                  default: 1
+                tasks: 
+                  type: array
+                  description: Specific SMS send task
+                  items: 
+                    type: object
+                    properties:
+                      tid:
+                        type: string
+                        description: Task ID
+                      from: 
+                        type: string
+                        description: Use‘,’‘-’to assign more than one port(from channel 1) 
+                        default: CHoose of Device
+                      to:
+                        type: string
+                        description: one or more(use ‘,’to distinguish) recipients
+                      to_all: 
+                        type: string
+                        description: 1 represents all ports
+                        default: 1
+                      sms:
+                        type: string
+                        description: SMS content
+                      chs: 
+                        type: string 
+                        description: Character coding set (utf8|base64)
+                        default: utf8
+                      coding: 
+                        type: integer
+                        description: Pecific the SMS codec
+                        enum: 
+                          - 0 not assign
+                          - 1 USC2
+                          - 2 7bit
+                        default: 0
+                      smstype: 
+                        type: integer
+                        description: SMS type
+                        enum: 
+                          - 0 SMS
+                          - 1 MMS
+                          - 2 MMS with multiple numbers and multiple subject
+                        default: 0
+                      smstitle: 
+                        type: string
+                        description: MMS subject,MMS subject format is UTF-8
+                        nullable: true
+                      to_title_array: 
+                        type: array
+                        description: Multiple MMS recipients and subject arrays. This field is valid only when smstype=2
+                        items: 
+                          type: object
+                          properties:
+                            number:
+                              type: string
+                            title:
+                              type: string
+                      attachments:
+                        type: string
+                        nullable: true
+                        description: >-
+                          1.MMS attachment,This field take effect only when smstype=1 or 2
+
+                          2.Field  content format:“File type1|base64 code file content 1;File type2|base64 code file content 2;......File type n|base64 code file content n”
+
+
+                          3.
+                          a.There can be a most of 5 attachment,all attachment total length cannot exceed 100K,at present only support jpg、gif、txt、mp3 formatted file.
+                          
+                          b.File type and file content use symbol | separate
+                          
+                          c.Attachment is could be empty,send the content of the SMS filed as a TXT attachment
+
+                          4.example:“txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk”
+                          
+                      smsc: 
+                        type: string
+                        description: Store the SMSC number.
+                      intvl:
+                        type: string
+                        default: 0
+                        description: Interval of 2 SMS while device sending them(ms)
+                      tmo: 
+                        type: integer
+                        default: 30
+                        description: Max time while waiting sending result(second)
+                      sdr: 
+                        type: integer
+                        description: If enable the successfully send report
+                        default: 1
+                        enum: 
+                          - 0 disable
+                          - 1 enbale
+                      fdr: 
+                        type: integer
+                        default: 0
+                        description: If enable the failed report
+                        enum:
+                          - 0 disable
+                          - 1 enable
+                      sr_prd:
+                        type: integer
+                        description: 
+                          Status report period (seconds)
+                        enum: 
+                          - 0 not on
+                          - Greater than 0:Control only the period in which a single task generates a report
+                        default: 60
+                      sr_cnt:
+                        type: integer
+                        description: >-
+                          Single-state report SMS number, less than 1 will use the default value
+
+                          Control only the number of processed messages that have been reported by a single task
+                  required: 
+                    - tid
+                    - to
+                    - sms
+              required: 
+                - type
+                - task_num
+                - tasks
+            example:
+              type: send-sms
+              sr_url: https://xxxxx.com/
+              sr_cnt: '100'
+              sr_prd: 60
+              sms_url: https://xxxxxx.com/
+              sms_cnt: 1
+              sms_prd: 30
+              task_num: '1'
+              tasks:
+                - tid: 5
+                  from: channel 1
+                  to: 133xxxxxx
+                  to_all: '1'
+                  sms: SMS content
+                  chs: utf8
+                  coding: 2
+                  smstype: 0
+                  smstitle: sms title
+                  to_title_array:
+                    - - number1
+                      - titile1
+                    - - number2
+                      - titile2
+                    - - number3
+                      - titile3
+                  attachments: MMS attachment
+                  smsc: Store the SMSC number
+                  intvl: '0'
+                  tmo: '30'
+                  sdr: 0
+                  fdr: 1
+                  sr_prd: null
+                  sr_cnt: 21
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code: 
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                  type:
+                    type: string
+                    description: send-sms
+                  status:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                  task_num:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: integer
+                          description: Task ID
+                        status:
+                          type: integer
+                          description: >-
+                            Task status code
+
+
+                            If task status ID not equal to 0, then means this
+                            task not received by device
+                          minimum: 0
+                          maximum: 19
+                          enum: 
+                            - 0 OK
+                            - 1 Invalid User
+                            - 2 Invalid Port
+                            - 3 USSD Expected
+                            - 4 Pending USSD
+                            - 5 SIM Unregistered
+                            - 6 Timeout
+                            - 7 Server Error
+                            - 8 SMS Expected
+                            - 9 TO Expected
+                            - 10 Pending Transaction
+                            - 11 TID Expected
+                            - 12 FROM Expected
+                            - 13 Duplicated TaskID
+                            - 14 Unauthorized
+                            - 15 Invalid CMD
+                            - 16 Too Many Task
+                            - 17 MMS Title Expected
+                            - 18 Too Many MMS Attachments
+                            - 19 MMS Attachments Expected
+                          examples:
+                            - 0
+                            - 1
+                            - 19
+                      required:
+                        - tid
+                        - status
+                required:
+                  - code
+                  - reason
+                  - type
+                  - status
+                  - task_num
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    type: send-sms
+                    task_num: 1
+                    tasks:
+                      - tid: tid_1
+          headers: {}
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: object
+                    properties:
+                      recipients:
+                        type: string
+                    required:
+                      - recipients
+                required:
+                  - message
+              examples:
+                '1':
+                  summary: Exception instance
+                  value:
+                    message:
+                      recipients: 'One of parameters: to, contacts, groups is required.'
+          headers: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Invalid API key.
+                required:
+                  - message
+              examples:
+                '1':
+                  summary: Exception instance
+                  value:
+                    message: Invalid API key.
+          headers: {}
+      security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
+
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root";
+                std::string jsonPayload = R"({
+                    "type": "send-sms",
+                    "sr_url": "https://xxxxx.com/",
+                    "sr_cnt": "100",
+                    "sr_prd": 60,
+                    "sms_url": "https://xxxxxx.com/",
+                    "sms_cnt": 1,
+                    "sms_prd": 30,
+                    "task_num": "1",
+                    "tasks": [{
+                      "tid": 5,
+                      "from": "1",
+                      "to": "133xxxxxx",
+                      "to_all": "1",
+                      "sms": "SMS content",
+                      "chs": "utf8",
+                      "coding": 2,
+                      "smstype": 0,
+                      "smstitle": "sms title",
+                      "to_title_array": [
+                        ["number1", "titile1"],
+                        ["number2", "titile2"],
+                        ["number3", "titile3"]
+                      ],
+                      "attachments": "MMS attachment",
+                      "smsc": "Store the SMSC number",
+                      "intvl": "0",
+                      "tmo": "30",
+                      "sdr": 0,
+                      "fdr": 1,
+                      "sr_prd": null,
+                      "sr_cnt": 21
+                    }]
+                  
+                })";
+                struct curl_slist *headers = NULL;
+                    headers = curl_slist_append(headers, "Content-Type: application/json");
+                    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                    curl_easy_setopt(curl, CURLOPT_URL, url);
+                    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                    res = curl_easy_perform(curl);
+                    if(res != CURLE_OK) {
+                      std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) <<std::endl;
+                    }
+
+                    curl_easy_cleanup(curl);
+                    curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+
+        - lang: PHP
+          label: PHP
+          source: |
+            <?php
+            $url = 'http://192.168.1.67:80/goip_send_sms.html?usernameroot&password=root';
+            $data = json_encode([
+              "type" => "send-sms",
+              "sr_url" => "https://xxxxx.com/",
+              "sr_cnt" => "100",
+              "sr_prd" => 60,
+              "sms_url" => "https://xxxxxx.com/",
+              "sms_cnt" => 1,
+              "sms_prd" => 30,
+              "task_num" => "1",
+               "tasks" => [
+                [
+                  "tid" => 5,
+                  "from" => "1",
+                  "to" => "133xxxxxx",
+                  "to_all" => "1",
+                  "sms" => "SMS content",
+                  "chs" => "utf8",
+                  "coding" => 2,
+                  "smstype" => 0,
+                  "smstitle" => "sms title",
+                  "to_title_array" => [
+                    ["number1", "titile1"],
+                    ["number2", "titile2"],
+                    ["number3", "titile3"]
+                  ],
+                  "attachments" => "MMS attachment",
+                  "smsc" => "Store the SMSC number",
+                  "intvl" => "0",
+                  "tmo" => "30",
+                  "sdr" => 0,
+                  "fdr" => 1,
+                  "sr_prd" => null,
+                  "sr_cnt" => 21
+               ]
+               ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' => "Content-Type: application/json",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+            $context  = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+
+            if ($result === FALSE) {
+              echo "Request failed!";
+            } else {
+              echo $result;
+            }
+            ?>
+        - lang: C#
+          label: C#
+          source: |
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program{
+              static async Task Main(string[] args){
+                var url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root";
+                var payload = new {
+                  type = "send-sms",
+                  sr_url = "https://xxxxx.com/",
+                  sr_cnt = 100,
+                  sr_prd = 60,
+                  sms_url = "https://xxxxx.com/",
+                  sms_cnt = 1,
+                  sms_prd = 30,
+                  task_num = 1
+                  tasks = new[] {
+                    new{
+                      tid = 5,
+                      from = "1",
+                      to = "133xxxxxx",
+                      to_all = "1",
+                      sms = "SMS content",
+                      chs = "utf8",
+                      coding = 2,
+                      smstype = 0,
+                      smstitle = "sms title",
+                      too_title_array = new[]{
+                        new[] {"number1", "titile1"},
+                        new[] {"number2", "titile2"},
+                        new[] {"number3", "titile3"}
+                      },
+                      attachments = "MMS attachment",
+                      smsc = "Store the SMSC number",
+                      intvl = "0",
+                      tmo = "30",
+                      sdr = 0,
+                      fdr = 1,
+                      sr_prd = "",
+                      sr_cnt = 21
+                    }
+                  }
+                };
+
+                var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient()) {
+                  var response = await client.PostAsync(url, content);
+                  var result = await response.Content.ReadAsStringAsync();
+                  Console.WriteLine(result);
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            curl -H "Content-Type: application/json"
+                 -X POST
+                 -d '{
+                        "type": "send-sms",
+                        "sr_url": "https://xxxxx.com/",
+                        "sr_cnt": "100",
+                        "sr_prd": 60,
+                        "sms_url": "https://xxxxxx.com/",
+                        "sms_cnt": 1,
+                        "sms_prd": 30,
+                        "task_num": "1",
+                        "tasks": [
+                          {
+                            "tid": 5,
+                            "from": "1",
+                            "to": "133xxxxxx",
+                            "to_all": "1",
+                            "sms": "SMS content",
+                            "chs": "utf8",
+                            "coding": 2,
+                            "smstype": 0,
+                            "smstitle": "sms title",
+                            "to_title_array": [
+                              ["number1", "titile1"],
+                              ["number2", "titile2"],
+                              ["number3", "titile3"]
+                            ],
+                            "attachments": "MMS attachment",
+                            "smsc": "Store the SMSC number",
+                            "intvl": "0",
+                            "tmo": "30",
+                            "sdr": 0,
+                            "fdr": 1,
+                            "sr_prd": "",
+                            "sr_cnt": 21
+                          }
+                        ]
+                      
+                    }'
+                 http://192.168.1.67:80/goip_send_sms.html?username=root&password=root
+        - lang: Powershell
+          label: Powershell
+          source: >
+            $url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root"
+
+            $headers = @{
+                "Content-Type" = "application/json"
+            }
+            $Body=@{
+                type = "send-sms"
+                sr_url = "https://xxxxx.com/"
+                sr_cnt = 100
+                sr_prd = 60
+                sms_url = "https://xxxxxx.com/"
+                sms_cnt = 1
+                sms_prd = 30
+                task_num = "1"
+                tasks = @(
+                  @{
+                    tid = 5
+                    from = "channel 1"
+                    to = "133xxxxxx"
+                    to_all = "1"
+                    sms = "SMS content"
+                    chs = "utf8"
+                    coding = 2
+                    smstype = 0
+                    smstitle = "sms title"
+                    to_title_array = @(
+                      @("number1", "titile1"),
+                      @("number2", "titile2"),
+                      @("number3", "titile3")
+                    )
+                    attachments = "MMS attachment"
+                    smsc = "Store the SMSC number"
+                    intvl = "0"
+                    tmo = "30"
+                    sdr = 0
+                    fdr = 1
+                    sr_prd = ""
+                    sr_cnt = 21
+                  }
+                )
+                
+            } | ConvertTo-Json -Depth 10
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            Sub SendRequest()
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+
+            Url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root"
+
+            JSONString = "{"
+            JSONString = JSONString & """type"": ""send-sms"","
+            JSONString = JSONString & """sr_url"": ""https://xxxxx.com/"","
+            JSONString = JSONString & """sr_cnt"": ""100"","
+            JSONString = JSONString & """sr_prd"": 60,"
+            JSONString = JSONString & """sms_url"": ""https://xxxxxx.com/"","
+            JSONString = JSONString & """sms_cnt"": 1,"
+            JSONString = JSONString & """sms_prd"": 30,"
+            JSONString = JSONString & """task_num"": ""1"","
+            JSONString = JSONString & """tasks"": ["
+            JSONString = JSONString & "{"
+            JSONString = JSONString & """tid"": 5,"
+            JSONString = JSONString & """from"": ""channel 1"","
+            JSONString = JSONString & """to"": ""133xxxxxx"","
+            JSONString = JSONString & """to_all"": ""1"","
+            JSONString = JSONString & """sms"": ""SMS content"","
+            JSONString = JSONString & """chs"": ""utf8"","
+            JSONString = JSONString & """coding"": 2,"
+            JSONString = JSONString & """smstype"": 0,"
+            JSONString = JSONString & """smstitle"": ""sms title"","
+            JSONString = JSONString & """to_title_array"": ["
+            JSONString = JSONString & "[""number1"", ""titile1""],"
+            JSONString = JSONString & "[""number2"", ""titile2""],"
+            JSONString = JSONString & "[""number3"", ""titile3""]"
+            JSONString = JSONString & "],"
+            JSONString = JSONString & """attachments"": ""MMS attachment"","
+            JSONString = JSONString & """smsc"": ""Store the SMSC number"","
+            JSONString = JSONString & """intvl"": ""0"","
+            JSONString = JSONString & """tmo"": ""30"","
+            JSONString = JSONString & """sdr"": 0,"
+            JSONString = JSONString & """fdr"": 1,"
+            JSONString = JSONString & """sr_prd"": null,"
+            JSONString = JSONString & """sr_cnt"": 21"
+            JSONString = JSONString & "}"
+            JSONString = JSONString & "]"
+            JSONString = JSONString & "}"
+            
+            objHTTP.Open "POST", Url, False
+
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            
+            objHTTP.send JSONString
+
+            Debug.Print "Response: " & objHTTP.ResponseText
+            End Sub
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import json
+
+
+            url = "http://192.168.1.67:80/goip_send_sms.html?username=root&password=root"
+
+            payload = {
+              "type": "send-sms",
+              "sr_url": "https://xxxxx.com/",
+              "sr_cnt": "100",
+              "sr_prd": 60,
+              "sms_url": "https://xxxxxx.com/",
+              "sms_cnt": 1,
+              "sms_prd": 30,
+              "task_num": "1",
+              "tasks": [{
+                "tid": 5,
+                "from": "channel 1",
+                "to": "133xxxxxx",
+                "to_all": "1",
+                "sms": "SMS content",
+                "chs": "utf8",
+                "coding": 2,
+                "smstype": 0,
+                "smstitle": "sms title",
+                "to_title_array": [
+                  ["number1","title1"],
+                  ["number2","title2"],
+                  ["number3","title3"]
+                ],
+                "attachments": "MMS attachment",
+                "smsc": "Store the SMSC number",
+                "intvl": "0",
+                "tmo": "30",
+                "sdr": 0,
+                "fdr": 1,
+                "sr_prd": None,
+                "sr_cnt": 21
+              }]
+            }
+
+            headers = {
+              "Content-Type": "application/json",
+            }
+
+
+            response = requests.post( url, headers=headers,
+            data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+
+              --body-data '{
+                "type": "send-sms",
+                "sr_url": "https://xxxxx.com/",
+                "sr_cnt": "100",
+                "sr_prd": 60,
+                "sms_url": "https://xxxxxx.com/",
+                "sms_cnt": 1,
+                "sms_prd": 30,
+                "task_num": "1",
+                "tasks": [{
+                  "tid": 5,
+                  "from": "channel 1",
+                  "to": "133xxxxxx",
+                  "to_all": "1",
+                  "sms": "SMS content",
+                  "chs": "utf8",
+                  "coding": 2,
+                  "smstype": 0,
+                  "smstitle": "sms title",
+                  "to_title_array": [
+                    ["number1", "titile1"],
+                    ["number2", "titile2"],
+                    ["number3", "titile3"]
+                  ],
+                  "attachments": "MMS attachment",
+                  "smsc": "Store the SMSC number",
+                  "intvl": "0",
+                  "tmo": "30",
+                  "sdr": 0,
+                  "fdr": 1,
+                  "sr_prd": null,
+                  "sr_cnt": 21
+                }]
+              
+            }' \
+            'http://192.168.1.67:80/goip_send_sms.html?username=root&password=root'
+        - lang: Java
+          label: Java
+          source: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+            import org.json.JSONArray;
+            import org.json.JSONObject;
+
+            public class main{
+              public static void main(String args[]) {
+                try{
+                  URL url = new URL("http://192.168.1.67:80/goip_send_sms?username=root&password=root");
+
+                  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                  conn.setRequestMethod("POST");
+                  conn.setRequestProperty("Content-Type", "application/json");
+                  conn.setDoOutput(true);
+
+                  JSONObject requestBody = new JSONObject();
+                  requestBody.put("type","send-sms");
+                  requestBody.put("sr_url", "https://xxxxx.com/");
+                  requestBody.put("sr_cnt", "100");
+                  requestBody.put("sr_prd", 60);
+                  requestBody.put("sms_url", "https://xxxxxx.com/");
+                  requestBody.put("sms_cnt", 1);
+                  requestBody.put("sms_prd", 30);
+                  requestBody.put("task_num", "1");
+
+                  JSONArray tasks = new JSONArray();
+                  JSONObject task = new JSONObject();
+                  task.put("tid", 5);
+                  task.put("from", "channel 1");
+                  task.put("to", "133xxxxxx");
+                  task.put("to_all", "1");
+                  task.put("sms", "SMS content");
+                  task.put("chs", "utf8");
+                  task.put("coding", 2);
+                  task.put("smstype", 0);
+                  task.put("smstitle", "sms title");
+
+                  JSONArray toTitleArray = new JSONArray();
+                  toTitleArray.put(new JSONArray().put("number1").put("titile1"));
+                  toTitleArray.put(new JSONArray().put("number2").put("titile2"));
+                  toTitleArray.put(new JSONArray().put("number3").put("titile3"));
+                  task.put("to_title_array", toTitleArray);
+
+                  task.put("attachments", "MMS attachment");
+                  task.put("smsc", "Store the SMSC number");
+                  task.put("intvl", "0");
+                  task.put("tmo", "30");
+                  task.put("sdr", 0);
+                  task.put("fdr", 1);
+                  task.put("sr_prd", JSONObject.NULL);
+                  task.put("sr_cnt", 21);
+
+                  tasks.put(task);
+                  requestBody.put("tasks",tasks);
+
+                  try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = requestBody.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                  }
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                  
+                  if (responseCode == HttpURLConnection.HTTp_OK) {
+                    StringBuilder response = new StringBuilder();
+                    try (java.io.BufferedReader in = new java.io.BufferedReader(
+                      new java.io.InputStreamReader(conn.getInputStream()))) {
+                        String inputLine;
+                        while ((inputLine = in.readLine()) != null) {
+                          response.append(inputLine);
+                        }
+                      }
+                      System.out.println("Response: " + response.toString());
+                  }else {
+                    System.out.println("Request failed with response code: " + responseCode);
+                  }
+                } catch (Expection e) {
+                  e.printStactTrace();
+                }
+              }
+            }
+  http://host:port/goip_pause_sms.html:
+    post:
+      summary: Pause message task
+      deprecated: false
+      description: >-
+        Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+
+                
+
+        When a SMS task is still waiting to be sent in the send queue, one or
+        more SMS can be paused.
+
+
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: ''
+          required: true
+          example: Device username
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: ''
+          required: true
+          example: Device password
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              tids:
+                - - tid1
+                - - tid2
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: integer
+                        description: Task ID
+                  description: When there is no field, all send tasks are suspended
+              
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    examples:
+                      - 200
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: string
+                          description: Task ID
+                        status:
+                          type: string
+                          description: Task status code
+                          enum:
+                            - 0 OK
+                            - 1 Invalid User
+                            - 2 Invalid Port
+                            - 3 USSD Expected
+                            - 4 Pending USSD
+                            - 5 SIM Unregistered
+                            - 6 TImeout
+                            - 7 Server Error
+                            - 8 SMS expected
+                            - 9 TO expected
+                            - 10 Pending Transaction
+                            - 11 TID Expected
+                            - 12 From Expected
+                      required:
+                        - status
+                        - tid
+                    description: >-
+                      Task processing results.
+
+                      When there is no tids in the request, this field is not
+                      included in the result.
+                required:
+                  - reason
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 200
+                    reason: OK
+                    result:
+                      - tid: 1
+                        status: 0 OK
+                      - tid: 2
+                        status: 3 USSD Expected
+                      
+          headers: {}
+      security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+            
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
+            
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+                std::string jsonPayload = R"({"tids : ["tid1","tid2"]"});
+
+                struct curl_slist *headers = NULL;
+                headers = curl_slist_append(headers,"Content-Type: application/json");
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                res = curl_easy_perform(curl);
+                if(res != CURLE_OK) {
+                  std::cerr << "curl_easy_perform failed: " << curl_easy_strerror(res) << std:: endl;
+                }
+
+                curl_easy_cleanup(curl);
+                curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+        - lang: php
+          label: php
+          source: |
+            
+            <?php
+            $url = 'http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root';
+            $data = json_encode([
+              'tids' => [
+                'tid1',
+                'tid2'
+              ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' = "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+              $content = stream_context_create($options);
+              $result = file_get_contents($url, false, $context);
+
+              if ($result === FALSE) {
+                echo "Request failed!";
+              } else {
+                echo $result;
+              }
+            ?>
+        - lang: C#
+          label: C#
+          source: |
+            
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program {
+              static async Task Main(string[] args) {
+                var url = "htttp://192.168.1.67:80/goip_pause_sms,html?username=root&password=root";
+                var payload = new{
+                  tids = new[] { "tid1" ,"tid2" }};
+
+                  var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                  var content = new StringContent(json, encoding utf8, "application/json");
+
+                  using (var client = new HttpClient()) {
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                  }
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"tids: ["tid1","tid2"]"}' \
+              http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root
+        - lang: PowerShell
+          label: PowerShell
+          source: >
+            
+            $url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            $headers = @{
+              "Content-Type" = "application/json"
+            }
+            $body = @{
+              tids = @(
+                @("tid1","tid2")
+              )
+            } | ConvertTo-Json
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+            url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            jsonPayload = "{""tids"": [""tid1"",""tid2""]}"
+            objHTTP.Open "POST", url, False
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            objHTTP.Send jsonPayload
+
+            Debug.Print objHTTP.ResponseText
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import Json
+
+            url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            payload = {
+              "tids" : {
+                "tid1",
+                "tid2"
+              }
+            }
+            headers = {
+              "Content-Type" : "application/json"
+            }
+
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+              --body-data '{"tids": ["tid1","tid2"]}' \
+              http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root
+        - lang: Java
+          label: Java
+          source: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                URL url = new URL("http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String jsonPayload = "{\"tids\": [\"tid1\", \"tid2\"]}";
+
+                try (OutputStream os = conn.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes("utf-8");
+                  os.write(input, 0, input.length);
+                }
+                
+                int responseCode = conn.getResponseCode();
+                System.out.println("Response Code: " + responseCode);
+              }
+            }
+
+
+  http://host:port/goip_resume_sms.html:
+    post:
+      summary: Resume paused message task
+      deprecated: false
+      description: >
+        Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+
+
+        Resume the sending of one or more suspended SMS tasks. 
+        
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes 
+            specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: string
+                        description: Task ID
+                  description: >
+                    The task ID to be restored
+                    Restore all sending tasks when  there is no field
+            example: 
+              tids:
+                - tid1
+                - tid2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                    examples:
+                      - 200
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: string
+                        status:
+                          type: string
+                      required:
+                        - status
+                        - tid
+                    description: >-
+                      Task processing results.
+
+                      When there is no tids in the request, this field is not
+                      included in the result.
+                required:
+                  - reason
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+                    results:
+                      - tid: '1'
+                        status: 0 OK
+                      - tid: '2'
+                        status: 2 Invalid Port
+          headers: {}
+      security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+            
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
+            
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root"
+                std::string jsonPayload = R"({"tids : ["tid1","tid2"]"});
+
+                struct curl_slist *headers = NULL;
+                headers = curl_slist_append(headers,"Content-Type: application/json");
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+                curl_easy_setopt(curl,CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                res = curl_easy_perform(curl);
+                if(res != CURLE_OK) {
+                  std::cerr << "curl_easy_perform failed: " << curl_easy_strerror(res) << std:: endl;
+                }
+
+                curl_easy_cleanup(curl);
+                curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+        - lang: php
+          label: php
+          source: |
+            
+            <?php
+            $url = 'http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root';
+            $data = json_encode([
+              'tids' => [
+                'tid1',
+                'tid2'
+              ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' = "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+              $content = stream_context_create($options);
+              $result = file_get_contents($url, false, $context);
+
+              if ($result === FALSE) {
+                echo "Request failed!";
+              } else {
+                echo $result;
+              }
+            ?>
+        - lang: C#
+          label: C#
+          source: |
+            
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program {
+              static async Task Main(string[] args) {
+                var url = "htttp://192.168.1.67:80/goip_resume_sms,html?username=root&password=root";
+                var payload = new{
+                  tids = new[] { "tid1","tid2" }};
+
+                  var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                  var content = new StringContent(json, encoding utf8, "application/json");
+
+                  using (var client = new HttpClient()) {
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                  }
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"tids: ["tid1","tid2"]"}' \
+              http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root
+        - lang: PowerShell
+          label: PowerShell
+          source: >
+            
+            $url = "http://192.168.1.67:80/goip_pause_sms.html?username=root&password=root"
+            $headers = @{
+              "Content-Type" = "application/json"
+            }
+            $body = @{
+              tids = @(
+                @("tid1","tid2")
+              )
+            } | ConvertTo-Json
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+            url = "http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root"
+            jsonPayload = "{""tids"": [""tid1"",""tid2""]}"
+            objHTTP.Open "POST", url, False
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            objHTTP.Send jsonPayload
+
+            Debug.Print objHTTP.ResponseText
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import Json
+
+            url = "http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root"
+            payload = {
+              "tids" : {
+                "tid1",
+                "tid2"
+              }
+            }
+            headers = {
+              "Content-Type" : "application/json"
+            }
+
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+              --body-data '{"tids": ["tid1","tid2"]}' \
+              http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root
+        - lang: Java
+          label: Java
+          source: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                URL url = new URL("http://192.168.1.67:80/goip_resume_sms.html?username=root&password=root");
+                HttpURLContention conn = (HttpURLContent) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String jsonPayload = "{\"tids\": [\"tid1\", \"tid2\"]}";
+
+                try (OutputStream os = conn.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes("utf-8");
+                  os.write(input, 0, input.length);
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                }
+              }
+            }
+
+
+  http://host:port/goip_remove_sms.html:
+    post:
+      summary: Delete message task
+      deprecated: false
+      description: |-
+        Message description :
+
+        host: Device IP address
+
+        port: Device webpage management port, default value is 80.
+
+        Delete one or more SMS tasks waiting to be sent in the send queue.
+       
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              tids:
+                - tid1
+                - tid2
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: integer
+                        description: Task ID
+                  description: The task ID to be deleted
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                    examples:
+                      - 200
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: string
+                          description: Task ID
+                        status:
+                          type: string
+                          description: |-
+                            The status code and reason description of 
+                            the task
+                          enum:
+                            - 0 OK
+                            - 1 Invalid User
+                            - 2 Invalid Port
+                            - 3 USSD Expected
+                            - 4 Pending USSD
+                            - 5 SIM Unregistered
+                            - 6 Timeout
+                            - 7 Server Error
+                            - 8 SMS expected
+                            - 9 TO expected
+                            - 10 Pending Transaction
+                            - 11 TID Expected
+                            - 12 From Expected
+                      required:
+                        - status
+                        - tid
+                    description: >-
+                      Task processing results .
+
+                      If there is no TIDS in the request, this field is not
+                      included in the result
+                required:
+                  - reason
+                  - results
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 200
+                    reason: OK
+                    results:
+                      - tid: 1
+                        status: 0 OK
+                      - tid: 2
+                        status: 2 Invalid Port
+          headers: {}
+      security: []
+      x-codeSamples:
+        - lang: C++
+          label: C++
+          source: |
+            
+            #include <iostream>
+            #include <curl/curl.h>
+            #include <string>
+            
+            int main(void) {
+              CURL *curl;
+              CURLcode res;
+
+              curl = curl_easy_init();
+              if(curl) {
+                const char *url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+                std::string jsonPayload = R"({"tids : ["tid1","tid2"]"});
+
+                struct curl_slist *headers = NULL;
+                headers = curl_slist_append(headers,"Content-Type: application/json");
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+                curl_easy_setopt(curl,CURLOPT_POSTFIELDS, jsonPayload.c_str());
+
+                res = curl_easy_perform(curl);
+                if(res != CURLE_OK) {
+                  std::cerr << "curl_easy_perform failed: " << curl_easy_strerror(res) << std:: endl;
+                }
+
+                curl_easy_cleanup(curl);
+                curl_slist_free_all(headers);
+              }
+              return 0;
+            }
+        - lang: php
+          label: php
+          source: |
+            
+            <?php
+            $url = 'http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root';
+            $data = json_encode([
+              'tids' => [
+                'tid1',
+                'tid2'
+              ]
+            ]);
+
+            $options = [
+              'http' => [
+                'header' = "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => $data,
+              ],
+            ];
+
+              $content = stream_context_create($options);
+              $result = file_get_contents($url, false, $context);
+
+              if ($result === FALSE) {
+                echo "Request failed!";
+              } else {
+                echo $result;
+              }
+            ?>
+        - lang: C#
+          label: C#
+          source: |
+            
+            using System;
+            using System.Net.Http;
+            using System.Text;
+            using System.Threading.Tasks;
+
+            class Program {
+              static async Task Main(string[] args) {
+                var url = "http://192.168.1.67:80/goip_remove_sms,html?username=root&password=root";
+                var payload = new{
+                  tids = new[] { "tid1","tid2" }};
+
+                  var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                  var content = new StringContent(json, encoding utf8, "application/json");
+
+                  using (var client = new HttpClient()) {
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                  }
+                }
+              }
+            }
+        - lang: cURL
+          label: cURL
+          source: |
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"tids: ["tid1","tid2"]"}' \
+              http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root
+        - lang: PowerShell
+          label: PowerShell
+          source: >
+            
+            $url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+            $headers = @{
+              "Content-Type" = "application/json"
+            }
+            $body = @{
+              tids = @(
+                @("tid1","tid2")
+              )
+            } | ConvertTo-Json
+
+            $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $body
+            Write-Output $response
+        - lang: VBA
+          label: VBA
+          source: >
+            
+            Set objHTTP = CreateObject("WinHttp.WinHttpRequest.5.1")
+            url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+            jsonPayload = "{""tids"": [[""tid1""],[""tid2""]]}"
+            objHTTP.Open "POST", url, False
+            objHTTP.setRequestHeader "Content-Type", "application/json"
+            objHTTP.Send jsonPayload
+
+            Debug.Print objHTTP.ResponseText
+        - lang: Python
+          label: Python
+          source: >
+            import requests
+            import Json
+
+            url = "http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root"
+            payload = {
+              "tids" : {
+                "tid1",
+                tid2"
+              }
+            }
+            headers = {
+              "Content-Type" : "application/json"
+            }
+
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            print(response.text)
+        - lang: Shell
+          label: Shell
+          source: |
+            
+            wget --no-check-certificate --quiet \
+              --method POST \
+              --header 'Content-Type: application/json' \
+              --body-data '{"tids": [["tid1"],["tid2"]]}' \
+              http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root
+        - lang: Java
+          label: Java
+          source: |
+            import java.io.OutputStream;
+            import java.net.HttpURLConnection;
+            import java.net.URL;
+
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                URL url = new URL("http://192.168.1.67:80/goip_remove_sms.html?username=root&password=root");
+                HttpURLContention conn = (HttpURLContent) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String jsonPayload = "{\"tids\": [\"tid1\", \"tid2\"]}";
+
+                try (OutputStream os = conn.getOutputStream()) {
+                  byte[] input = jsonPayload.getBytes("utf-8");
+                  os.write(input, 0, input.length);
+
+                  int responseCode = conn.getResponseCode();
+                  System.out.println("Response Code: " + responseCode);
+                }
+              }
+            }
+
+
+  http://host:port/goip_get_tasks.html:
+    get:
+      summary: Query message task
+      deprecated: false
+      description: |-
+        Message description :
+
+        host: Device IP address
+
+        port: Device webpage management port, default value is 80.
+
+        Query the SMS task waiting to be sent in the send queue. 
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API Version
+            This document describes 
+            specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+        - name: port
+          in: query
+          description: Send port. Starting from 1
+          required: true
+          schema:
+            type: integer
+            examples:
+              - 1
+              - 32
+              - 64
+        - name: has_content
+          in: query
+          description: Whether to bring a text message in the result
+          required: false
+          schema:
+            type: integer
+            default: 0
+            enum:
+              - 0
+              - 1
+        - name: pos
+          in: query
+          description: |-
+            The starting position of the request. 
+            0 represents the 
+            beginning of the first task
+          required: true
+          schema:
+            type: integer
+        - name: num
+          in: query
+          description: |-
+            The number of 
+            Request messages
+          required: false
+          schema:
+            type: integer
+            default: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tid:
+                        type: integer
+                        description: Task ID
+                    required:
+                      - tid
+                  description: The task ID to be query.
+              required:
+                - tids
+            example: 
+              tids:
+                - tid1
+                - tid2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    examples:
+                      - 200
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: 'Interface processing results '
+                    examples:
+                      - OK
+                  total_num:
+                    type: integer
+                    description: The number of tasks
+                  task_num:
+                    type: integer
+                    description: Query the number of tasks returned
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: integer
+                          description: Task id
+                        from:
+                          type: string
+                          description: |-
+                            One or more (commas, short horizontal 
+                            connections) send ports (from 1)
+                          default: Device selection
+                        to:
+                          type: string
+                          description: |-
+                            One or more (comma connected) message 
+                            receiver number.
+                        sms:
+                          type: string
+                          description: Message content
+                        chs:
+                          type: string
+                          description: Code set（utf8|base64）
+                          default: Utf-8
+                        coding:
+                          type: integer
+                          description: 'Specifies the encoding of the message sent. '
+                          default: 0
+                          enum:
+                            - 0 Do not specify
+                            - 1 USC2
+                            - 2 7bit
+                        state:
+                          type: integer
+                          description: Task status
+                          enum:
+                            - 0 normal
+                            - 1 suspended
+                      required:
+                        - tid
+                        - to
+                        - state
+                    description: Query the returned array of tasks
+                required:
+                  - reason
+                  - tasks
+                  - total_num
+                  - task_num
+                  - code
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 200
+                    reason: OK
+                    total_num: n
+                    task: 
+                      - - tid: 1
+                          from: 1
+                          to: 10086
+                          sms: hello123
+                          chs: utf-8
+                          coding: 0
+                          state: 0
+                      - - tid: 2
+                          from: 2
+                          to: 10001
+                          sms: hello123
+                          chs: utf-8
+                          coding: 0
+                          state: 0
+          headers: {}
+      security: []
+  Server or device configuration decision:
+    post:
+      summary: Sending status report
+      deprecated: false
+      description: >-
+        While SMS send successfully/failed/timeout, device will put the result
+        in cache, after meet condition(cache storage full or cache time reached
+        ),device will send POST request to report one or more task execute
+        result. If it is group sending, device will report execute result
+        periodically until all num in this group sending task get a result. 
+
+
+        Tips： 
+
+
+        1.tid related to the task ID in the send-sms message. 
+
+
+        2.sending, sent, failed are accumulated num in one task. 
+
+
+        3.Sdr(successfully send record) list records between 2 status-report,
+        server should keep before details. 
+
+
+        4.fdr(failed detail record) list records between 2 status-report, server
+        should keep before details.
+      tags:
+        - Send message
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version
+            This document describes specification support only
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    const: status-report
+                    description: Message type
+                  rpt_rum:
+                    type: string
+                    description: Report num
+                    default: '1'
+                    examples:
+                      - '1'
+                  rpts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tid:
+                          type: integer
+                          description: Related task ID
+                        sending:
+                          type: integer
+                          description: Total num of SMS in sending
+                        sent:
+                          type: integer
+                          description: Total num of SMS successfully send
+                        failed:
+                          type: integer
+                          description: Total num of SMS failed send
+                        unsent:
+                          type: integer
+                          description: 'Total SMS in cache waiting for send '
+                        sdr:
+                          type: array
+                          items:
+                            type: object
+                            properties: {}
+                            description: |-
+                              Success report is a array, 
+                              [0]: recipients num index(based on 
+                              group sending),int 
+                              [1]: num, string 
+                              [2]: SMS sending port(1.01,2.02,...), 
+                              string 
+                              [3]: SMS send timestamp in UTC time, int
+                          description: |-
+                            Successfully send details(one list for 
+                            one num)
+                        fdr:
+                          type: array
+                          items:
+                            type: object
+                            properties: {}
+                            description: >-
+                              [0]: recipients num index(based on 
+
+                              group sending),int 
+
+                              [1]: num, string 
+
+                              [2]: SMS sending port(1.01,2.02,...), 
+
+                              string 
+
+                              [3]: SMS send timestamp in UTC time.int
+
+                              [4]: Progress reason, code+details[refer to 1.0
+                              API] 
+
+                              [5]: Carrier reason, code+ description. Valid when
+                              [4] is failed to send
+                          description: Fail send details(one num one list)
+                      required:
+                        - tid
+                        - sending
+                        - sent
+                        - failed
+                        - unsent
+                        - sdr
+                        - fdr
+                    description: Detail status report
+                required:
+                  - type
+                  - rpt_rum
+                  - rpts
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    type: status-report
+                    rpt_num: n
+                    rpts:
+                      - - tid: 1
+                          sending: 1
+                          sent: 1
+                          failed: 0
+                          unsent: 1
+                          sdr:
+                            - recipients_num_index: 13xxxxxxxxx(Base on group sending)
+                              num: 13xxxxxxxxx
+                              SMS_sending_port: 1.01
+                              SMS_sending_timestamp_inUTCtime: 1739269711
+
+                               
+                          fdr: 
+                            - recipients_num_index: 13xxxxxxxxx(Base on group sending)
+                              num: 13xxxxxxxxx
+                              SMS_sending_port: 1.01
+                              SMS_sending_timestamp_inUTCtime: 1739269711 
+                              progress_reason: code+details
+                              carrier_reason: code+ description.Valid when [4] is failed to send
+
+          headers: {}
+      security: []
+  http://host:port/goip_get_esims.html:
+    get:
+      summary: Query ESIM
+      deprecated: false
+      description: >-
+        Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+
+
+        The write and delete operations for ESIM cannot be completed
+        immediately, so when a successful HTTP request is submitted, the status
+        field returned is 1, indicating that the task has been submitted but the
+        operation has not been performed yet. To know the result of the previously submitted operation, it is necessary to use the query ESIM
+        interface regularly to obtain various ESIM information and judge the
+        value of the status field.
+
+
+      tags:
+        - ESIM
+      parameters:
+        - name: version
+          in: query
+          description: |-
+            API version  
+            1.0: Compatible with
+            previous API
+            1.1: Support for the description of this document
+          required: false
+          schema:
+            type: string
+            examples:
+              - '1.0: Compatible with previous API '
+              - '1.1: Support for the description of this document'
+            default: '1.0'
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+        - name: ports
+          in: query
+          description: |-
+            The specified port number (valued
+            from 1)
+          required: false
+          schema:
+            type: string
+            default: all
+            examples:
+              - 'all: all ports'
+              - '2: Specify a single port'
+              - >-
+                1-2, 4: Port numbers separated by short numbers, specifying
+                multiple ports, where "-" indicates a continuous port number
+
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                  count:
+                    type: integer
+                    description: Number of statistical results
+                  ports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                          description: Port number (value from 1)eUICC ID
+                        eid:
+                          type: string
+                          description: eUICC ID
+                        esim_state:
+                          type: string
+                          description: If or not the eid is obtained correctly
+                          enum:
+                            - 0 no
+                            - 1 yes
+                        profiles:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              slot:
+                                type: integer
+                                description: Slot number (value from 1)
+                              enabled:
+                                type: integer
+                                description: If or not the current profile is enabled
+                                enum:
+                                  - 0 disabled
+                                  - 1 enabled
+                              iccid:
+                                type: string
+                                description: ESIM corresponding iccid
+                              ac:
+                                type: string
+                                description: Activation code
+                              cc:
+                                type: string
+                                description: Confirmation code
+                              provider:
+                                type: string
+                                description: Name of service provide
+                              exist:
+                                type: integer
+                                description: >-
+                                  If or not the current slot has been written
+                                  into the profile
+                                enum:
+                                  - 0 no
+                                  - 1 yes
+                              op:
+                                type: integer
+                                description: Profile operation of the current slot
+                                enum:
+                                  - 0 No operation
+                                  - 1 Writing
+                                  - 2 Deleting
+                              status:
+                                type: integer
+                                description: The current esim profile operation status
+                                enum:
+                                  - 0 No operation
+                                  - 1 Operation request submitted
+                                  - 2 Profile operation is in progress on the current port
+                                  - 3 Operation error,the specific reason is described in the reason field
+                              reason:
+                                type: string
+                                description: Causes of operational errors
+                            required:
+                              - slot
+                              - enabled
+                              - iccid
+                              - ac
+                              - cc
+                              - provider
+                              - exist
+                              - op
+                              - reason
+                              - 01JKF8VV7JBRWYHHFD7G54PRSV
+                              - status
+                            description: ESIM information array item description
+                          description: >-
+                            The array of ESIM information for this port, with
+                            each ESIM information as follows
+                      required:
+                        - port
+                        - eid
+                        - esim_state
+                        - profiles
+                      description: Description of the query result item
+                    description: >-
+                      An array of query results. Each result item in the array
+                      is as follows
+                required:
+                  - code
+                  - reason
+                  - count
+                  - ports
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+                    count: 1
+                    ports:
+                      - port: 5
+                        eid: 123abc456def789ghi
+                        esim_state: 1
+                        profiles: 
+                          - slot: 1
+                            enabled: 1
+                            iccid: 898604701924xxxxxxxx
+                            aa: ""
+                            cc: ""
+                            provider: China Mobile
+                            exist: 1
+                            op: 1
+                            status: 1
+                            reason: ""
+          headers: {}
+      security: []
+  http://host:port/goip_write_esims.html:
+    post:
+      summary: Write ESIM
+      deprecated: false
+      description: |-
+        Message description :
+
+        host: Device IP address
+
+        port: Device webpage management port, default value is 80.
+
+        The write operations for ESIM  cannot be completed immediately.
+      tags:
+        - ESIM
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          schema:
+            type: string
+            default: '1.0'
+            examples:
+              - '1.0: Compatible with previous API'
+              - '1.1: Support for the description of this document'
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              port: 1
+              slot: 1
+              ac: ""
+              cc: ""
+            schema:
+              type: object
+              properties:
+                port:
+                  type: integer
+                  description: Port number (value from 1)
+                slot:
+                  type: integer
+                  description: Slot number (value from 1)
+                ac:
+                  type: string
+                  description: Activation code
+                cc:
+                  type: string
+                  description: Confirmation code
+              required:
+                - port
+                - slot
+                - ac
+                - cc
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                    examples:
+                      - 200
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                    examples:
+                      - OK
+                  ports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                          description: Port number (value from 1)
+                          examples:
+                            - 1
+                            - 32
+                            - 64
+                        slot:
+                          type: integer
+                          description: slot number (value from 1)
+                          examples:
+                            - 1
+                            - 32
+                            - 64
+                        status:
+                          type: integer
+                          description: >-
+                            The current esim profile submission write operation
+                            status
+                            enum: 
+                              - 1 Write request has been submitted
+                              - 2 The current port is performing profile operation,submission failed
+                              - 3 Other errors,submission failed
+                      required:
+                        - port
+                        - slot
+                        - status
+                      description: Description of the query result item
+                    description: An array of query results
+                required:
+                  - code
+                  - reason
+                  - ports
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 200
+                    reason: OK
+                    ports: 
+                      - port: 1
+                        slot: 1
+                        status: 1
+          headers: {}
+      security: []
+  http://host:port/goip_delete_esims.html:
+    post:
+      summary: Delete ESIM
+      deprecated: false
+      description: |-
+        Message description :
+
+        host: Device IP address
+
+        port: Device webpage management port, default value is 80.
+
+        The delete operations for ESIM cannot be completed immediately.
+        
+      tags:
+        - ESIM
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: '1.0'
+            examples:
+              - '1.0: Compatible with previous API'
+              - '1.1: Support for the description of this document'
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              port: 1
+              slot: 1
+            schema:
+              type: object
+              properties:
+                port:
+                  type: integer
+                  description: port number (value from 1)
+                  examples:
+                    - 1
+                    - 32
+                    - 64
+                slot:
+                  type: integer
+                  description: slot number (value from 1)
+                  examples:
+                    - 1
+                    - 32
+                    - 64
+              required:
+                - port
+                - slot
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    examples:
+                      - 200
+                  reason:
+                    type: string
+                    examples:
+                      - OK
+                  ports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                        slot:
+                          type: integer
+                        status:
+                          type: integer
+                          enum:
+                            - 1 The deletion request has been submitted
+                            - 2 The current port is performing a profile operation,and the submission failed
+                            - 3 Other errors,submission failed
+                      required:
+                        - port
+                        - slot
+                        - status
+                required:
+                  - code
+                  - reason
+                  - ports
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 200
+                    reason: OK
+                    ports: 
+                      - port: 1
+                        slot: 1
+                        stauts: 1
+          headers: {}
+      security: []
+
+  Default set by device,server can revise it in SMS sending quest message:
+    get:
+      summary: Receive SMS
+      deprecated: false
+      description: >-
+        1.Device will send SMS to server by POST request, while it get SMS from
+        operator. 
+
+
+        2.While forwarding SMS, device send a request to server first, so even
+        device in LAN, and server in a public net, it also can work effectively
+
+
+        3.URL：Default set by device，server can revise it in SMS sending quest
+        message.
+      tags:
+        - Receive SMS
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          example: '1.1'
+          schema:
+            type: string
+            default: '1.1'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Data type
+                  sms_num:
+                    type: string
+                    description: Total SMS num
+                  sms:
+                    type: array
+                    items:
+                      type: string
+                    description: >-
+                      For saving the bandwidth, SMS content also storage in a
+                      array.
+                      enum:
+                        - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report
+                        - [1]: Receive report(‘1.01’,’1.02’)
+                        - [2]: timestamp while device got this SMS
+                        - [3]: Sender(If Delivery report flag set to 1, then sender
+                      should be SMCC)
+                        - [4]: Recipient(If Delivery report flag set to 1,then recipient should be the original recipient. )
+                        - [5]: SMS content: Delivery report: "code scts", code is 0 for successful delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
+                required:
+                  - sms
+                  - type
+                  - sms_num
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    type: recv-sms
+                    sms_num: n
+                    sms:
+                      - "..."
+          headers: {}
+      security: []
+  http://host:port/goip_get_sms.html:
+    get:
+      summary: Query SMS
+      deprecated: false
+      description: >-
+
+        1.Customers can actively query the SMS received by the device through
+        HTTP GET/POST request.
+
+
+        2.Query process：
+
+
+        1).Query all messages received by the device without the query
+        parameters (except for user-verified parameters). 
+
+
+        2).Use the value of next_sms returned by the device as the value of the
+        sms_id parameter to query subsequent SMS messages. 
+
+
+        3).If the device restarts, return a different ssrc synchronization
+        source ID and return to step 1. 
+
+
+        4).Repeat step 2
+
+
+        3.Message description :
+
+
+        host: Device IP address 
+
+
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Query SMS
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device  Password
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: sms_id
+          in: query
+          description: Start SMS ID
+          required: false
+          example: '1'
+          schema:
+            type: string
+        - name: sms_num
+          in: query
+          description: 'Specify the number of SMS to be queried '
+          required: false
+          example: 0 Query all SMS
+          schema:
+            type: string
+        - name: sms_del
+          in: query
+          description: Delete the SMS that has been returned by the query
+          required: false
+          enum: 
+            - 0 Do not Delete
+            - 1 Delete
+          default: 0
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Operation code
+                  reason:
+                    type: string
+                    description: Reason description
+                  ssrc:
+                    type: string
+                    description: >-
+                      Synchronization source identifier The device generates a
+                      new ssrc each time it runs.So the value changes, re-query
+                  sms_num:
+                    type: integer
+                    description: Number of SMS queried
+                  next_sms:
+                    type: integer
+                    description: The next SMS ID
+                  data:
+                    type: integer
+                    description: >-
+                      Queryed SMS content
+
+                      For saving the bandwidth, SMS content also storage in a
+                      array. 
+                      enum: 
+                        - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report [1]: Receive report(‘1.01’,’1.02’)
+                        - [2]: timestamp while device got this SMS
+                        - [3]: Sender(If Delivery report flag set to 1, then sender should be SMCC)
+                        - [4]: Recipient(If Delivery report flag set to 1,then recipient should be the original recipient.)
+                        - [5]: SMS content: Delivery report: "code scts", code is 0 for successful delivery, utf-8 Ordinary SMS: BASE64 encoding of utf-8
+                required:
+                  - code
+                  - reason
+                  - ssrc
+                  - sms_num
+                  - next_sms
+                  - data
+              examples:
+                '1':
+                  summary: Data
+                  value: 
+                    code: 0
+                    reason: OK
+                    ssrc: 0123456789abcdef
+                    sms_num: 2
+                    next_sms: 3
+                    data:
+                     - - 0
+                       - 1B
+                       - 1466506477
+                       - 10010
+                       - 13265825xxx
+                       - 5bCK5pWs55qE55So5oi377yM5oKo5aW977yB5o6o6I2Q5oKo5L2/55So44CQ5omL5py66JCl5Lia5Y6F44CR5LiA56uZ5byP5YWN5rWB6YeP5pyN5Yqh5bmz5Y+wIGh0dHA6Ly91LjEwMDEwLmNuL2R0Y2Qg77yM6L275p2+5p+l6K+i6K+d6LS544CB5L2Z6aKd5Y+K6K+m5Y2V77yb5oiW5Zue5aSN5Lul5LiL5pWw5a2X5Luj56CB6I635Y+W5oKo6ZyA6KaB55qE5pyN5Yqh77yaDQoxMDEu5b2T5pyI6K+d6LS577ybDQoxMDIu5Y+v55So5L2Z6aKd77ybDQowLuWNh+e6pzRH77ybDQoxLuivnei0ueWPiuenr+WIhu+8mw0KMi7otKbmiLfmn6Xor6LvvJsNCjMu5YWF5YC877ybDQo0LuWuouaIt+acjeWKoe+8mw0KNS7kuJrliqHlip7nkIbvvJsNCjYu5aKe5YC85Lia5Yqh77ybDQo3LuecgeS7veS4k+WMuu+8mw0KOS7ng63ngrnkv4PplIDjgIINCuW5v+S4nOiBlOmAmuOAggAAAAA=
+                     - - 0
+                       - 1B
+                       - 1466506670
+                       - 10010
+                       - 13265825xxx
+                       - 5bCK5pWs55qE55So5oi377yM5oKo5aW977yB5o6o6I2Q5oKo5L2/55So44CQ5omL5py66JCl5Lia5Y6F44CR5LiA56uZ5byP5YWN5rWB6YeP5pyN5Yqh5bmz5Y+wIGh0dHA6Ly91LjEwMDEwLmNuL2R0Y2Qg77yM6L275p2+5p+l6K+i6K+d6LS544CB5L2Z6aKd5Y+K6K+m5Y2V77yb5oiW5Zue5aSN5Lul5LiL5pWw5a2X5Luj56CB6I635Y+W5oKo6ZyA6KaB55qE5pyN5Yqh77yaDQoxMDEu5b2T5pyI6K+d6LS577ybDQoxMDIu5Y+v55So5L2Z6aKd77ybDQowLuWNh+e6pzRH77ybDQoxLuivnei0ueWPiuenr+WIhu+8mw0KMi7otKbmiLfmn6Xor6LvvJsNCjMu5YWF5YC877ybDQo0LuWuouaIt+acjeWKoe+8mw0KNS7kuJrliqHlip7nkIbvvJsNCjYu5aKe5YC85Lia5Yqh77ybDQo3LuecgeS7veS4k+WMuu+8mw0KOS7ng63ngrnkv4PplIDjgIINCuW5v+S4nOiBlOmAmuOAggAAAAA=
+
+          headers: {}
+      security: []
+  http://host:port/goip_get_status.html:
+    get:
+      summary: Status notification
+      deprecated: false
+      description: >-
+        1.This device will send a HTTP POST request which include the device
+        running status information to the SMS server when it reaches either of
+        below conditions.
+
+
+        One of device port status changed.
+
+
+        Community period expired.
+
+
+        2.Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Status notification
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device  Password
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: url
+          in: query
+          description: |-
+            Specific the report URL
+            Tips:
+            Special characters need do URL encode
+            Just need specific once time
+          required: false
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: >-
+            Report period
+
+            >0:Report status according to the specified report period,the
+            minimum value is 60,the unit is second 
+
+            0:cancel status report
+          required: false
+          schema:
+            type: integer
+            default: 60
+        - name: all_sims
+          in: query
+          description: Get all the card status
+          required: false
+          schema:
+            type: integer
+            default: 0
+            enum:
+              - 0 disable
+              - 1 enable
+        - name: all_slots
+          in: query
+          description: Get the status of all card slots
+          required: false
+          schema:
+            type: integer
+            default: 0
+            enum:
+              - 0 disable
+              - 1 enable
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    const: dev-status
+                    description: Message type
+                  seq:
+                    type: integer
+                    description: Device status message sequence number, start from 1
+                  expires:
+                    type: integer
+                    default: 180
+                    description: Dev-status sending period
+                  mac:
+                    type: string
+                    description: Device MAC
+                  ip:
+                    type: string
+                    description: Device IP address
+                  max-ports:
+                    type: integer
+                    description: Total ports of dev
+                  max-slots:
+                    type: string
+                    default: '1'
+                    description: Total SIM slots of deviceice
+                  status:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: string
+                      required:
+                        - port
+                    description: Status of device port
+                required:
+                  - type
+                  - mac
+                  - ip
+                  - status
+                  - seq
+                  - max-ports
+              examples:
+                '1':
+                  summary: dev-status
+                  value: 
+                    type: dev-Status
+                    seq: 1
+                    expires: 180
+                    mac: 00-30-f1-01-02-03
+                    ip: 192.168.1.67
+                    max-ports: 32
+                    max-slots: 4
+                    status: 
+                      - port: 1A
+                        sim: ""
+                        seq: 1
+                        st: 7
+                        imei: 86739075242xxxx
+                        active: 1
+                        inserted: 1
+                        slot_active: 1
+                        led: 0
+                        iccid: 893510123241310xxxxx
+                        imsi: 2680111006xxxxx
+                        sn: ""
+                        opr: 46000 CHINA MOBILE
+                        bal: 0.00
+                        sig: 5
+                      - ......
+
+          headers: {}
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    const: port-status
+                    description: Message type
+                  port:
+                    type: string
+                    description: >-
+                      Describe the current working port and SIM slot. Like
+                      1.01,1.02.....32.04
+                  sim:
+                    type: string
+                    description: Simpool’s identification
+                  seq:
+                    type: integer
+                    description: The port is incremented from port 1
+                  st:
+                    type: string
+                    description: 'Port status code + detail '
+                    enum:
+                      - 0 No SIM card
+                      - 1 Exist idel SIM card
+                      - 2 Registering
+                      - 3 Registered
+                      - 4 Call connected
+                      - 5 Nobalance or alarm
+                      - 6 Register failed
+                      - 7 SIM card locked by device
+                      - 8 SIM card locked by operator
+                      - 9 Recognize SIM card error
+                      - 11 Card Detected
+                      - 12 User locked
+                      - 13 Port inter-calling
+                      - 14 Inter-calling holding
+                      - 15 Access Mobile Network
+                      - 16 Module Response timeout
+                  bal:
+                    type: number
+                    description: SIM card  balance(yy.mm)
+                  opr:
+                    type: string
+                    description: >-
+                      SIM card operator name and ID valid while parameter “st”
+                      equal to 3 or 4
+                    nullable: true
+                  sn:
+                    type: string
+                    description: SIM number
+                  imei:
+                    type: string
+                    description: IMEI of module
+                  active:
+                    type: integer
+                    description: Current card
+                    enum:
+                      - 0 no
+                      - 1 yes
+                  imsi:
+                    type: string
+                    description: IMSI num of SIM card
+                  iccid:
+                    type: string
+                    description: ICCID num of SIM card
+                  inserted:
+                    type: integer
+                    description: A card is inserted into a slot
+                    enum:
+                      - 1 yes
+                      - 0 no
+                  slot_active:
+                    type: integer
+                    description: Whether the card slot is enabled
+                    enum:
+                      - 0 disabled
+                      - 1 enabled
+                  sig:
+                    type: integer
+                    description: Signal value of the module
+                    minimum: 0
+                    maximum: 31
+                  led:
+                    type: integer
+                    description: Led is enabled or not
+                    enum:
+                      - 0 no
+                      - 1 yes
+                required:
+                  - type
+                  - port
+                  - bal
+                  - st
+              examples:
+                '1':
+                  summary: port-status
+                  value:
+                    type: port-status
+                    port: 2B
+                    sim: ''
+                    seq: 8
+                    st: '3'
+                    bal: 100
+                    opr: 46001 CHINA UNICOM GSM
+                    sn: ''
+                    imei: '8986105994xxxxx'
+                    active: 1
+                    imsi: '4600149782xxxxx'
+                    iccid: '898601162899100xxxxx'
+                    inserted: 1
+                    slot_active: 1
+                    sig: 29
+                    led: 1
+          headers: {}
+      security: []
+  http://host:port/goip_get_sms_stat.html:
+    get:
+      summary: Query SMS statistics
+      deprecated: false
+      description: >-
+        1.The client can actively query the short message statistics of the
+        device through the HTTP GET request.
+
+        2.host: Device IP address
+           port: Device webpage management port, default value is 80.
+      tags:
+        - Query SMS statistics
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          example: '1.0'
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: xxx
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          example: xxx
+          schema:
+            type: string
+        - name: ports
+          in: query
+          description: >-
+            The specified port number (valued from 1). The values are as
+            follows:
+              enum: 
+                - 1)all: all ports;
+                - 2)Specify a single port;
+                - 3)1-2, 4: Port numbers separated by short numbers, specifying multiple ports, where "-" indicates a continuous port number;
+
+          required: false
+          example: all
+          schema:
+            type: string
+        - name: slots
+          in: query
+          description: >-
+            The specified card slot number (value from 1). The values are as
+            follows:
+              enum: 
+                - 1).Do not specify: current card
+                - 2)all: all card slots;
+                - 3)2: Specify a single card slot;
+                - 4)1-2, 4: A card slot number separated by a short number, specifying a plurality of card slots, where "-" indicates a continuous card slot number;
+
+          required: false
+          example: Current card
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: |-
+            Statistic type. 
+
+          required: false
+          example: '0'
+          schema:
+            type: string
+            enum:
+              - 0 The last hour
+              - 1 The last two hours
+              - 2 Today
+              - 3 Cumulative
+            default: '0'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                  count:
+                    type: integer
+                    description: Number of statistical results
+                  stats:
+                    type: array
+                    items:
+                      type: string
+                    description: |-
+                      Array of statistical results (stat
+                      results are as follows)
+                  port:
+                    type: integer
+                    description: Port number (value from 1)
+                  slot:
+                    type: integer
+                    description: Slot number (value from 1)
+                  received:
+                    type: integer
+                    description: Number of SMS received
+                  sent:
+                    type: integer
+                    description: Number of SMS sent
+                  sent_ok:
+                    type: integer
+                    description: Number of successful SMS sent
+                  sent_failed:
+                    type: integer
+                    description: Number of failed SMS sent
+                  con_failed:
+                    type: integer
+                    description: Number of consecutive failed SMS
+                  unsent:
+                    type: integer
+                    description: Number of unsent SMS
+                  sending:
+                    type: integer
+                    description: Number of SMS being sent
+                required:
+                  - code
+                  - reason
+                  - count
+                  - stats
+                  - port
+                  - slot
+                  - received
+                  - sent
+                  - sent_ok
+                  - sent_failed
+                  - con_failed
+                  - unsent
+                  - sending
+              examples:
+                '1':
+                  summary: Response
+                  value: 
+                    code: 200
+                    reason: OK
+                    count: n
+                    stats: 
+                      - port: 1
+                        slot: 1
+                        received: 5
+                        sent: 1
+                        sent_ok: 1
+                        sent_failed: 0
+                        con_failed: 0
+                        unsent: 0
+                        sending: 0
+                      - port: 2A
+                        "...": ""
+                      - "..."
+          headers: {}
+      security: []
+  http://host:port/goip_get_call_stat.html:
+    get:
+      summary: Query call statistics
+      deprecated: false
+      description: >-
+        1.The client can actively query the call statistics of the device through the HTTP GET request.
+
+
+        2.Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+      tags:
+        - Query call statistics
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: '1.0'
+            examples:
+              - '1.0: Compatible with previous API'
+              - '1.1: Support for the description of this documen'
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+        - name: ports
+          in: query
+          description: The specified port number (valued from 1)
+          required: false
+          schema:
+            type: string
+            examples:
+              - 'all: all ports'
+              - '2: Specify a single port'
+              - >-
+                1-2, 4: Port numbers separated by short numbers, specifying
+                multiple ports, where "-" indicates a continuous port number
+            default: all
+        - name: slots
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: Current card
+            examples:
+              - 'Do not specify: current card'
+              - 'all: all card slots'
+              - '2: Specify a single card slot'
+              - >-
+                1-2, 4: A card slot number separated by a short number,
+                specifying a plurality of card slots, where "-" indicates a
+                continuous card slot number
+        - name: type
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: '0'
+            enum:
+              - 0 The last hour
+              - 1 The last two hours
+              - 2 Today
+              - 3 Cumulative
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                  count:
+                    type: integer
+                    description: Number of statistical results
+                  stats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: integer
+                          description: Port number (value from 1)
+                        slot:
+                          type: integer
+                          description: Slot number (value from 1)
+                        calls:
+                          type: integer
+                          description: Number of calling
+                        alerted:
+                          type: integer
+                          description: Number of alerting
+                        connected:
+                          type: integer
+                          description: Number of connected calls
+                        con_failed:
+                          type: integer
+                          description: Number of failed calls
+                        nc:
+                          type: string
+                          description: >-
+                            No Carriers success ratio ("n/m"), the numerator n
+                            is the success number, and the
+
+                            denominator m is the total number
+                        pdd:
+                          type: integer
+                          description: PDD
+                        acd:
+                          type: integer
+                          description: ACD
+                        asr:
+                          type: integer
+                          description: ASR percentage value
+                        tcd:
+                          type: integer
+                          description: |-
+                            Cumulative call duration
+                            (minutes)
+                        act_tcd:
+                          type: integer
+                          description: |-
+                            Actual cumulative call
+                            duration (seconds)
+                      required:
+                        - port
+                        - slot
+                        - calls
+                        - alerted
+                        - connected
+                        - con_failed
+                        - nc
+                        - pdd
+                        - acd
+                        - asr
+                        - tcd
+                        - act_tcd
+                    description: 'Array of statistical results '
+                required:
+                  - code
+                  - reason
+                  - stats
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+                    stats:
+                      - port: 1
+                        slot: 1
+                        calls: 1
+                        alerted: 1
+                        connected: 1
+                        con_failed: 0
+                        nc: 0/0
+                        pdd: 0
+                        acd: 32
+                        asr: 100
+                        tcd: 1
+                        act_tcd: 32
+                      - port: 2
+                        slot: 1
+                        calls: 0
+                        alerted: 0
+                        connected: 0
+                        con_failed: 0
+                        nc: 0/0
+                        pdd: 0
+                        acd: 0
+                        asr: 0
+                        tcd: 0
+                        act_tcd: 0
+          headers: {}
+      security: []
+  http://host:port/goip_send_cmd.html:
+    post:
+      summary: 'Send operate command '
+      deprecated: false
+      description: >-
+        Message description :
+
+
+        host: Device IP address
+
+
+        port: Device webpage management port, default value is 80.
+
+        Device offer API to server to change device status, like change sim
+        card, lock/unlock port, reboot device. About USSD command sending,
+        please refer to “USSD API”;
+
+        Device will send message to the server by port status notification when
+        lock port or change SIM card.
+
+
+      tags:
+        - 'Send operate command '
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device account
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+        - name: op
+          in: query
+          description: Operation description
+          required: false
+          schema:
+            type: string
+            enum:
+              - lock
+              - unlock
+              - switch
+              - reset
+              - save
+              - reboot
+              - multiple
+              - ledon
+              - ledoff
+        - name: par_name(n)
+          in: query
+          description: >-
+            The name of the parameter to be actually operated. If the parameter
+            is an array parameter, you can use parentheses with parameters, and
+            the subscript starts from 0. 
+            
+
+            Sms_url: destination URL for SMS push
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              type: command
+              op: multiple
+              ops: 
+                - op: lock
+                  ports: 1.01
+                - op: switch
+                  ports: 2B
+            schema: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  const: command
+                  description: Message type
+                op:
+                  type: string
+                  description: |-
+                      Operation type
+
+                      lock: lock port 
+
+                      unlock: unlock port 
+
+                      switch: switch SIM card 
+
+                      reset: reboot module 
+
+                      save: save configuration 
+
+                      reboot: reboot device 
+
+                      multiple: multiple command
+
+                      ledon: turn on led
+                      
+                      ledoff: turn off led
+                  enum: 
+                      - lock
+                      - unlock
+                      - switch
+                      - reset
+                      - save
+                      - reboot
+                      - multiple
+                      - ledon
+                      - ledoff
+                ports: 
+                  type: string
+                  description: |-
+                      The port NO. need to operate.
+
+                      all,*: all ports 
+
+                      It is valid while op 
+                      parameter equal to 
+                      lock/unlock/switch/reset/ledon/ledoff
+
+                      When op=lock|unlock, if you 
+                      do not specify the SIM slot, 
+                      the entire port will be 
+                      locked/unlocked. 
+
+                      When op=switch, it means to switch to this location. 
+
+                      When op=reset, only the port 
+                      number is valid.
+                ops:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      op:
+                        type: string
+                        description: Operation type
+                      ports:
+                        type: String
+                    required:
+                      - op
+                      - ports
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                required:
+                  - code
+                  - reason
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+          headers: {}
+      security: []
+  Add SIM Card Numbers:
+    post:
+      summary: Add SIM Card Numbers
+      deprecated: false
+      description: "Reference: \ninformation in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_number(n)=xxxx,\nn = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter\nExample:\nsim_number(192)=1358021178&sim_number(196)=123456762221\n192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1. \nSo, 25.01=(25 - 1)*8+(1-1) =192.\n196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. \nSo, \t25.05=(25-1)*8+(5-1)=196."
+      tags:
+        - 'Send operate command '
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: op
+          in: query
+          description: ''
+          required: true
+          const: set
+          example: set
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sim_number(n):
+                  type: string
+              required:
+                - sim_number(n)
+            example: 
+              sim_number(192)=135802xxxx&sim_number(196)=123456762221
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  reason:
+                    type: string
+                  par_set:
+                    type: integer
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 0
+                    reason: OK
+                    par_set: 2
+          headers: {}
+      security: []
+
+  Modify IMEI parameters:
+    post:
+      summary: Modify IMEI parameters
+      deprecated: false
+      description: "information in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_imei(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1) xxx = imei parameters \n\nExample: \nsim_imei(21)=865847053403202&sim_imei(51)=865847053403213 \n21 means 6B, B is slot_number 2 ,so 6B=（6 - 1）* 4+(2-1) =21 \n51 means 13D, D is slot_number 4,so 13D =(13-1)*4+(4-1)=51"
+      tags:
+        - 'Send operate command '
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: op
+          in: query
+          description: ''
+          required: true
+          const: set
+          example: set
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sim_imei(n):
+                  type: string
+              required:
+                - sim_imei(n)
+            example: 
+              sim_imei(21)=86584705340xxxx&sim_imei(51)=865847053403xxx
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  reason:
+                    type: string
+                  par_set:
+                    type: integer
+              examples:
+                '1':
+                  summary: Successfull instance
+                  value:
+                    code: 0
+                    reason: OK
+                    par_set: 2
+          headers: {}
+      security: []
+  In the 'SMS/MMS Settings' menu of the device, the 'MMS Inbox' page allows you to configure the push receiving server address:
+    post:
+      summary: Receive MMS
+      deprecated: false
+      description: >-
+        At this stage, the main function is to push the received MMS content to
+        the configured server address via HTTP.
+
+
+        MMS content is pushed via HTTP POST. Please refer to the HTTP standard
+        for details. Only special HTTP header fields are explained below (Note:
+        header fields may not exist). 
+        
+        
+        In addition, header fields starting with
+        'Emms-' are custom fields, while others are standard HTTP fields:
+      tags:
+        - Receive MMS
+      parameters:
+        - name: Emms-Subject
+          in: header
+          description: MMS subject
+          required: false
+          example: chatset=US-ASCII
+          schema:
+            type: string
+            examples:
+              - charset：Character set, such as UTF-8
+        - name: Emms-From
+          in: header
+          description: MMS sending address
+          required: false
+          example: type=PLMN;chartset=utf-8
+          schema:
+            type: string
+            examples:
+              - 'charset: Character set, such as UTF-8'
+              - 'type: Sender address type, usually a phone number, known as PLMN'
+        - name: Emms-To
+          in: header
+          description: MMS receiving address
+          required: false
+          example: type=PLMN;chartset=utf-8
+          schema:
+            type: string
+            examples:
+              - 'charset: Character set, such as UTF-8 '
+              - 'type: Sender address type, usually a phone number, known as PLMN'
+        - name: Date
+          in: header
+          description: MMS sending time
+          required: false
+          example: Thu,28 Mar 2024 09:47:10 GMT
+          schema:
+            type: string
+        - name: Content-Type
+          in: header
+          description: >-
+            The specifics need to be decided according to the operator, but
+            attention should be paid to the processing of multipart related
+            types
+          required: false
+          example: application/smil
+          schema:
+            type: string
+            examples:
+              - Related to specific types
+          headers: {}
+      security: []
+  http://host:port/goip_send_at.html:
+    get:
+      summary: AT Command
+      deprecated: false
+      description: >-
+        1.Application will send a HTTP GET request to the device, device will
+        return HTTP 200 OK response to the application.
+
+
+        2.Request URL
+
+
+        http://host[:port]/goip_send_at.html
+
+
+        host: device IP address
+
+
+        port: web port，default is 80，(Optional) 
+
+
+        3.Notes: # and % will be ignore by the browser, they need to
+                    replace by %23 and %2B
+      tags:
+        - AT Command
+      parameters:
+        - name: username
+          in: query
+          description: 'Device Usuername '
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          example: root
+          schema:
+            type: string
+        - name: port
+          in: query
+          description: Which port to send AT(begin with port 1)
+          required: true
+          example: ''
+          schema:
+            type: string
+        - name: at
+          in: query
+          description: AT command code
+          required: true
+          example: 'ati'
+          schema:
+            type: string
+        - name: timeout
+          in: query
+          description: timeout(second)
+          required: false
+          schema:
+            type: string
+            default: '120'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Return code，0 means success
+                    enum:
+                      - 0 Success or OK
+                      - 1 Username or assword wrong
+                      - 2 Port parameter wrong
+                      - 3 No AT parameter
+                      - 4 Have incomplete AT request
+                      - 5 timeout
+                  reason:
+                    type: string
+                    description: Reason describe
+                  resp:
+                    type: string
+                    description: AT command response
+                  max-port:
+                    type: string
+                    description: Specify the max port
+                  port:
+                    type: string
+                    description: |-
+                      Means available port
+                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 0
+                    reason: OK
+                    resp: ati\r\nQuectel_Ltd\r\nQuectel_M35\r\nRevision:M35FAR01A03\r\nOK\r\n
+          headers: {}
+      security: []
+  http://host:port/goip_send_ussd.html:
+    get:
+      summary: USSD API
+      deprecated: false
+      description: >
+        1.Application will send a HTTP GET request to the device, device will
+        return HTTP 200 OK response to the application.
+
+        2.Request URL
+
+        http://host[:port]/goip_send_ussd.html
+
+        host: device IP address
+
+        port: web port,default is 80,(Optional)
+      tags:
+        - USSD API
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+        - name: port
+          in: query
+          description: Which port to send ussd(begin with port 1)
+          required: true
+          schema:
+            type: string
+        - name: ussd
+          in: query
+          description: Ussd command code
+          required: true
+          schema:
+            type: string
+        - name: timeout
+          in: query
+          description: timeout (second)
+          required: false
+          schema:
+            type: string
+            default: '120'
+        - name: retries
+          in: query
+          description: >-
+            Number of failed retries.
+
+            Note: the top-up service should set this field to 0 and check if
+            success by USSD query.
+          required: false
+          schema:
+            type: string
+            default: '3'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Return code，0 means success
+                    enum:
+                      - 0 Success or OK
+                      - 1 Username or password wrong
+                      - 2 Port parameter wrong
+                      - 3 No ussd parameter
+                      - 4 Have incomplete USSD request
+                      - 5 SIM not resisted
+                      - 6 Timeout
+                  reason:
+                    type: string
+                    description: Reason describe
+                  ussd:
+                    type: string
+                    description: Ussd command response
+                  max-port:
+                    type: string
+                    description: Specify the max port
+                  port:
+                    type: string
+                    description: |-
+                      Means available port
+                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
+                required:
+                  - code
+                  - reason
+                  - ussd
+                  - max-port
+                  - port
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    code: 0
+                    reason: OK
+                    resp: your balance is 50.00$
+          headers: {}
+      security: []
