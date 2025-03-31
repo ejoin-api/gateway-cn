@@ -194,6 +194,8 @@ paths:
             schema:
               description: Ports
               type: array
+              items:
+                type: int 
               example: [1]
       
       responses:
@@ -841,7 +843,7 @@ paths:
                       to_title_array: 
                         type: array
                         description: Multiple MMS recipients and subject arrays. This field is valid only when smstype=2
-                        item: 
+                        items: 
                           type: object
                           properties:
                             number:
@@ -4759,59 +4761,3 @@ paths:
                     resp: your balance is 50.00$
           headers: {}
       security: []
-components:
-  schemas:
-    Category:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          minimum: 1
-          description: 分组ID编号
-        name:
-          type: string
-          description: 分组名称
-      xml:
-        name: Category
-    Tag:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          minimum: 1
-          description: 标签ID编号
-        name:
-          type: string
-          description: 标签名称
-      xml:
-        name: Tag
-    tasks:
-      type: object
-      properties:
-        tid:
-          type: integer
-          description: Task ID
-        from:
-          type: string
-          description: |-
-            Use‘,’‘-’to assign more than one port(from
-            channel 1)
-        to:
-          type: string
-        to_all:
-          type: string
-        sms:
-          type: string
-        chs:
-          type: string
-      required:
-        - from
-        - to
-        - to_all
-        - sms
-        - chs
-  securitySchemes: {}
-servers: []
-security: []
