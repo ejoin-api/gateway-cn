@@ -155,8 +155,9 @@ paths:
               description: Ports
               type: array
               items:
-               type: int
-              example: [1]
+               description: Port
+               type: number
+               example: 1
       
       responses:
         '202':
@@ -195,8 +196,9 @@ paths:
               description: Ports
               type: array
               items:
+                descroption: Port
                 type: int 
-              example: [1]
+                example: 1
       
       responses:
         '200':
@@ -324,8 +326,9 @@ paths:
               description: Ports
               type: array
               items:
+               description: Port
                type: int
-              example: [1]
+               example: 1
       
       responses:
         '200':
@@ -472,8 +475,9 @@ paths:
               description: Port number
               type: array
               items:
-               type: int
-              example: [1]
+               type: number
+               description: Port
+               example: 1
 
       responses:
         '200':
@@ -618,16 +622,62 @@ paths:
                     description: A serving cells array
                     items: 
                      type: object
+                     properties:
+                       port:
+                         type: number
+                       status:
+                         type: string
+                       operator: 
+                         type: string
+                       earfcn:
+                         type: number
+                       pci:
+                         type: number
+                       cid:
+                         type: string
+                       rsrp:
+                         type: number
                   neighbour_cells:
                     type: array
                     description: A neighbour cells array
                     items: 
                      type: object
+                     properties:
+                       port:
+                         type: number
+                       status:
+                         type: array
+                         items:
+                           type: object
+                           properties:
+                             operator:
+                               type: string
+                             earfcn:
+                               type: number
+                             pci:
+                               type: number
+                             cid:
+                               type: string
+                             rsrp:
+                               type: number
                   locking_status:
                     type: array
                     description: A status array
                     items: 
                      type: object
+                     properties:
+                       port:
+                         type: number
+                       status:
+                         type: number
+                       action:
+                         type: number
+                       earfcn:
+                         type: number
+                       pci:
+                         type: number
+                       action_status:
+                         type: number
               examples:
                 '1': 
                   summary: Example
