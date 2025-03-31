@@ -4789,4 +4789,4 @@ components:
         - chs
   securitySchemes: {}
 servers: []
-security: {}
+security: []
