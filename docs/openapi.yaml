@@ -21,7 +21,7 @@ info:
     etc.). Each example is accompanied with API response sample.
 
 
-  version: v2.4.1
+  version: v2.5.0
   x-logo:
     url: ./EAPI-logo.png
     backgroundColor: '#FAFAFA'
@@ -81,6 +81,8 @@ paths:
           description: 'OK'
         '400':
           description: 'Bad Request'
+          headers: {}
+      security: []
               
   http://host:port/get_network_type:
     post:
@@ -122,6 +124,8 @@ paths:
                     - lte
         '400':
           description: 'Bad Request'
+          headers: {}
+      security: []
           
   http://host:port/scan_serving_cells:
     post:
@@ -158,6 +162,8 @@ paths:
 
         '400':
           description: 'Bad Request'
+          headers: {}
+      security: []
 
   http://host:port/get_serving_cells:
     get:
@@ -236,7 +242,8 @@ paths:
                       rsrp: -86
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/scan_neighbour_cells:
     post:
       summary: ScanNeighbourCells
@@ -283,7 +290,8 @@ paths:
 
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/get_neighbor_cells:
     get:
       summary: GetNeighborCells
@@ -379,7 +387,8 @@ paths:
                         
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/lock_cells:
     post:
       summary: LockCells
@@ -427,7 +436,8 @@ paths:
 
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/query_cells_locking_status:
     post:
       summary: QueryLockCells
@@ -499,7 +509,8 @@ paths:
                 
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/unlock_cells:
     post:
       summary: UnLockCells
@@ -547,7 +558,8 @@ paths:
 
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/set_cell_config:
     post:
       summary: SetCellConfig
@@ -630,10 +642,10 @@ paths:
                         earfcn: ""
                         pci: ""
                         action_status: 0
-
         '400':
           description: 'Bad Request'
-
+          headers: {}
+      security: []
   http://host:port/get_cell_config:
     get:
       summary: GetCellConfig
@@ -671,7 +683,8 @@ paths:
                     type: number
                     description: Cell operation timeout, in seconds. If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
                     default: 120
-                    
+          headers: {}
+      security: []                  
 
   http://host:port/goip_post_sms.html:
     post:
@@ -4789,4 +4802,4 @@ components:
         - chs
   securitySchemes: {}
 servers: []
-security: []
+security: {}
