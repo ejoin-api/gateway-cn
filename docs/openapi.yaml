@@ -154,6 +154,8 @@ paths:
             schema:
               description: Ports
               type: array
+              items:
+               type: int
               example: [1]
       
       responses:
@@ -319,6 +321,8 @@ paths:
             schema:
               description: Ports
               type: array
+              items:
+               type: int
               example: [1]
       
       responses:
@@ -465,6 +469,8 @@ paths:
             schema:
               description: Port number
               type: array
+              items:
+               type: int
               example: [1]
 
       responses:
@@ -608,12 +614,18 @@ paths:
                   serving_cells:
                     type: array
                     description: A serving cells array
+                    items: 
+                     type: object
                   neighbour_cells:
                     type: array
                     description: A neighbour cells array
+                    items: 
+                     type: object
                   locking_status:
                     type: array
                     description: A status array
+                    items: 
+                     type: object
               examples:
                 '1': 
                   summary: Example
