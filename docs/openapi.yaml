@@ -4101,3 +4101,82 @@ paths:
                     resp: your balance is 50.00$
           headers: {}
       security: []
+  http://host:port/set_network_type:
+    post:
+      summary: Set Network Type
+      deprecated: false
+      description: 
+      tags:
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              type: lte
+            schema: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: Network type
+      responses:
+        '200':
+          description: 'OK'
+          headers: {}
+      security: []
+  http://host:port/get_network_type:
+    post:
+      summary: Get Network Type
+      deprecated: false
+      description: 
+      tags:
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Network type
+                    enum:
+                      - auto
+                      - gsm
+                      - wcdma
+                      - lte
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    type: lte
+          headers: {}
+      security: []
