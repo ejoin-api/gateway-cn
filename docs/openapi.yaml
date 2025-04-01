@@ -250,54 +250,7 @@ paths:
           description: 'Bad Request'
           headers: {}
       security: []
-  http://host:port/scan_neighbour_cells:
-    post:
-      summary: ScanNeighbourCells
-      deprecated: false
-      description: >-
-         Retry-After: 120
-      tags: 
-        - CellLock
-      parameters:
-        - name: username
-          in: query
-          description: Device username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: 
-                port:
-                  type: number
-                  description: Port number
-                  example: 1
-                  enum: 
-                    Device max port
-                range:
-                  type: string
-                  description: Scan range
-                  example: current
-                  enum: 
-                    - all: All operator
-                    - current: The operator corresponding to the SIM card
-      responses:
-        '202':
-          description: 'Accepted'
-
-        '400':
-          description: 'Bad Request'
-          headers: {}
-      security: []
+      
   http://host:port/get_neighbor_cells:
     get:
       summary: GetNeighborCells
