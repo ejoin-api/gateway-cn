@@ -4204,12 +4204,18 @@ paths:
       requestBody:
         content: 
           application/json:
+            example: 
+              - 1
             schema:
-              type: array
-              items:
+              type: object
               properties:
-                type: number
-                description: Port number
+                ports:
+                  type: array
+                  items:
+                    type: number
+                    description: Port number
+              required: 
+                - ports
       responses:
         '202':
           description: 'Accepted'
@@ -4238,12 +4244,18 @@ paths:
       requestBody:
         content: 
           application/json:
+            example: 
+              - 1
             schema:
-              type: array
-              items:
+              type: object
               properties:
-                type: number
-                description: Port number
+                ports:
+                  type: array
+                  items:
+                    type: number
+                    description: Port number
+              required: 
+                - ports
       responses:
         '200':
           description: 'OK'
@@ -4358,14 +4370,20 @@ paths:
           schema:
             type: string
       requestBody:
-        content:
+        content: 
           application/json:
+            example: 
+              - 1
             schema:
-               type: array
-               items:
-               properties:
-                 type: number
-                 description: Port number
+              type: object
+              properties:
+                ports:
+                  type: array
+                  items:
+                    type: number
+                    description: Port number
+              required: 
+                - ports
 
       responses:
         '200':
@@ -4457,12 +4475,18 @@ paths:
       requestBody:
         content: 
           application/json:
+            example: 
+              - 1
             schema:
-              type: array
-              items: 
+              type: object
               properties:
-                type: number
-                description: Port number
+                ports:
+                  type: array
+                  items:
+                    type: number
+                    description: Port number
+              required: 
+                - ports
       responses:
         '200':
           description: 'OK'
