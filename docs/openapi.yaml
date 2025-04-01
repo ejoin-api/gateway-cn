@@ -4205,7 +4205,8 @@ paths:
         content: 
           application/json:
             schema:
-            
+              type: array
+              items:
       responses:
         '202':
           description: 'Accepted'
@@ -4235,7 +4236,8 @@ paths:
         content: 
           application/json:
             schema:
-            
+              type: array
+              items:
       responses:
         '200':
           description: 'OK'
@@ -4353,7 +4355,8 @@ paths:
         content:
           application/json:
             schema:
-               
+               type: array
+               items:
       responses:
         '200':
           description: 'OK'
@@ -4445,6 +4448,8 @@ paths:
         content: 
           application/json:
             schema:
+              type: array
+              items: 
       responses:
         '200':
           description: 'OK'
