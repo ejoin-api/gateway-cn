@@ -4180,7 +4180,6 @@ paths:
                     type: lte
           headers: {}
       security: []
-
   http://host:port/get_serving_cells:
     get:
       summary: Get Serving Cells
@@ -4314,8 +4313,6 @@ paths:
           required: true
           schema:
             type: string
-
-
       responses:
         '200':
           description: 'OK'
@@ -4383,119 +4380,3 @@ paths:
           description: 'Accepted'
           headers: {}
       security: []
-  http://host:port/query_cells_locking_status:
-    post:
-      summary: Query Lock cells
-      deprecated: false
-      description: 'Retry-After: 120'
-      tags:
-        - CellLock
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device Password
-          required: true
-          schema:
-            type: string
-
-      responses:
-        '200':
-          description: 'OK'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  port: 
-                    type: number
-                    description: Port number
-                  status:
-                    type: string
-                    description: 
-                    default: completed
-                    enum: 
-                      - idle: No operation
-                      - waitting: In progress
-                      - completed: Completed
-                      - timeout: Timeout
-                  action:
-                    type: number
-                    description: Locking action
-                    enum:
-                      - 0: Unlock cell
-                      - 1: Lock cell through EARFCN
-                      - 2: Lock cell through EARFCN and PCI
-                  earfcn:
-                    type: number
-                    description: EARFCN
-                  pci:
-                    type: number
-                    description: Physical cell ID
-                  action_status:
-                    type: number
-                    description: Locking action status
-                    enum:
-                      - 0: Finish
-                      - 1: Not finish
-              examples:
-                '1':
-                  summary: Successful instance
-                  value:
-                    port: 1
-                    status: cinpleted
-                    action: 0
-                    earfcn: ""
-                    pci: ""
-                    action_status: 0
-          headers: {}
-      security: []
-  http://host:port/unlock_cells:
-    post:
-      summary: UnLock cells
-      deprecated: false
-      description: 'Retry-After: 120'
-      tags:
-        - CellLock
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device Password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              port: 1
-              earfcn: 1850
-              pci: 227
-            schema: 
-              type: object
-              properties:
-                port:
-                  type: number
-                  description: Port number
-                earfcn: 
-                  type: number
-                  description: EARFCN
-                pci:
-                  type: number
-                  description: PCI
-      responses:
-        '202':
-          description: 'Accepted'
-          headers: {}
-      security: []               
