@@ -4204,6 +4204,7 @@ paths:
       requestBody:
         content: 
           application/json:
+            schema:
             
       responses:
         '202':
@@ -4233,6 +4234,7 @@ paths:
       requestBody:
         content: 
           application/json:
+            schema:
             
       responses:
         '200':
@@ -4442,7 +4444,7 @@ paths:
       requestBody:
         content: 
           application/json:
-            
+            schema:
       responses:
         '200':
           description: 'OK'
