@@ -4201,21 +4201,7 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              - 1
-            schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  items:
-                    type: number
-                    description: Port number
-              required: 
-                - ports
+
       responses:
         '202':
           description: 'Accepted'
@@ -4241,21 +4227,7 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              - 1
-            schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  items:
-                    type: number
-                    description: Port number
-              required: 
-                - ports
+
       responses:
         '200':
           description: 'OK'
@@ -4369,21 +4341,7 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              - 1
-            schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  items:
-                    type: number
-                    description: Port number
-              required: 
-                - ports
+
 
       responses:
         '200':
@@ -4472,21 +4430,7 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              - 1
-            schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  items:
-                    type: number
-                    description: Port number
-              required: 
-                - ports
+
       responses:
         '200':
           description: 'OK'
