@@ -4138,7 +4138,7 @@ paths:
           headers: {}
       security: []
   http://host:port/get_network_type:
-    post:
+    get:
       summary: Get Network Type
       deprecated: false
       description: 
@@ -4178,5 +4178,43 @@ paths:
                   summary: Successful instance
                   value:
                     type: lte
+          headers: {}
+      security: []
+  http://host:port/scan_serving_cells:
+    post:
+      summary: ScanServingCells
+      deprecated: false
+      description: 'Retry-After: 120'
+      tags:
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              - 1
+            schema:
+              type: array
+              items:
+                type: number
+                description: Port
+              description: Ports number
+              minItems: 1
+              uniqueItems: true
+      responses:
+        '202':
+          description: Accepted
           headers: {}
       security: []
