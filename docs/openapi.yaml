@@ -4207,6 +4207,9 @@ paths:
             schema:
               type: array
               items:
+              properties:
+                type: number
+                description: Port number
       responses:
         '202':
           description: 'Accepted'
@@ -4238,6 +4241,9 @@ paths:
             schema:
               type: array
               items:
+              properties:
+                type: number
+                description: Port number
       responses:
         '200':
           description: 'OK'
@@ -4357,6 +4363,10 @@ paths:
             schema:
                type: array
                items:
+               properties:
+                 type: number
+                 description: Port number
+
       responses:
         '200':
           description: 'OK'
@@ -4450,6 +4460,9 @@ paths:
             schema:
               type: array
               items: 
+              properties:
+                type: number
+                description: Port number
       responses:
         '200':
           description: 'OK'
