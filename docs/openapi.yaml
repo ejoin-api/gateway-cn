@@ -4181,32 +4181,6 @@ paths:
           headers: {}
       security: []
 
-  http://host:port/scan_serving_cells:
-    post:
-      summary: Scan Serving Cells
-      deprecated: false
-      description: 'Retry-After: 120'
-      tags:
-        - CellLock
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device Password
-          required: true
-          schema:
-            type: string
-
-      responses:
-        '202':
-          description: 'Accepted'
-          headers: {}
-      security: []
   http://host:port/get_serving_cells:
     get:
       summary: Get Serving Cells
@@ -4227,7 +4201,6 @@ paths:
           required: true
           schema:
             type: string
-
       responses:
         '200':
           description: 'OK'
