@@ -4150,7 +4150,8 @@ paths:
     post:
       summary: Set Network Type
       deprecated: false
-      description: 
+      description: >-
+         It enables the device to lock onto a specific network type such as **LTE, WCDMA, GSM, or Auto**. The network type configuration is essential for managing which radio network the device connects to, especially when using cell locking features.
       tags:
         - CellLock
       parameters:
@@ -4195,7 +4196,8 @@ paths:
     get:
       summary: Get Network Type
       deprecated: false
-      description: 
+      description: >-
+         It allows the user to retrieve the current network type of the device port. It provides information about the network type the device is currently configured to, such as **LTE, WCDMA, GSM, or Auto**. This can be helpful for monitoring or troubleshooting network settings.
       tags:
         - CellLock
       parameters:
@@ -4242,7 +4244,13 @@ paths:
       summary: Scan Serving Cells
       deprecated: false
       description: >-
-         **Retry-After: 120**
+         It triggers the scan of the serving cells on device. The scan can help gather information about the current serving cell's network parameters,typically used to analyze or optimize the device's connection to the network by scanning the cells it is serving.
+          
+          
+          The system may require a retry after this delay if the operation isn't completed successfully or if there are issues with the network settings.
+          
+      
+         **Retry-After: 120 seconds**
       tags:
         - CellLock
       parameters:
@@ -4268,6 +4276,8 @@ paths:
               properties:
                 ports:
                   type: array
+                  minimum: 1
+                  maximum: Device max-port
                   description: Ports number
                   items:
                     type: number
@@ -4284,7 +4294,13 @@ paths:
       summary: Get Serving Cells
       deprecated: false
       description: >-
-         **Retry-After: 120**
+         The response provides details about the status and parameters of the serving cells, such as the cell's port, operator, E-UTRA Absolute Radio Frequency Channel Number (EARFCN), Physical Cell ID (PCI), Cell ID (CID), and Reference Signal Receiving Power (RSRP),helps in managing network connections and optimizing performance. 
+          
+          
+          The system may require a retry after this delay if the operation isn't completed successfully or if there are issues with the network settings.
+          
+      
+         **Retry-After: 120 seconds**
       tags:
         - CellLock
       parameters:
@@ -4326,22 +4342,25 @@ paths:
                 properties:
                   port:
                     type: number
+                    minimum: 1
+                    maximum: Device max-port
                     description: Port number
                   status:
                     type: string
                     description: >
                        The status of the most recent service base station scan operation
                        
-                       idle: No operation
+                       
+                       <ul><li>idle: No operation</li>
                        
                        
-                       waitting: In progress
+                       <li>waitting: In progress</li>
                        
                        
-                       completed: Completed
+                       <li>completed: Completed</li>
                        
                        
-                       timeout: Timeout
+                       <li>timeout: Timeout</li></ul>
                     default: completed
                     enum: 
                       - idle
@@ -4353,7 +4372,7 @@ paths:
                     description: Operator ID
                   earfcn:
                     type: number
-                    description: The ARFCN or UARFCN of cell
+                    description: E-UTRA Absolute Radio Frequency Channel Number
                   pci:
                     type: number
                     description: Physical cell ID
@@ -4389,7 +4408,13 @@ paths:
       summary: Scan Neighbour Cells
       deprecated: false
       description: >-
-         **Retry-After: 120**
+         It allows the user to initiate a scan of the neighboring cells surrounding the device. The scan can be configured to cover either all operators' cells or just those of the operator corresponding to the device's SIM card. 
+         
+         
+         After the scan request is sent, the device will begin the scan, and a retry might be necessary after 120 seconds if the scan is not completed or encounters issues.It helps in detecting and gathering information about neighboring cells, which is essential for tasks such as network optimization and roaming management.
+         
+         
+         **Retry-After: 120 seconds**
       tags:
         - CellLock
       parameters:
@@ -4416,6 +4441,8 @@ paths:
               properties: 
                 port:
                   type: number
+                  minimum: 1
+                  maximum: Device max-port
                   description: Port number
                 range:
                   type: string
@@ -4423,10 +4450,10 @@ paths:
                     Scan range
                     
                     
-                    all: All operator
+                    <ul><li>all: All operator</li>
                     
                     
-                    current: The operator  corresponding to the SIM card
+                    <li>current: The operator  corresponding to the SIM card</li></ul>
                   enum: 
                     - all
                     - current
@@ -4443,7 +4470,13 @@ paths:
       summary: Get Neighbour Cells
       deprecated: false
       description: >-
-         **Retry-After: 120**
+         It allows the user to retrieve information about the neighboring cells that are detected by the device. It provides detailed information about each neighboring cell, such as the operator, E-UTRA Absolute Radio Frequency Channel Number (EARFCN), Physical Cell ID (PCI), Cell ID (CID), and Reference Signal Receiving Power (RSRP). This information can be helpful for tasks such as network optimization, troubleshooting, or managing cell locking.
+          
+          
+          The system may require a retry after this delay if the operation isn't completed successfully or if there are issues with the network settings.
+      
+      
+         **Retry-After: 120 seconds**
       tags:
         - CellLock
       parameters:
@@ -4470,6 +4503,8 @@ paths:
                 ports:
                   type: array
                   description: Ports number
+                  minimum: 1
+                  maximum: Device max-port
                   items:
                     type: number
                     description: Port number
@@ -4483,21 +4518,70 @@ paths:
               schema:
                 type: object
                 properties:
-                  type:
+                  port:
+                    type: number
+                    minimum: 1
+                    maximum: Device max-port
+                    description: Port number
+                  status:
                     type: string
-                    description: Network type
-                    enum:
-                      - auto
-                      - gsm
-                      - wcdma
-                      - lte
+                    description: >
+                       The status of the most recent service base station scan operation
+                       
+                       
+                       <ul><li>idle: No operation</li>
+                       
+                       
+                       <li>waitting: In progress</li>
+                       
+                       
+                       <li>completed: Completed</li>
+                       
+                       
+                       <li>timeout: Timeout</li>
+                    default: completed
+                    enum: 
+                      - idle
+                      - waitting
+                      - completed
+                      - timeout
+                  cells:
+                    type: array
+                    description: Cell details
+                    items:
+                      type: object
+                      properties:
+                        operator: 
+                          type: string
+                          description: Operator ID
+                        earfcn:
+                          type: number
+                          description: E-UTRA Absolute Radio Frequency Channel Number
+                        pci: 
+                          type: number
+                          description: Physical cell ID
+                        cid:
+                          type: string
+                          description: Cell ID,HEX string
+                        rsrp:
+                          type: number
+                          description: Reference signal receiving power
                 required:
-                  - type
+                  - port
+                  - status
+                  - cells
               examples:
-                '1':
-                  summary: Successful instance
-                  value:
-                    type: lte
+                  '1':
+                    summary: Successful instance
+                    value:
+                      port: 1
+                      status: completed
+                      cells:
+                        - operator: 46000
+                          earfcn: 1850
+                          pci: 227
+                          cid: AC22D0E
+                          rsrp: -67
           headers: {}
       security: []
   http://host:port/lock_cells:
@@ -4505,97 +4589,12 @@ paths:
       summary: Lock Cells
       deprecated: false
       description: >-
-         **Retry-After: 120**
-      tags:
-        - CellLock
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device Password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              port: 1
-              earfcn: 1850
-              pci: 227
-            schema: 
-              type: object
-              properties:
-                port:
-                  type: number
-                  description: Port number
-                earfcn: 
-                  type: number
-                  description: The ARFCN or UARFCN of cell
-                pci:
-                  type: number
-                  description: Physical cell ID
-              required: 
-                - port
-                - earfcn
-                - pci
-      responses:
-        '202':
-          description: 'Accepted'
-          headers: {}
-      security: []
-  http://host:port/query_cells_locking_status:
-    post:
-      summary: Query Lock Cells
-      deprecated: false
-      description: >-
-         **Retry-After: 120**
-      tags:
-        - CellLock
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device Password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content: 
-          application/json:
-            example: 
-              - 1
-            schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  description: Ports number
-                  items:
-                    type: number
-                    description: Port number
-              required: 
-                - ports
-      responses:
-        '202':
-          description: 'Accepted'
-          headers: {}
-      security: []
-  http://host:port/unlock_cells:
-    post:
-      summary: UnLock Cells
-      deprecated: false
-      description: >-
+         It allows the user to lock specific cells on the device,  The device will lock onto a cell specified by its E-UTRA Absolute Radio Frequency Channel Number (EARFCN) and Physical Cell ID (PCI). Locking a cell can be useful for optimizing network performance,restricting the device to a specific network cell，ensuring stable connectivity.
+         
+         
+         The system may require a retry after this delay if the lock operation isn't completed successfully or if there are issues with the network settings.
+         
+         
          **Retry-After: 120 seconds**
       tags:
         - CellLock
@@ -4622,13 +4621,125 @@ paths:
             schema: 
               type: object
               properties:
-
                 port:
                   type: number
+                  minimum: 1
+                  maximum: Device max-port
                   description: Port number
                 earfcn: 
                   type: number
-                  description: The ARFCN or UARFCN of cell
+                  description: E-UTRA Absolute Radio Frequency Channel Number
+                pci:
+                  type: number
+                  description: Physical cell ID
+              required: 
+                - port
+                - earfcn
+                - pci
+      responses:
+        '202':
+          description: 'Accepted'
+          headers: {}
+        '503':
+          description: >-
+             Service Unavailable.<span style="color: red;font-weight: bold;font-style: italic">Please set the network type to 'lte' first to enable the cell locking function.</span>
+          headers: {}
+      security: []
+  http://host:port/query_cells_locking_status:
+    post:
+      summary: Query Lock Cells
+      deprecated: false
+      description: >-
+         It enables the user to query the locking status of cells on the device. It accepts a list of ports and checks whether any of the corresponding ports have a cell lock applied. The response will indicate whether the request was accepted, and the status of the lock operation can be further queried.
+         
+         
+         The system may require a retry after this delay if the operation isn't completed successfully or if there are issues with the network settings.
+         
+      
+         **Retry-After: 120 seconds**
+      tags:
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              - 1
+            schema:
+              type: object
+              properties:
+                ports:
+                  type: array
+                  description: Ports number
+                  minimum: 1
+                  maximum: Device max-port
+                  items:
+                    type: number
+                    description: Port number
+              required: 
+                - ports
+      responses:
+        '202':
+          description: 'Accepted'
+          headers: {}
+      security: []
+  http://host:port/unlock_cells:
+    post:
+      summary: UnLock Cells
+      deprecated: false
+      description: >-
+         It allows the user to unlock previously locked cells on the device. By specifying the E-UTRA Absolute Radio Frequency Channel Number (EARFCN) and Physical Cell ID (PCI), the device will release the lock from the specified cell, allowing it to connect to other available cells.
+         
+         
+         The system may require a retry after this delay if the unlock operation isn't completed successfully or if there are issues with the network settings.
+                
+      
+         **Retry-After: 120 seconds**
+      tags:
+        - CellLock
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              port: 1
+              earfcn: 1850
+              pci: 227
+            schema: 
+              type: object
+              properties:
+                port:
+                  type: number
+                  minimum: 1
+                  maximum: Device max-port
+                  description: Port number
+                earfcn: 
+                  type: number
+                  description: E-UTRA Absolute Radio Frequency Channel Number
                 pci:
                   type: number
                   description: Physical cell ID
@@ -4705,7 +4816,7 @@ paths:
                          description: Operator ID
                        earfcn:
                          type: number
-                         description: The ARFCN or UARFCN of cell
+                         description: E-UTRA Absolute Radio Frequency Channel Number
                        pci:
                          type: number
                          description: Physical cell ID
@@ -4740,7 +4851,7 @@ paths:
                                description: Operator ID
                              earfcn:
                                type: number
-                               description: The ARFCN or UARFCN of cell
+                               description: E-UTRA Absolute Radio Frequency Channel Number
                              pci:
                                type: number
                                description: Physical cell ID
@@ -4769,7 +4880,7 @@ paths:
                          description: Locking action
                        earfcn:
                          type: number
-                         description: The ARFCN or UARFCN of cell
+                         description: E-UTRA Absolute Radio Frequency Channel Number
                        pci:
                          type: number
                          description: Physical cell ID
