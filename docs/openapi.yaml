@@ -27,22 +27,24 @@ info:
     backgroundColor: '#FAFAFA'
     altText: SMS logo
 tags:
-  - name: Send message
+  - name: Send Message
   - name: Receive SMS
   - name: Query SMS
-  - name: Query SMS statistics
+  - name: Query SMS Statistics
   - name: Receive MMS
-  - name: Query call statistics
-  - name: Status notification
-  - name: 'Send operate command '
+  - name: Query Call Statistics
+  - name: Status Notification
+  - name: 'Send Operate Command '
   - name: AT Command
   - name: USSD
   - name: ESIM
   - name: CellLock
+    description: |
+      🌴Here is the JSON file for [CellLock](/CellLock.postman_collection.json).
 paths:
   http://host:port/goip_post_sms.html:
     post:
-      summary: Send message task
+      summary: Send Message Task
       deprecated: false
       description: >-
         Message description :
@@ -69,7 +71,7 @@ paths:
 
         separately.
       tags:
-        - Send message
+        - Send Message
       parameters:
         - name: version
           in: query
@@ -928,7 +930,7 @@ paths:
             }
   http://host:port/goip_pause_sms.html:
     post:
-      summary: Pause message task
+      summary: Pause Message Task
       deprecated: false
       description: >-
         Message description :
@@ -946,7 +948,7 @@ paths:
 
 
       tags:
-        - Send message
+        - Send Message
       parameters:
         - name: version
           in: query
@@ -1258,7 +1260,7 @@ paths:
         Resume the sending of one or more suspended SMS tasks. 
         
       tags:
-        - Send message
+        - Send Message
       parameters:
         - name: version
           in: query
@@ -1538,7 +1540,7 @@ paths:
 
   http://host:port/goip_remove_sms.html:
     post:
-      summary: Delete message task
+      summary: Delete Message Task
       deprecated: false
       description: |-
         Message description :
@@ -1550,7 +1552,7 @@ paths:
         Delete one or more SMS tasks waiting to be sent in the send queue.
        
       tags:
-        - Send message
+        - Send Message
       parameters:
         - name: version
           in: query
@@ -1846,7 +1848,7 @@ paths:
 
   http://host:port/goip_get_tasks.html:
     get:
-      summary: Query message task
+      summary: Query Message Task
       deprecated: false
       description: |-
         Message description :
@@ -1857,7 +1859,7 @@ paths:
 
         Query the SMS task waiting to be sent in the send queue. 
       tags:
-        - Send message
+        - Send Message
       parameters:
         - name: version
           in: query
@@ -2043,7 +2045,7 @@ paths:
       security: []
   Server or device configuration decision:
     post:
-      summary: Sending status report
+      summary: Sending Status Report
       deprecated: false
       description: >-
         While SMS send successfully/failed/timeout, device will put the result
@@ -2069,7 +2071,7 @@ paths:
         4.fdr(failed detail record) list records between 2 status-report, server
         should keep before details.
       tags:
-        - Send message
+        - Send Message
       parameters:
         - name: version
           in: query
@@ -2872,7 +2874,7 @@ paths:
       security: []
   http://host:port/goip_get_status.html:
     get:
-      summary: Status notification
+      summary: Status Notification
       deprecated: false
       description: >-
         1.This device will send a HTTP POST request which include the device
@@ -2894,7 +2896,7 @@ paths:
 
         port: Device webpage management port, default value is 80.
       tags:
-        - Status notification
+        - Status Notification
       parameters:
         - name: username
           in: query
@@ -3153,7 +3155,7 @@ paths:
       security: []
   http://host:port/goip_get_sms_stat.html:
     get:
-      summary: Query SMS statistics
+      summary: Query SMS Statistics
       deprecated: false
       description: >-
         1.The client can actively query the short message statistics of the
@@ -3162,7 +3164,7 @@ paths:
         2.host: Device IP address
            port: Device webpage management port, default value is 80.
       tags:
-        - Query SMS statistics
+        - Query SMS Statistics
       parameters:
         - name: version
           in: query
@@ -3318,7 +3320,7 @@ paths:
       security: []
   http://host:port/goip_get_call_stat.html:
     get:
-      summary: Query call statistics
+      summary: Query call Statistics
       deprecated: false
       description: >-
         1.The client can actively query the call statistics of the device through the HTTP GET request.
@@ -3332,7 +3334,7 @@ paths:
 
         port: Device webpage management port, default value is 80.
       tags:
-        - Query call statistics
+        - Query Call Statistics
       parameters:
         - name: version
           in: query
@@ -3515,7 +3517,7 @@ paths:
       security: []
   http://host:port/goip_send_cmd.html:
     post:
-      summary: 'Send operate command '
+      summary: 'Send Operate Command '
       deprecated: false
       description: >-
         Message description :
@@ -3536,7 +3538,7 @@ paths:
 
 
       tags:
-        - 'Send operate command '
+        - 'Send Operate Command '
       parameters:
         - name: version
           in: query
@@ -3698,7 +3700,7 @@ paths:
       deprecated: false
       description: "Reference: \ninformation in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_number(n)=xxxx,\nn = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter\nExample:\nsim_number(192)=1358021178&sim_number(196)=123456762221\n192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1. \nSo, 25.01=(25 - 1)*8+(1-1) =192.\n196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. \nSo, \t25.05=(25-1)*8+(5-1)=196."
       tags:
-        - 'Send operate command '
+        - 'Send Operate Command '
       parameters:
         - name: username
           in: query
@@ -3764,7 +3766,7 @@ paths:
       deprecated: false
       description: "information in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_imei(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1) xxx = imei parameters \n\nExample: \nsim_imei(21)=865847053403202&sim_imei(51)=865847053403213 \n21 means 6B, B is slot_number 2 ,so 6B=（6 - 1）* 4+(2-1) =21 \n51 means 13D, D is slot_number 4,so 13D =(13-1)*4+(4-1)=51"
       tags:
-        - 'Send operate command '
+        - 'Send Operate Command '
       parameters:
         - name: username
           in: query
@@ -4102,6 +4104,7 @@ paths:
                     resp: your balance is 50.00$
           headers: {}
       security: []
+  
   http://host:port/set_network_type:
     post:
       summary: Set Network Type
@@ -4133,6 +4136,13 @@ paths:
                 type:
                   type: string
                   description: Network type
+                  enum:
+                    - auto
+                    - gsm
+                    - wcdma
+                    - lte
+              required:
+                - type
       responses:
         '200':
           description: 'OK'
@@ -4174,6 +4184,8 @@ paths:
                       - gsm
                       - wcdma
                       - lte
+                required:
+                  - type
               examples:
                 '1':
                   summary: Successful instance
@@ -4212,6 +4224,7 @@ paths:
               properties:
                 ports:
                   type: array
+                  description: Ports number
                   items:
                     type: number
                     description: Port number
@@ -4226,7 +4239,8 @@ paths:
     get:
       summary: Get Serving Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120**
       tags:
         - CellLock
       parameters:
@@ -4252,6 +4266,7 @@ paths:
               properties:
                 ports:
                   type: array
+                  description: Ports number
                   items:
                     type: number
                     description: Port number
@@ -4303,13 +4318,22 @@ paths:
                       pci: 114
                       cid: 6161001
                       rsrp: -86
+              required:
+                 - port
+                 - status
+                 - operator
+                 - earfcn
+                 - pci
+                 - cid
+                 - rsrp
           headers: {}
       security: []
   http://host:port/scan_neighbour_cells:
     post:
       summary: Scan Neighbour Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120**
       tags:
         - CellLock
       parameters:
@@ -4343,6 +4367,9 @@ paths:
                   enum: 
                     - all: All operator
                     - current: The operator corresponding to the SIM card
+              required: 
+                - port
+                - range
       responses:
         '202':
           description: 'Accepted'
@@ -4352,7 +4379,8 @@ paths:
     get:
       summary: Get Neighbour Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120**
       tags:
         - CellLock
       parameters:
@@ -4378,12 +4406,12 @@ paths:
               properties:
                 ports:
                   type: array
+                  description: Ports number
                   items:
                     type: number
                     description: Port number
               required: 
                 - ports
-
       responses:
         '200':
           description: 'OK'
@@ -4400,6 +4428,8 @@ paths:
                       - gsm
                       - wcdma
                       - lte
+                required:
+                  - type
               examples:
                 '1':
                   summary: Successful instance
@@ -4409,9 +4439,10 @@ paths:
       security: []
   http://host:port/lock_cells:
     post:
-      summary: Lock cells
+      summary: Lock Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120**
       tags:
         - CellLock
       parameters:
@@ -4442,10 +4473,14 @@ paths:
                   description: Port number
                 earfcn: 
                   type: number
-                  description: EARFCN
+                  description: The ARFCN or UARFCN of cell
                 pci:
                   type: number
-                  description: PCI
+                  description: Physical cell ID
+              required: 
+                - port
+                - earfcn
+                - pci
       responses:
         '202':
           description: 'Accepted'
@@ -4453,9 +4488,10 @@ paths:
       security: []
   http://host:port/query_cells_locking_status:
     post:
-      summary: Query Lock cells
+      summary: Query Lock Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120**
       tags:
         - CellLock
       parameters:
@@ -4515,7 +4551,7 @@ paths:
                       - 2: Lock cell through EARFCN and PCI
                   earfcn:
                     type: number
-                    description: EARFCN
+                    description: The ARFCN or UARFCN of cell
                   pci:
                     type: number
                     description: Physical cell ID
@@ -4525,6 +4561,13 @@ paths:
                     enum:
                       - 0: Finish
                       - 1: Not finish
+                required:
+                  - port
+                  - status
+                  - action
+                  - earfcn
+                  - pci
+                  - action_status
               examples:
                 '1':
                   summary: Successful instance
@@ -4539,9 +4582,10 @@ paths:
       security: []
   http://host:port/unlock_cells:
     post:
-      summary: UnLock cells
+      summary: UnLock Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120 seconds**
       tags:
         - CellLock
       parameters:
@@ -4567,15 +4611,20 @@ paths:
             schema: 
               type: object
               properties:
+
                 port:
                   type: number
                   description: Port number
                 earfcn: 
                   type: number
-                  description: EARFCN
+                  description: The ARFCN or UARFCN of cell
                 pci:
                   type: number
-                  description: PCI
+                  description: Physical cell ID
+              required: 
+                - port
+                - earfcn
+                - pci
       responses:
         '202':
           description: 'Accepted'
@@ -4628,65 +4677,99 @@ paths:
                 properties:
                   serving_cells:
                     type: array
-                    description: A serving cells array
+                    description: >-
+                       A serving cells array.  
+                       For more details, please refer to **Get Serving cells**.
                     items: 
                      type: object
                      properties:
                        port:
                          type: number
+                         description: Port number
                        status:
-                         type: string
+                         type: string  
+                         description: The status of the most recent service base station scanning operation
                        operator: 
                          type: string
+                         description: Operator ID
                        earfcn:
                          type: number
+                         description: The ARFCN or UARFCN of cell
                        pci:
                          type: number
+                         description: Physical cell ID
                        cid:
                          type: string
+                         description: Cell ID,HEX string
                        rsrp:
                          type: number
+                         description: Reference signal receiving power
                   neighbour_cells:
                     type: array
-                    description: A neighbour cells array
+                    description: >-
+                       A neighbour cells array.
+                       For more details,please refer to **Get Neighbour Cell**.
                     items: 
                      type: object
                      properties:
                        port:
                          type: number
+                         description: Port number
                        status:
+                         type: string
+                         description: The status of the most recent service base station scanning operation
+                       cells:
                          type: array
+                         description: Cell details
                          items:
                            type: object
                            properties:
                              operator:
                                type: string
+                               description: Operator ID
                              earfcn:
                                type: number
+                               description: The ARFCN or UARFCN of cell
                              pci:
                                type: number
+                               description: Physical cell ID
                              cid:
                                type: string
+                               description: Cell ID,HEX string
                              rsrp:
                                type: number
+                               description: Reference signal receiving power
                   locking_status:
                     type: array
-                    description: A status array
+                    description: >-
+                       A status array.
+                       For more details,please refer to **Get Cells Locking Status**.
                     items: 
                      type: object
                      properties:
                        port:
                          type: number
+                         description: Port number
                        status:
                          type: number
+                         description: The status of the most recent service base station scanning operation
                        action:
                          type: number
+                         description: Locking action
                        earfcn:
                          type: number
+                         description: The ARFCN or UARFCN of cell
                        pci:
                          type: number
+                         description: Physical cell ID
                        action_status:
                          type: number
+                         description: Locking action status
+                required:
+                  - serving_cells
+                  - neighbour_cells
+                  - locking_status
+
               examples:
                 '1': 
                   summary: Example
@@ -4753,6 +4836,9 @@ paths:
                     type: number
                     description: Cell operation timeout, in seconds. If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
                     default: 120
+                required:
+                  - report_url
+                  - timeout
               examples:
                 '1':
                   summary: Successful instance

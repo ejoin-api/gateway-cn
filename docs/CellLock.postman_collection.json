@@ -1,0 +1,482 @@
+{
+	"info": {
+		"_postman_id": "270fcdae-e54d-4ac5-ba4b-db2772c15a65",
+		"name": "CellLock",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41952195",
+		"_collection_link": "https://eapicelllock.postman.co/workspace/Eapi_celllock-Workspace~481e991d-4b9c-4e15-9c96-603a6ff8a338/collection/41952195-270fcdae-e54d-4ac5-ba4b-db2772c15a65?action=share&source=collection_link&creator=41952195"
+	},
+	"item": [
+		{
+			"name": "SetNetworkType",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\":\"lte\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/set_network_type?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"set_network_type"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetNetworkType",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.169/get_network_type?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"get_network_type"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ScanServingCells",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    1\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/scan_serving_cells?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"scan_serving_cells"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetServingCells",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    1\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/get_serving_cells?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"get_serving_cells"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ScanNeighbourCells",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[ \r\n    {\r\n        \"port\":2,\r\n        \"range\":\"all\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/scan_neighbour_cells?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"scan_neighbour_cells"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetNeighbourCells",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    1\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/get_neighbour_cells?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"get_neighbour_cells"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LockCells",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[ \r\n    {\r\n        \"port\":1,\r\n        \"earfcn\":1850,\r\n        \"pci\":227\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/lock_cells?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"lock_cells"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "QueryLockStatus",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    1\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/query_cells_locking_status?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"query_cells_locking_status"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetLockStatus",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    1\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/get_cells_locking_status?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"get_cells_locking_status"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UnLockCells",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    1\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/unlock_cells?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"unlock_cells"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetCellConfig",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   “report_url”:\"\",\r\n   \"timeout\":180\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.169/set_cell_config?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"set_cell_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCellConfig",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.169/get_cell_config?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"169"
+					],
+					"path": [
+						"get_cell_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
