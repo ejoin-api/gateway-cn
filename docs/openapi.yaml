@@ -39,7 +39,7 @@ tags:
   - name: USSD
   - name: ESIM
   - name: CellLock
-    description: |
+    description: |-
       🌴Here is the POSTMAN JSON file for <a download target="_blank" href="https://github.com/ejoin-api/gateway/blob/main/docs/CellLock.postman_collection.json">CellLock</a> 
 paths:
   http://host:port/goip_post_sms.html:
