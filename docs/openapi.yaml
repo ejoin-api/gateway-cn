@@ -4289,6 +4289,7 @@ paths:
                     type: string
                     description: >
                        The status of the most recent service base station scan operation
+
                        
                        idle: No operation
                        
@@ -4552,6 +4553,7 @@ paths:
                     type: string
                     description: >
                        The status of the most recent service base station scan operation
+
                        
                        idle: No operation
                        
