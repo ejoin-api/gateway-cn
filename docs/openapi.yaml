@@ -3965,14 +3965,33 @@ paths:
                 properties:
                   code:
                     type: string
-                    description: Return code，0 means success
+                    description: >
+                      Return code:
+                      
+                      
+                       0 Success or OK
+                      
+                      
+                       1 Username or assword wrong
+                       
+                       
+                       2 Port parameter wrong
+                       
+                       
+                       3 No AT parameter
+                       
+                       
+                       4 Have incomplete AT request
+                       
+                       
+                       5 timeout
                     enum:
-                      - 0 Success or OK
-                      - 1 Username or assword wrong
-                      - 2 Port parameter wrong
-                      - 3 No AT parameter
-                      - 4 Have incomplete AT request
-                      - 5 timeout
+                      - 0 
+                      - 1 
+                      - 2 
+                      - 3 
+                      - 4 
+                      - 5 
                   reason:
                     type: string
                     description: Reason describe
@@ -4003,6 +4022,7 @@ paths:
       description: >
         1.Application will send a HTTP GET request to the device, device will
         return HTTP 200 OK response to the application.
+
 
         2.Request URL
 
@@ -4048,10 +4068,10 @@ paths:
         - name: retries
           in: query
           description: >-
-            Number of failed retries.
+               Number of failed retries.
 
-            Note: the top-up service should set this field to 0 and check if
-            success by USSD query.
+
+               Note: the top-up service should set this field to 0 and check isuccess by USSD query.
           required: false
           schema:
             type: string
@@ -4066,15 +4086,36 @@ paths:
                 properties:
                   code:
                     type: string
-                    description: Return code，0 means success
+                    description: >-
+                      Return code:
+                      
+                       0 Success or OK
+                       
+                       
+                       1 Username or password wrong
+                       
+                       
+                       2 Port parameter wrong
+                       
+                       
+                       3 No ussd parameter
+                       
+                       
+                       4 Have incomplete USSD request
+                       
+                       
+                       5 SIM not resisted
+                       
+                       
+                       6 Timeout
                     enum:
-                      - 0 Success or OK
-                      - 1 Username or password wrong
-                      - 2 Port parameter wrong
-                      - 3 No ussd parameter
-                      - 4 Have incomplete USSD request
-                      - 5 SIM not resisted
-                      - 6 Timeout
+                      - 0 
+                      - 1
+                      - 2 
+                      - 3 
+                      - 4 
+                      - 5 
+                      - 6 
                   reason:
                     type: string
                     description: Reason describe
@@ -4289,7 +4330,6 @@ paths:
                     type: string
                     description: >
                        The status of the most recent service base station scan operation
-
                        
                        idle: No operation
                        
@@ -4321,7 +4361,7 @@ paths:
                     description: Cell ID, HEX string
                   rsrp: 
                     type: number
-                    description: Reference Signal Receiving Power
+                    description: Reference signal receiving power
               examples:
                   '1':
                     summary: Successful instance
@@ -4378,10 +4418,17 @@ paths:
                   description: Port number
                 range:
                   type: string
-                  description: Scan range
+                  description: >
+                    Scan range
+                    
+                    
+                    all: All operator
+                    
+                    
+                    current: The operator  corresponding to the SIM card
                   enum: 
-                    - all: All operator
-                    - current: The operator corresponding to the SIM card
+                    - all
+                    - current
               required: 
                 - port
                 - range
@@ -4553,7 +4600,6 @@ paths:
                     type: string
                     description: >
                        The status of the most recent service base station scan operation
-
                        
                        idle: No operation
                        
