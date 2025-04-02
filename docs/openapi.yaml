@@ -4241,7 +4241,8 @@ paths:
     post:
       summary: Scan Serving Cells
       deprecated: false
-      description: 'Retry-After: 120'
+      description: >-
+         **Retry-After: 120**
       tags:
         - CellLock
       parameters:
