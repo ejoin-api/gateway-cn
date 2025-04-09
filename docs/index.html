@@ -32,6 +32,9 @@
       .bFIVui{
             position: static !important;
         }
+      h1.sc-dFRpbK + p {
+         display: none;
+      }
     </style>
     <script>
       window.onload=function(){
@@ -58,16 +61,5 @@
     <redoc spec-url='openapi.yaml'></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
   </body>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const h1Element = document.querySelector('h1.sc-dFRpbK');
-      if (h1Element) {
-          const nextSibling = h1Element.nextElementSibling;
-          if (nextSibling && nextSibling.tagName === 'P') {
-              nextSibling.remove();
-          }
-      }
-});
-  </script>
 </html>
 
