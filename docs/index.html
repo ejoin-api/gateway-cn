@@ -41,21 +41,27 @@
       button.sc-eEVmNe svg.sc-dIsUp {
         display: none;
       }
+      li.huvfwk {
+          pointer-events: auto; /* 确保元素可点击 */
+      }
     </style>
   </head>
   <body>
     <redoc spec-url='openapi.yaml'></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
     <script>
-      // 导航点击事件监听（部署在 Redoc 渲染后）
-        document.addEventListener('click', (e) => {
-            const navItem = e.target.closest('li.huvfwk');
-            if (navItem) {
-                const navName = navItem.querySelector('span.klzczi').textContent.trim(); // 调整选择器
-                const anchorPath = navItem.querySelector('a[href]')?.href.split('#')[1] || '';
-                gtag('event', 'nav_link_click', { nav_name: navName, anchor_path: anchorPath });
-            }
-        });
+      document.addEventListener('DOMContentLoaded', function () {
+          document.addEventListener('click', function (e) {
+              if (e.target.closest('li.huvfwk')) {
+                  const navItem = e.target.closest('li.huvfwk');
+                  if (navItem) {
+                      const navName = navItem.querySelector('span.klzczi').textContent.trim(); 
+                      const anchorPath = navItem.querySelector('a[href]')?.href.split('#')[1] || '';
+                      gtag('event', 'nav_link_click', { nav_name: navName, anchor_path: anchorPath });
+                  }
+              }
+         });
+      });
     </script>
   </body>
 </html>
