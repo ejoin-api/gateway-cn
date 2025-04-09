@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R602HEZ9JB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-R602HEZ9JB');
+    </script>
     <title>Ejoin Gateway HTTP API</title>
     <!-- needed for adaptive design -->
     <meta charset="utf-8"/>
@@ -24,6 +33,34 @@
             position: static !important;
         }
     </style>
+    <script>
+      window.onload=function(){
+            document.addEventListener('click', (e) => {
+              const targetLi = e.target.closest('li.huvfwk');
+              if (targetLi) {
+                const navName = targetLi.dataset.itemId
+                console.log('Click URL:', navName);
+                const contentSpan = targetLi.querySelector('span.sc-hzUIXc');
+                if (contentSpan) {
+                  const text = contentSpan.textContent.trim();
+                  console.log('Click Text:', text);
+                   gtag('event', 'nav_link_click', {
+                      nav_name: navName, 
+                      page_path: text
+                   });
+                }
+              }
+            });
+
+          const h1Element = document.querySelector('h1.sc-dFRpbK');
+          if (h1Element) {
+              const nextSibling = h1Element.nextElementSibling;
+              if (nextSibling && nextSibling.tagName === 'p') {
+                  nextSibling.remove();
+              }
+          }
+      };
+    </script>
   </head>
   <body>
     <redoc spec-url='openapi.yaml'></redoc>
