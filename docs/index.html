@@ -43,23 +43,27 @@
       }
     </style>
     <script>
-      window.onload=function(){
-            const liElement = document.querySelector('li.huvfwk');
+      document.addEventListener('DOMContentLoaded', function () {
+        const liElement = document.querySelector('li.huvfwk');
+        if (liElement) {
             liElement.addEventListener('click', (e) => {
                 const targetLi = e.target;
-                const navName = targetLi.dataset.itemId
+                const navName = targetLi.dataset.itemId;
                 console.log('Click URL:', navName);
                 const contentSpan = targetLi.querySelector('span.sc-hzUIXc');
                 if (contentSpan) {
-                  const text = contentSpan.textContent.trim();
-                  console.log('Click Text:', text);
-                   gtag('event', 'nav_link_click', {
-                      nav_name: navName, 
-                      page_path: text
-                   });
+                    const text = contentSpan.textContent.trim();
+                    console.log('Click Text:', text);
+                    gtag('event', 'nav_link_click', {
+                        nav_name: navName,
+                        page_path: text
+                    });
                 }
             });
-      };
+        } else {
+            console.log('未找到带有 huvfwk 类的 <li> 元素');
+        }
+    });
     </script>
   </head>
   <body>
