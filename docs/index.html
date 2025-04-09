@@ -44,9 +44,9 @@
     </style>
     <script>
       window.onload=function(){
-            document.addEventListener('click', (e) => {
-              const targetLi = e.target.closest('li.huvfwk');
-              if (targetLi) {
+            const liElement = document.querySelector('li.huvfwk');
+            liElement.addEventListener('click', (e) => {
+                const targetLi = e.target;
                 const navName = targetLi.dataset.itemId
                 console.log('Click URL:', navName);
                 const contentSpan = targetLi.querySelector('span.sc-hzUIXc');
@@ -58,7 +58,6 @@
                       page_path: text
                    });
                 }
-              }
             });
       };
     </script>
