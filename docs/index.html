@@ -42,7 +42,12 @@
         display: none;
       }
     </style>
-    <script>
+  </head>
+  <body>
+    <redoc spec-url='openapi.yaml'></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+  </body>
+  <script>
       document.addEventListener('DOMContentLoaded', function () {
         const liElement = document.querySelector('li.huvfwk');
         if (liElement) {
@@ -65,10 +70,5 @@
         }
     });
     </script>
-  </head>
-  <body>
-    <redoc spec-url='openapi.yaml'></redoc>
-    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
-  </body>
 </html>
 
