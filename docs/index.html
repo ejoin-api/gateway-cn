@@ -90,8 +90,8 @@
     <script src="https://code.jquery.com/jquery-2.0.0.min.js"></script>
     <div id="redoc-container"></div>
     <script>
-      const observers = [];
-      const isobserver = false;
+      let observers = [];
+      let isobserver = false;
       Redoc.init('openapi.yaml', {}, document.getElementById('redoc-container'));
       document.addEventListener('DOMContentLoaded', function () {
           var clk_url = $('li.huvfwk');
