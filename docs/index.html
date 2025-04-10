@@ -91,23 +91,27 @@
     <div id="redoc-container"></div>
     <script>
       const observers = [];
+      const isobserver = false;
       Redoc.init('openapi.yaml', {}, document.getElementById('redoc-container'));
       document.addEventListener('DOMContentLoaded', function () {
           var clk_url = $('li.huvfwk');
           if(clk_url && clk_url.length >0){
                addEventListenerInit();
-          }else{
+          }else if(!isobserver){
                console.log('Element not found. Listening for DOM changes...');
-
+                
                 // 使用 MutationObserver 监听 DOM 变化
                 const observer = new MutationObserver(function (mutationsList) {
-                    for (const mutation of mutationsList) {
-                        if (mutation.type === 'childList') {
-                            clk_url = $('li.huvfwk');
-                             if(clk_url && clk_url.length >0){
-                                console.log('Element found after DOM change:', clk_url.length);
-                                observers.forEach(obs => obs.disconnect());
-                                addEventListenerInit();
+                    if(!isobserver){
+                        for (const mutation of mutationsList) {
+                            if (mutation.type === 'childList') {
+                                clk_url = $('li.huvfwk');
+                                 if(clk_url && clk_url.length >0){
+                                    isobserver = true;
+                                    console.log('Element found after DOM change:', clk_url.length);
+                                    observers.forEach(obs => obs.disconnect());
+                                    addEventListenerInit();
+                                }
                             }
                         }
                     }
