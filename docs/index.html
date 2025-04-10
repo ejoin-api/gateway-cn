@@ -169,20 +169,12 @@
         	var popup_height = $(popup).height();
         	var popup_width = $(popup).width();
         	var left = rect.left + (rect.width / 2) - (popup_width / 2) - 10 + 'px';
-          const scrollTop = scrollContainer.scrollTop;
         	var top = rect.top - rect.height - popup_height - 12 + 'px';
-        	$("#popup").css({ top: top + scrollTop ,left: left  }).show();
+        	$("#popup").css({ top: top ,left: left  }).show();
         	 setTimeout(function () {
         		$("#popup").removeClass(isSucc ? "succ" : "fail").hide().html("");
         	 }, 3000);
      }
-
-     function updatePosition() {
-          const scrollTop = scrollContainer.scrollTop;
-          console.log(`scrollTop：${scrollTop}px`);
-     }
-      
-     scrollContainer.addEventListener('scroll', updatePosition); 
       /**
       document.addEventListener('DOMContentLoaded', function () {
           document.addEventListener('click', function (e) {
