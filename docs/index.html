@@ -44,9 +44,47 @@
       li.huvfwk {
           pointer-events: auto; /* 确保元素可点击 */
       }
+      #popup {
+      	position: absolute;
+      	
+      	color: white;
+      	padding: 10px;
+      	border-radius: 5px;
+      	display: none;
+      	z-index: 1;
+      }
+      
+      #popup::after {
+      	content: "";
+      	position: absolute;
+      	top: 100%;
+      	left: 50%;
+      	margin-left: -5px;
+      	border-width: 5px;
+      	border-style: solid;
+      	
+      }
+      #listTopSlotsId table tr td{
+          background: #EEE !important;
+      	border-bottom: none;
+      }
+      #popup.succ{
+          background-color: #4CAF50;
+      }
+      #popup.succ::after {
+          border-color: #4CAF50 transparent transparent transparent;
+      }
+      
+      #popup.fail{
+          background-color: red;
+      }
+      #popup.fail::after {
+          border-color: red transparent transparent transparent;
+      }
     </style>
   </head>
   <body>
+    <div id="popup"></div>
     <redoc spec-url='openapi.yaml'></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
     <script src="https://code.jquery.com/jquery-2.0.0.min.js"></script>
@@ -57,8 +95,52 @@
                const anchorPath = this.dataset.itemId;
                gtag('event', 'nav_link_click', { nav_name: navName, anchor_path: anchorPath });
           });
-        
+          $('button.sc-eEVmNe.gXhEov').append('<div class="sc-carFqZ hBWCUB ejoin_copy_url">Copy</div>');
+          $("div.ejoin_copy_url").click(function () {
+               var url_obj = $(this).siblings("span.sc-jXcxbT.hVdkvA");
+               copyToClipboard(url_obj[0], url_obj.html());
+          });
       })
+
+      function copyToClipboard(clkObj, text) {
+        	if (navigator.clipboard) {
+        		navigator.clipboard.writeText(text).then(function() {
+        			popupCopyToClipboard(clkObj, true);
+        		}).catch(function(err) {
+        			popupCopyToClipboard(clkObj, false);
+        		});
+        	}else {
+        		var textarea = document.createElement("textarea");
+        		textarea.value = text;
+        		textarea.style.position = "fixed";
+        		document.body.appendChild(textarea);
+        		textarea.focus();
+        		textarea.select();
+        		try {
+        			var successful = document.execCommand('copy');
+        			popupCopyToClipboard(clkObj, successful);
+        		} catch (err) {
+        			popupCopyToClipboard(clkObj, false); 
+        		}
+        		document.body.removeChild(textarea);
+        	}
+      }
+
+      function popupCopyToClipboard(clkObj, isSucc){	
+        	const txt = isSucc ? 'Copied' : 'Failed to copy data to clipboard';
+        	const rect = clkObj.getBoundingClientRect();
+        	const popup = document.getElementById('popup');
+            $(popup).addClass(isSucc ? "succ" : "fail").html(txt);
+        	var popup_height = $(popup).height();
+        	var popup_width = $(popup).width();
+        	var left = rect.left + (rect.width / 2) - (popup_width / 2) - 10 + 'px';
+        	var top = rect.top - rect.height - popup_height - 12 + 'px';
+        	$("#popup").css({ top: top ,left: left  }).show();
+        	 setTimeout(function () {
+        		$("#popup").removeClass(isSucc ? "succ" : "fail").hide().html("");
+        	 }, 3000);
+     }
+      
       /**
       document.addEventListener('DOMContentLoaded', function () {
           document.addEventListener('click', function (e) {
