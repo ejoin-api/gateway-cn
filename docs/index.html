@@ -102,9 +102,8 @@
                 
                 // 使用 MutationObserver 监听 DOM 变化
                 const observer = new MutationObserver(function (mutationsList) {
-                    if(!isobserver){
                         for (const mutation of mutationsList) {
-                            if (mutation.type === 'childList') {
+                            if (!isobserver && mutation.type === 'childList') {
                                 clk_url = $('li.huvfwk');
                                  if(clk_url && clk_url.length >0){
                                     isobserver = true;
@@ -113,7 +112,6 @@
                                     addEventListenerInit();
                                 }
                             }
-                        }
                     }
                 });
 
