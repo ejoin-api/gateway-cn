@@ -105,8 +105,8 @@
                             clk_url = $('li.huvfwk');
                              if(clk_url && clk_url.length >0){
                                 console.log('Element found after DOM change:', clk_url.length);
+                               observer.disconnect();
                                 addEventListenerInit();
-                                observer.disconnect(); // 找到元素后停止监听
                             }
                         }
                     }
