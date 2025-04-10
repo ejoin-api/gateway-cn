@@ -40,7 +40,7 @@ tags:
   - name: ESIM
   - name: CellLock
     description: |-
-      🌴Here is the POSTMAN JSON file for <a download target="_blank" href="./CellLock.postman_collection.json">CellLock</a> 
+      💡Here is the POSTMAN JSON file for <a download target="_blank" href="./CellLock.postman_collection.json">CellLock</a> 
 paths:
   http://host:port/goip_post_sms.html:
     post:
@@ -1245,7 +1245,7 @@ paths:
 
   http://host:port/goip_resume_sms.html:
     post:
-      summary: Resume paused message task
+      summary: Resume Paused Message Task
       deprecated: false
       description: >
         Message description :
@@ -3320,7 +3320,7 @@ paths:
       security: []
   http://host:port/goip_get_call_stat.html:
     get:
-      summary: Query call Statistics
+      summary: Query Call Statistics
       deprecated: false
       description: >-
         1.The client can actively query the call statistics of the device through the HTTP GET request.
@@ -3762,7 +3762,7 @@ paths:
 
   Modify IMEI parameters:
     post:
-      summary: Modify IMEI parameters
+      summary: Modify IMEI Parameters
       deprecated: false
       description: "information in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_imei(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1) xxx = imei parameters \n\nExample: \nsim_imei(21)=865847053403202&sim_imei(51)=865847053403213 \n21 means 6B, B is slot_number 2 ,so 6B=（6 - 1）* 4+(2-1) =21 \n51 means 13D, D is slot_number 4,so 13D =(13-1)*4+(4-1)=51"
       tags:
@@ -4020,17 +4020,19 @@ paths:
       summary: USSD
       deprecated: false
       description: >
-        1.Application will send a HTTP GET request to the device, device will
-        return HTTP 200 OK response to the application.
-
-
-        2.Request URL
+        Request URL
 
         http://host[:port]/goip_send_ussd.html
+        
 
         host: device IP address
+        
 
         port: web port,default is 80,(Optional)
+        
+        
+        Application will send a HTTP GET request to the device, device will
+        return HTTP 200 OK response to the application.
       tags:
         - USSD
       parameters:
@@ -4277,7 +4279,7 @@ paths:
                 ports:
                   type: array
                   minimum: 1
-                  maximum: Device max-port
+                  maximum: max-port
                   description: Ports number
                   items:
                     type: number
@@ -4343,7 +4345,7 @@ paths:
                   port:
                     type: number
                     minimum: 1
-                    maximum: Device max-port
+                    maximum: max-port
                     description: Port number
                   status:
                     type: string
@@ -4442,7 +4444,7 @@ paths:
                 port:
                   type: number
                   minimum: 1
-                  maximum: Device max-port
+                  maximum: max-port
                   description: Port number
                 range:
                   type: string
@@ -4504,7 +4506,7 @@ paths:
                   type: array
                   description: Ports number
                   minimum: 1
-                  maximum: Device max-port
+                  maximum: max-port
                   items:
                     type: number
                     description: Port number
@@ -4521,7 +4523,7 @@ paths:
                   port:
                     type: number
                     minimum: 1
-                    maximum: Device max-port
+                    maximum: max-port
                     description: Port number
                   status:
                     type: string
@@ -4624,7 +4626,7 @@ paths:
                 port:
                   type: number
                   minimum: 1
-                  maximum: Device max-port
+                  maximum: max-port
                   description: Port number
                 earfcn: 
                   type: number
@@ -4684,7 +4686,7 @@ paths:
                   type: array
                   description: Ports number
                   minimum: 1
-                  maximum: Device max-port
+                  maximum: max-port
                   items:
                     type: number
                     description: Port number
@@ -4735,7 +4737,7 @@ paths:
                 port:
                   type: number
                   minimum: 1
-                  maximum: Device max-port
+                  maximum: max-port
                   description: Port number
                 earfcn: 
                   type: number
