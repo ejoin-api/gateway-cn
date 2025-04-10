@@ -85,22 +85,52 @@
   </head>
   <body>
     <div id="popup"></div>
-    <redoc spec-url='openapi.yaml'></redoc>
+  <!--  <redoc spec-url='openapi.yaml'></redoc>  -->
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
     <script src="https://code.jquery.com/jquery-2.0.0.min.js"></script>
+    <div id="redoc-container"></div>
     <script>
-      $(function(){
-          $('li.huvfwk').click(function () {
-               const navName = $(this).find('span.klzczi').html().trim(); 
-               const anchorPath = this.dataset.itemId;
-               gtag('event', 'nav_link_click', { nav_name: navName, anchor_path: anchorPath });
-          });
-          $('button.sc-eEVmNe.gXhEov').append('<div class="sc-carFqZ hBWCUB ejoin_copy_url">Copy</div>');
-          $("div.ejoin_copy_url").click(function () {
-               var url_obj = $(this).siblings("span.sc-jXcxbT.hVdkvA");
-               copyToClipboard(url_obj[0], url_obj.html());
-          });
-      })
+      Redoc.init('openapi.yaml', {}, document.getElementById('redoc-container'));
+      document.addEventListener('DOMContentLoaded', function () {
+          var clk_url = $('li.huvfwk');
+          if(clk_url && clk_url.length >0){
+               addEventListenerInit();
+          }else{
+               console.log('Element not found. Listening for DOM changes...');
+
+                // 使用 MutationObserver 监听 DOM 变化
+                const observer = new MutationObserver(function (mutationsList) {
+                    for (const mutation of mutationsList) {
+                        if (mutation.type === 'childList') {
+                            clk_url = $('li.huvfwk');
+                             if(clk_url && clk_url.length >0){
+                                console.log('Element found after DOM change:', clk_url.length);
+                                addEventListenerInit();
+                                observer.disconnect(); // 找到元素后停止监听
+                            }
+                        }
+                    }
+                });
+
+                // 配置观察选项
+                const config = { childList: true, subtree: true };
+                // 开始观察
+                observer.observe(document.body, config);
+          }
+      });
+
+      function addEventListenerInit(){
+            $('li.huvfwk').click(function () {
+                 const navName = $(this).find('span.klzczi').html().trim(); 
+                 const anchorPath = this.dataset.itemId;
+                 gtag('event', 'nav_link_click', { nav_name: navName, anchor_path: anchorPath });
+            });
+            $('button.sc-eEVmNe.gXhEov').append('<div class="sc-carFqZ hBWCUB ejoin_copy_url">Copy</div>');
+            $("div.ejoin_copy_url").click(function () {
+                 var url_obj = $(this).siblings("span.sc-jXcxbT.hVdkvA");
+                 copyToClipboard(url_obj[0], url_obj.html());
+            });
+      }
 
       function copyToClipboard(clkObj, text) {
         	if (navigator.clipboard) {
