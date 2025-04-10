@@ -163,7 +163,8 @@
 
       function popupCopyToClipboard(clkObj, isSucc){	
         	const txt = isSucc ? 'Copied' : 'Failed to copy data to clipboard';
-        	const rect = clkObj.getBoundingClientRect();
+        	/**
+          const rect = clkObj.getBoundingClientRect();
         	const popup = document.getElementById('popup');
             $(popup).addClass(isSucc ? "succ" : "fail").html(txt);
         	var popup_height = $(popup).height();
@@ -171,8 +172,11 @@
         	var left = rect.left + (rect.width / 2) - (popup_width / 2) - 10 + 'px';
         	var top = rect.top - rect.height - popup_height - 12 + 'px';
         	$("#popup").css({ top: top ,left: left  }).show();
+          **/
+          var html = 'Copy<div class="sc-iTVJFM oxVOu"><div class="sc-iBzEex glZmJR">'+txt+'</div><div class="sc-efHYUO cFSLxQ"></div><div class="sc-cTJkRt lmGFyU"></div></div>';
+          $(clkObj).html(html); 
         	 setTimeout(function () {
-        		$("#popup").removeClass(isSucc ? "succ" : "fail").hide().html("");
+        		    $(clkObj).html('Copy'); 
         	 }, 3000);
      }
       /**
