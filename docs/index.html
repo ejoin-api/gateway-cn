@@ -173,7 +173,7 @@
         	var top = rect.top - rect.height - popup_height - 12 + 'px';
         	$("#popup").css({ top: top ,left: left  }).show();
           **/
-          var html = 'Copy<div class="sc-iTVJFM oxVOu"><div class="sc-iBzEeX glZmJR">'+txt+'</div><div class="sc-efHYUO cFSLxQ"></div><div class="sc-cTJkRt lmGFyU"></div></div>';
+          var html = 'Copy<div class="sc-iTVJFM oxVOu" style="position: absolute;min-width: 80px;max-width: 500px;background: rgb(255, 255, 255);bottom: 100%;left: 50%;margin-bottom: 10px;transform: translateX(-50%);border-radius: 4px;padding: 0.3em 0.6em;text-align: center;box-shadow: rgb(204, 204, 204) 0px 0px 5px 0px;"><div class="sc-iBzEeX glZmJR" style="background:rgb(255, 255, 255);color: rgb(0, 0, 0);display: inline;font-size: 0.85em;white-space:nowrap;">'+txt+'</div><div class="sc-efHYUO cFSLxQ"></div><div class="sc-cTJkRt lmGFyU"></div></div>';
           $(clkObj).html(html); 
         	 setTimeout(function () {
         		    $(clkObj).html('Copy'); 
