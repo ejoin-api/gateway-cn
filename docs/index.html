@@ -132,16 +132,16 @@
             $('button.sc-eEVmNe.gXhEov').append('<div class="sc-carFqZ hBWCUB ejoin_copy_url">Copy</div>');
             $("div.ejoin_copy_url").click(function () {
                  var url_obj = $(this).siblings("span.sc-jXcxbT.hVdkvA");
-                 copyToClipboard(url_obj[0], url_obj.html());
+                 copyToClipboard(this, url_obj[0], url_obj.html());
             });
       }
 
-      function copyToClipboard(clkObj, text) {
+      function copyToClipboard(cp_btn, clkObj, text) {
         	if (navigator.clipboard) {
         		navigator.clipboard.writeText(text).then(function() {
-        			popupCopyToClipboard(clkObj, true);
+        			popupCopyToClipboard(cp_btn, true);
         		}).catch(function(err) {
-        			popupCopyToClipboard(clkObj, false);
+        			popupCopyToClipboard(cp_btn, false);
         		});
         	}else {
         		var textarea = document.createElement("textarea");
@@ -152,9 +152,9 @@
         		textarea.select();
         		try {
         			var successful = document.execCommand('copy');
-        			popupCopyToClipboard(clkObj, successful);
+        			popupCopyToClipboard(cp_btn, successful);
         		} catch (err) {
-        			popupCopyToClipboard(clkObj, false); 
+        			popupCopyToClipboard(cp_btn, false); 
         		}
         		document.body.removeChild(textarea);
         	}
