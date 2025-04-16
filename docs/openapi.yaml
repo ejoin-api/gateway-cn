@@ -142,8 +142,7 @@ paths:
                 tasks: 
                   type: array
                   description: Specific SMS send task
-                  x-redoc:
-                    collapsed: false
+                  x-redoc-expanded: true
                   items: 
                     type: object
                     properties:
