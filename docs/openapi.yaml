@@ -6,7 +6,14 @@ info:
 
     to learn about, try, and implement Ejoin Gateway HTTP API.
 
+    # Getting Started
 
+    Before you can start using API, first you need to enable API access on your SMSEagle device.
+
+    # Authentication
+
+    APIv2 supports the following authentication methods:
+    
     # Overview
 
     This document specifies HTTP SMS API of Ejoin device, include SMS receiving, single sending, group-sending and status of Sending task querying.
