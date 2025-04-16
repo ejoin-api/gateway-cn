@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "f16e8c84-71bb-4139-83dc-21e5cc9f9d1f",
+		"name": "NumberSettings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43156585"
+	},
+	"item": [
+		{
+			"name": "GetNumberConfig",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.168:80/get_number_config?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"168"
+					],
+					"port": "80",
+					"path": [
+						"get_number_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetNumberConfig",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"operator_id\": \"46011\",\r\n        \"method\": \"none\",\r\n        \"command\": \"5p+l6K+i5Y+356CB\",\r\n        \"keyword\": \"dXRmLTg=\",\r\n        \"valid_chars\": \"dXRmLTg=\",\r\n        \"dst_number\": \"10000\",\r\n        \"recv_number\": \"10001\",\r\n        \"old_prefix\": \"1\",\r\n        \"new_prefix\": \"1\"\r\n    },\r\n    {\r\n        \"operator_id\": \"46001\",\r\n        \"method\": \"none\",\r\n        \"command\": \"\",\r\n        \"keyword\": \"\",\r\n        \"valid_chars\": \"\",\r\n        \"dst_number\": \"10000\",\r\n        \"recv_number\": \"10001\",\r\n        \"old_prefix\": \"1\",\r\n        \"new_prefix\": \"1\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.168:80/set_number_config?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"168"
+					],
+					"port": "80",
+					"path": [
+						"set_number_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						},
+						{
+							"key": "operator_id",
+							"value": "46011",
+							"disabled": true
+						},
+						{
+							"key": "method",
+							"value": "none",
+							"disabled": true
+						},
+						{
+							"key": "command",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "keyword",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "valid_chars",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "dst_number",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "recv_number",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "old_prefix",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "new_prefix",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "X-API-Key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://farming-simulator.pstmn.io"
+		}
+	]
+}

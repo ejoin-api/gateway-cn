@@ -41,6 +41,10 @@ tags:
   - name: CellLock
     description: |-
       💡Here is the POSTMAN JSON file for <a download target="_blank" href="./CellLock.postman_collection.json">CellLock</a> 
+  - name: Number Settings
+    description: |-
+      💡Here is the POSTMAN JSON file for <a download target="_blank" href="./NumberSettings.postman_collection.json">Number Settings</a>
+    
 paths:
   http://host:port/goip_post_sms.html:
     post:
@@ -3844,40 +3848,79 @@ paths:
       tags:
         - Receive MMS
       parameters:
-        - name: Emms-Subject
-          in: header
-          description: MMS subject
-          required: false
-          example: chatset=US-ASCII
-          schema:
-            type: string
-            examples:
-              - charset：Character set, such as UTF-8
-        - name: Emms-From
-          in: header
-          description: MMS sending address
-          required: false
-          example: type=PLMN;chartset=utf-8
-          schema:
-            type: string
-            examples:
-              - 'charset: Character set, such as UTF-8'
-              - 'type: Sender address type, usually a phone number, known as PLMN'
-        - name: Emms-To
-          in: header
-          description: MMS receiving address
-          required: false
-          example: type=PLMN;chartset=utf-8
-          schema:
-            type: string
-            examples:
-              - 'charset: Character set, such as UTF-8 '
-              - 'type: Sender address type, usually a phone number, known as PLMN'
         - name: Date
           in: header
           description: MMS sending time
           required: false
           example: Thu,28 Mar 2024 09:47:10 GMT
+          schema:
+            type: string
+        - name: Emms-Subject
+          in: header
+          description: >-
+            MMS subject,encoded using BASE64
+            
+            
+            `charset` : encoding format
+          required: false
+          example: MQ==;charset=US-ASCII
+          schema:
+            type: string
+
+        - name: Emms-From
+          in: header
+          description: >-
+            MMS sending address,encoded using BASE64
+            
+            
+            `charset` : Character set, such as UTF-8'
+            
+            
+            `type` : Sender address type, usually a phone number, known as PLMN
+          required: false
+          example: KzE3Nzg1MzkzMjMw;type=PLMN;charset=utf-8
+          schema:
+            type: string
+        - name: Emms-To
+          in: header
+          description: >-
+            MMS receiving address,encoded using BASE64
+            
+            
+            `charset` : Character set, such as UTF-8'
+            
+            
+            `type` : Sender address type, usually a phone number, known as PLMN
+          required: false
+          example: KzE3Nzg1MzkzMzcv;type=PLMN;charset=utf-8
+          schema:
+            type: string
+        - name: Emms-Mac
+          in: header
+          description: The MAC address of the device that received the MMS
+          required: false
+          example: 00-30-f1-01-02-03
+          schema:
+            type: string
+        - name: Emms-Port
+          in: header
+          description: The port slot number of the device that received the MMS
+          required: false
+          example: 2.01
+          schema:
+            type: string
+        - name: Emms-Iccid
+          in: header
+          description: The ICCID of the SIM that received the MMS
+          required: false
+          example: 89302610108063017211
+          schema:
+            type: string
+        - name: Emms-Imsi
+          in: header
+          description: The IMSI of the SIM that received the MMS
+          required: false
+          example: 302610947313558
           schema:
             type: string
         - name: Content-Type
@@ -3886,12 +3929,13 @@ paths:
             The specifics need to be decided according to the operator, but
             attention should be paid to the processing of multipart related
             types
+            
+            
+            Related to specific types
           required: false
           example: application/smil
           schema:
             type: string
-            examples:
-              - Related to specific types
           headers: {}
       security: []
   http://host:port/goip_send_at.html:
@@ -4970,4 +5014,221 @@ paths:
                     report_url: 192.168.1.156
                     timeout: 180
           headers: {}
-      security: []                  
+      security: []  
+
+  http://host:port/get_number_config:
+    get:
+      summary: Get Number Config
+      deprecated: false
+      description: >-
+         It allows the user to retrieve the number configuration settings for device, provides detailed information about the operator's configuration, including the method used for querying phone numbers, commands, and the phone number format.
+      tags: 
+        - Number Settings
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string                
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  settings:
+                    type: array
+                    description: Query result number configuration information
+                    items:
+                      type: object
+                      properties:
+                        operator_id: 
+                          type: string
+                          description: Operator ID
+                        operator_name:
+                          type: string
+                          description: Operator Name
+                        method: 
+                          type: string
+                          description: >-
+                            The method used to query the phone number
+                          enum: 
+                            - none
+                            - ussd
+                            - sms
+                            - sim
+                        command:
+                          type: string
+                          description: The command used to query the phone number, **encoded using BASE64**
+                        keyword:
+                          type: string
+                          description: The keyword used to match the phone number in the query result,**encoded using BASE64**
+                        valid_chars:
+                          type: string
+                          description: Valid character set, **encoded using BASE64**
+                        dst_number:
+                          type: string
+                          description: Service phone number	
+                        recv_number:
+                          type: string 
+                          description: Receive phone number
+                        old_prefix: 
+                          type: string
+                          description: Prefix to be replaced
+                        new_prefix:
+                          type: string
+                          description: >-
+                            New prefix after replacement:  When the retrieved number matches the `old_prefix`, replace `old_prefix` with `new_prefix`
+                      required:
+                        - operator_id
+                        - operator_name
+                        - method
+                        - command
+                        - keyword
+                        - valid_chars
+                        - dst_number
+                        - recv_number
+                        - old_prefix
+                        - new_prefix
+                required:
+                  - settings
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    - operator_id: 46011
+                      operator_name: CHN-CT
+                      method: none
+                      command: ""
+                      keyword: ""
+                      valid_chars: ""
+                      dst_number: ""
+                      recv_number: ""
+                      old_prefix: ""
+                      new_prefix: ""
+                    - operator_id: 46000
+                      operator_name: CHINA MOBILE
+                      method: sms
+                      command: MTAx
+                      keyword: 5bCK5pWs55qE
+                      valid_chars: dXRmLTg=
+                      dst_number: 10086
+                      recv_number: ""
+                      old_prefix: 861
+                      new_prefix: 1
+          headers: {}
+      security: []
+  http://host:port/set_number_config:
+    post:
+      summary: Set Number Config
+      deprecated: false
+      description: >-
+         It updates the number configuration settings for device. It allows you to specify the method for querying phone numbers, commands, keywords, and other parameters related to number retrieval and processing. 
+         
+         
+         This configuration can include changes to the operator ID, query method (USSD, SMS, SIM), and prefix replacement rules. **If a parameter is missing from the request, it will be updated to a null value**.
+      tags: 
+        - Number Settings
+      parameters:
+        - name: username
+          in: query
+          description: Device username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              - operator_id: 46011
+                method: ussd
+                command: "IzEwMQ=="
+                keyword: "5Y+356CB"
+                valid_chars: "dXRmLTg="
+                dst_number: "MTAwMTE="
+                recv_number: ""
+                old_prefix: "ODY="
+                new_prefix: "MQ=="
+              - operator_id: 46000
+                method: sms
+                command: ""
+                keyword: ""
+                valid_chars: "dXRmLTg="
+                dst_number: ""
+                recv_number: ""
+                old_prefix: ""
+                new_prefix: ""
+            schema:
+              type: object
+              required:
+                - settings
+              properties:
+                settings:
+                  type: array
+                  description: >-
+                      Number configuration parameters
+                  
+                  
+                      Please use **Get Number Config** to query the number configuration first, and make sure the operator ID to be modified exists
+                      
+                      
+                      A certain parameter in the array is missing from the request; this parameter will be **updated to a null value**
+                  items:
+                    type: object
+                    required:
+                      - operator_id
+                      - method
+                    properties:
+                      operator_id: 
+                        type: string
+                        description: Operator ID
+                      method: 
+                        type: string
+                        enum: 
+                          - none
+                          - ussd
+                          - sms
+                          - sim
+                        description: The method used to query the phone number
+                      command: 
+                        type: string
+                        description: The command used to query the phone number, **encoded using BASE64**
+                      keyword:
+                        type: string
+                        description: The keyword used to match the phone number in the query result,**encoded using BASE64**
+                      valid_chars:
+                        type: string
+                        description: Valid character set, **encoded using BASE64**
+                      dst_number:
+                        type: string
+                        description: Service phone number
+                      recv_number:
+                        type: string
+                        description: Receive phone number
+                      old_prefix:
+                        type: string
+                        description: Prefix to be replaced
+                      new_prefix:
+                        type: string
+                        description: >-
+                          New prefix after replacement: When the retrieved number matches the `old_prefix`, replace `old_prefix` with `new_prefix`
+      responses:
+        '200':
+          description: 'OK'
+          headers: {}
+      security: []
