@@ -21,7 +21,7 @@ info:
     etc.). Each example is accompanied with API response sample.
 
 
-  version: v2.5.0
+  version: v2.6.0
   x-logo:
     url: ./EAPI-logo.png
     backgroundColor: '#FAFAFA'
