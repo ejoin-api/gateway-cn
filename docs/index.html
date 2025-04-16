@@ -138,6 +138,8 @@
                  var url_obj = $(this).siblings("span.sc-jXcxbT.hVdkvA");
                  copyToClipboard(this, url_obj[0], url_obj.html());
             });
+            $("button[aria-label='expand properties']").click();
+			      $("button[class='sc-htmcrh khIKSp']:not(:disabled)").click();
       }
 
       function copyToClipboard(cp_btn, clkObj, text) {
