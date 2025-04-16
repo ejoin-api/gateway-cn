@@ -41,9 +41,9 @@ tags:
   - name: CellLock
     description: |-
       💡Here is the POSTMAN JSON file for <a download target="_blank" href="./CellLock.postman_collection.json">CellLock</a> 
-  - name: Number Settings
+  - name: Number Config
     description: |-
-      💡Here is the POSTMAN JSON file for <a download target="_blank" href="./NumberSettings.postman_collection.json">Number Settings</a>
+      💡Here is the POSTMAN JSON file for <a download target="_blank" href="./NumberConfig.postman_collection.json">Number Config</a>
     
 paths:
   http://host:port/goip_post_sms.html:
@@ -5023,7 +5023,7 @@ paths:
       description: >-
          It allows the user to retrieve the number configuration settings for device, provides detailed information about the operator's configuration, including the method used for querying phone numbers, commands, and the phone number format.
       tags: 
-        - Number Settings
+        - Number Config
       parameters:
         - name: username
           in: query
@@ -5045,7 +5045,7 @@ paths:
               schema: 
                 type: object
                 properties: 
-                  settings:
+                  config:
                     type: array
                     description: Query result number configuration information
                     items:
@@ -5100,7 +5100,7 @@ paths:
                         - old_prefix
                         - new_prefix
                 required:
-                  - settings
+                  - config
               examples:
                 '1':
                   summary: Successful instance
@@ -5137,7 +5137,7 @@ paths:
          
          This configuration can include changes to the operator ID, query method (USSD, SMS, SIM), and prefix replacement rules. **If a parameter is missing from the request, it will be updated to a null value**.
       tags: 
-        - Number Settings
+        - Number Config
       parameters:
         - name: username
           in: query
@@ -5176,9 +5176,9 @@ paths:
             schema:
               type: object
               required:
-                - settings
+                - config
               properties:
-                settings:
+                config:
                   type: array
                   description: >-
                       Number configuration parameters
