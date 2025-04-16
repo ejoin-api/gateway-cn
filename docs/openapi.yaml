@@ -6,14 +6,6 @@ info:
 
     to learn about, try, and implement Ejoin Gateway HTTP API.
 
-    # Getting Started
-
-    Before you can start using API, first you need to enable API access on your SMSEagle device.
-
-    # Authentication
-
-    APIv2 supports the following authentication methods:
-    
     # Overview
 
     This document specifies HTTP SMS API of Ejoin device, include SMS receiving, single sending, group-sending and status of Sending task querying.
@@ -26,14 +18,6 @@ info:
     sample payload parameters in JSON format showing how to complete a task (for
     example send SMS, send AT command, get status notification,
     etc.). Each example is accompanied with API response sample.
-
-    # SDKs
-
-    SMSEagle API is built on OpenAPI 3.0 Specification. You may download the API specification using Download button at the top of the page. The specification file can be used to generate SDK in your preffered programming language using open source tools like OpenAPI Generator or Swagger Codegen.
-
-    # Webhooks
-
-    If you want to be notified about certain events like incoming message or change of delivery status, use webhooks. Webhooks are standard HTTP endpoints implemented in your application that will accept HTTP requests from SMSEagle device. Webhooks save you from having to continuously send requests to the SMSEagle device asking for message status. Webhooks can be configured via feature named Callback URL (Web-GUI > menu CallbackURL).
     
   version: v2.6.0
   x-logo:
