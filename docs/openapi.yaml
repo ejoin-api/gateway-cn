@@ -94,7 +94,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -973,7 +973,7 @@ paths:
           in: query
           description: ''
           required: true
-          example: Device password
+          example: Device Password
           schema:
             type: string
       requestBody:
@@ -1283,7 +1283,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -1574,7 +1574,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -1882,7 +1882,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -2252,7 +2252,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -2444,7 +2444,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -2578,7 +2578,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -3357,7 +3357,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -3557,7 +3557,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -4011,23 +4011,23 @@ paths:
                     description: >
                       Return code:
                       
+                      <ul>
+                       <li>0 Success or OK</li>
                       
-                       0 Success or OK
                       
-                      
-                       1 Username or assword wrong
+                       <li>1 Username or Password wrong</li>
                        
                        
-                       2 Port parameter wrong
+                       <li>2 Port parameter wrong</li>
                        
                        
-                       3 No AT parameter
+                       <li>3 No AT parameter</li>
                        
                        
-                       4 Have incomplete AT request
+                       <li>4 Have incomplete AT request</li>
                        
                        
-                       5 timeout
+                       <li>5 Timeout</li></ul>
                     enum:
                       - 0 
                       - 1 
@@ -4814,7 +4814,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -4983,7 +4983,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
@@ -5032,7 +5032,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string                
@@ -5146,7 +5146,7 @@ paths:
             type: string
         - name: password
           in: query
-          description: Device password
+          description: Device Password
           required: true
           schema:
             type: string
