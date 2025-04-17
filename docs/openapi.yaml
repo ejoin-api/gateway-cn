@@ -3873,7 +3873,7 @@ paths:
             MMS sending address,encoded using BASE64
             
             
-            `charset` : Character set, such as UTF-8'
+            `charset` : Character set, such as UTF-8
             
             
             `type` : Sender address type, usually a phone number, known as PLMN
@@ -3887,7 +3887,7 @@ paths:
             MMS receiving address,encoded using BASE64
             
             
-            `charset` : Character set, such as UTF-8'
+            `charset` : Character set, such as UTF-8
             
             
             `type` : Sender address type, usually a phone number, known as PLMN
