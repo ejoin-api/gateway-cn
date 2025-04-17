@@ -88,7 +88,7 @@ paths:
             default: '1.0'
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -966,7 +966,7 @@ paths:
           in: query
           description: ''
           required: true
-          example: Device username
+          example: Device Username
           schema:
             type: string
         - name: password
@@ -1277,7 +1277,7 @@ paths:
             type: string
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -1568,7 +1568,7 @@ paths:
             type: string
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -1876,7 +1876,7 @@ paths:
             type: string
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -2438,7 +2438,7 @@ paths:
               - '1.1: Support for the description of this document'
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -2572,7 +2572,7 @@ paths:
               - '1.1: Support for the description of this document'
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -3164,6 +3164,7 @@ paths:
         1.The client can actively query the short message statistics of the
         device through the HTTP GET request.
 
+
         2.host: Device IP address
            port: Device webpage management port, default value is 80.
       tags:
@@ -3351,7 +3352,7 @@ paths:
               - '1.1: Support for the description of this documen'
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -3965,7 +3966,7 @@ paths:
       parameters:
         - name: username
           in: query
-          description: 'Device Usuername '
+          description: 'Device Username '
           required: true
           example: root
           schema:
@@ -4808,7 +4809,7 @@ paths:
       parameters:
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -4977,7 +4978,7 @@ paths:
       parameters:
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -5026,7 +5027,7 @@ paths:
       parameters:
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
@@ -5140,7 +5141,7 @@ paths:
       parameters:
         - name: username
           in: query
-          description: Device username
+          description: Device Username
           required: true
           schema:
             type: string
