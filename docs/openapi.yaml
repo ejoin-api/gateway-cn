@@ -3938,6 +3938,206 @@ paths:
             type: string
           headers: {}
       security: []
+      x-codeSamples:
+        - lang: Java
+          label: Java
+          source: |
+            import javax.servlet.http.HttpServletRequest;
+
+            import java.io.*;
+            import java.nio.charset.StandardCharsets;
+            import java.util.*;
+
+            public class MmsContentExtractor {
+                
+              /**
+               * extract MMS Content
+               * @param request
+               * @param path
+               */
+                public static void extractMmsContent(HttpServletRequest request, String path) {
+                    try {
+                        if (!isMultipartRelated(request)) {
+                            System.err.println("Error: Non multipart/related format");
+                            return;
+                        }
+                        String boundary = extractBoundary(request.getContentType());
+                        if (boundary == null) {
+                            System.err.println("Error: Unable to parse boundary symbol");
+                            return;
+                        }
+
+                        InputStream inputStream = request.getInputStream();
+                        List<MmsPart> parts = parseMmsParts(inputStream, boundary);
+                        /*for (MmsPart part : parts) {
+                            savePartToFile(part, path);
+                        }*/
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                private static boolean isMultipartRelated(HttpServletRequest request) {
+                    String contentType = request.getContentType();
+                    return contentType != null && contentType.toLowerCase().startsWith("multipart/related");
+                }
+
+                private static String extractBoundary(String contentType) {
+                    int boundaryIndex = contentType.indexOf("boundary=");
+                    if (boundaryIndex == -1) return null;
+                    String boundaryPart = contentType.substring(boundaryIndex + "boundary=".length());
+                    int semicolonIndex = boundaryPart.indexOf(';');
+                    boundaryPart = (semicolonIndex > 0) ? boundaryPart.substring(0, semicolonIndex) : boundaryPart;
+                    return boundaryPart.trim().replaceAll("^\"|\"$", "");
+                }
+                
+                /**
+                 * Process the remaining content after detecting the end boundary
+                 * @param bufferBytes :Current buffer byte array
+                 * @param endIndex End :the starting position of the boundary in the buffer zone
+                 * @param currentPart :The part currently being processed (may be null)
+                 * @param parts :Parsed partial list
+                 */
+                private static void processRemainingContent(byte[] bufferBytes, int endIndex, MmsPart currentPart, List<MmsPart> parts) {
+                    if (currentPart != null) {
+                        // Extract the content before the end boundary (check for any preceding \r\n)
+                        int contentEnd = endIndex;
+                        
+                        // If there is \r\n before ending the boundary, it needs to be excluded
+                        if (contentEnd >= 2 && bufferBytes[contentEnd - 1] == '\n' && bufferBytes[contentEnd - 2] == '\r') {
+                            contentEnd -= 2;
+                        }
+                        
+                        byte[] partContent = Arrays.copyOfRange(bufferBytes, 0, contentEnd);
+                        currentPart.setContent(partContent);
+                        parts.add(currentPart);
+                    }
+                }
+                
+                private static List<MmsPart> parseMmsParts(InputStream inputStream, String boundary) throws IOException {
+                    List<MmsPart> parts = new ArrayList<>();
+                    byte[] boundaryBytes = ("\r\n--" + boundary).getBytes(StandardCharsets.UTF_8);
+                    byte[] endBoundaryBytes = ("\r\n--" + boundary + "--").getBytes(StandardCharsets.UTF_8);
+                    byte[] headerEndBytes = "\r\n\r\n".getBytes(StandardCharsets.UTF_8); //Header terminator, 4 bytes
+                    
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    MmsPart currentPart = null;
+                    byte[] chunk = new byte[4096];
+                    int bytesRead;
+
+                    while ((bytesRead = inputStream.read(chunk)) != -1) {
+                      buffer.write(chunk, 0, bytesRead);
+                        byte[] bufferBytes = buffer.toByteArray();
+
+                        //End of detection boundary (processing the last part)
+                        int endIndex = indexOf(bufferBytes, endBoundaryBytes);
+                        if (endIndex != -1) {
+                            processRemainingContent(bufferBytes, endIndex, currentPart, parts); //Call an existing method to handle the end boundary
+                            buffer.reset(); //Clear the buffer zone
+                            break;
+                        }
+
+                        //Detecting ordinary boundaries (processing the middle part)
+                        int boundaryIndex = indexOf(bufferBytes, boundaryBytes);
+                        while (boundaryIndex != -1) {
+                            if (currentPart != null) {
+                              processRemainingContent(bufferBytes, boundaryIndex, currentPart, parts); //Call an existing method to handle the end boundary
+                                currentPart = null;
+                            }
+
+                            // Skip the current boundary symbol and process the subsequent data (boundary symbol is \r\n -- boundary, totaling boundaryBytes.length bytes)
+                            int nextStart = boundaryIndex + boundaryBytes.length;
+                            bufferBytes = Arrays.copyOfRange(bufferBytes, nextStart, bufferBytes.length);
+                            buffer.reset();
+                            buffer.write(bufferBytes);
+
+                            //Initialize new section, parse header (must find header terminator \r\n\r\n)
+                            currentPart = new MmsPart();
+                            int headerEnd = indexOf(bufferBytes, headerEndBytes);
+                            if (headerEnd == -1) {
+                                throw new IOException("The MIME header is incomplete and missing the terminator\r\n\r\n");
+                            }
+                            byte[] headerBytes = Arrays.copyOfRange(bufferBytes, 0, headerEnd);
+                            parsePartHeaders(headerBytes, currentPart); 
+                            // Skip the header terminator and start content from behind
+                            int contentStart = headerEnd + headerEndBytes.length; 
+                            bufferBytes = Arrays.copyOfRange(bufferBytes, contentStart, bufferBytes.length);
+                            buffer.reset();
+                            buffer.write(bufferBytes); // The buffer now only contains image content (without headers and borders)
+
+                            boundaryIndex = indexOf(bufferBytes, boundaryBytes); // Continue searching for the next boundary symbol
+                        }
+                    }
+                    return parts;
+                }
+
+                private static void parsePartHeaders(byte[] headerBytes, MmsPart part) {
+                    String headersStr = new String(headerBytes, StandardCharsets.UTF_8);
+                    for (String line : headersStr.split("\r\n")) {
+                        if (line.contains(":")) {
+                            String[] keyValue = line.split(":", 2);
+                            part.getHeaders().put(keyValue[0].trim(), keyValue[1].trim());
+                        }
+                    }
+                }
+
+                private static int indexOf(byte[] source, byte[] target) {
+                    if (target.length == 0) return 0;
+                    int max = source.length - target.length;
+                    for (int i = 0; i <= max; i++) {
+                        if (source[i] != target[0]) continue; 
+                        boolean match = true;
+                        for (int j = 1; j < target.length; j++) {
+                            if (source[i + j] != target[j]) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match) return i;
+                    }
+                    return -1;
+                }
+                
+                private static void savePartToFile(MmsPart part, String filePath) {
+                  Map<String, String> headers = part.getHeaders();
+                    String fileName = headers.get("Content-Location");
+                    if (fileName == null) {
+                        fileName = headers.get("Content-ID");
+                    }
+                    if (fileName == null) {
+                        fileName = "extracted_image";
+                    }
+                    fileName = fileName.replaceAll("^<<|>>$", "");
+                  if (headers.containsKey("Content-Type") && headers.get("Content-Type").startsWith("image/")) {
+                      String savePath = filePath + fileName;
+                      try (FileOutputStream fos = new FileOutputStream(savePath)) {
+                          fos.write(part.getContent());
+                          System.out.println("Successfully extracted image:" + savePath);
+                      } catch (IOException e) {
+                          System.err.println("Failed to save image: " + e.getMessage());
+                          e.printStackTrace();
+                      }
+                  }
+                }
+
+                private static class MmsPart {
+                    private final Map<String, String> headers = new HashMap<>();
+                    private byte[] content;
+
+                    public Map<String, String> getHeaders() {
+                        return headers;
+                    }
+
+                    public void setContent(byte[] content) {
+                        this.content = content;
+                    }
+
+                    public byte[] getContent() {
+                        return content;
+                    }
+                }
+            }
   http://host:port/goip_send_at.html:
     get:
       summary: AT Command
