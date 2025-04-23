@@ -6,20 +6,32 @@ info:
 
     to learn about, try, and implement Ejoin Gateway HTTP API.
 
+
     # Overview
 
-    This document specifies HTTP SMS API of Ejoin device, include SMS receiving, single sending, group-sending and status of Sending task querying.
-    Based on‘Ejoin SMS sending API’, this document extra support Group-Sending and multi task and status report support in one message.This SMS API is still base on HTTP and add POST request support, enabling multi-tasking and status reporting through a JSON array format. For detailed specifications on the JSON array format, please refer to the standardization guidelines.
+     This document outlines the HTTP SMS API for devices, covering SMS reception, single and group message sending, and 
+     querying the status of sending tasks.
 
 
-    # Examples
+     Building upon the existing "Ejoin SMS Sending API", this version introduces enhanced support for group messaging, 
+     multitasking, and status reporting—all within a single request.
 
-    For each API endpoint, we provide basic use case examples. Each example has
-    sample payload parameters in JSON format showing how to complete a task (for
-    example send SMS, send AT command, get status notification,
-    etc.). Each example is accompanied with API response sample.
-    
-  version: v2.6.0
+
+     The API remains HTTP-based but now supports POST requests, allowing multiple tasks and status updates to be 
+     processed using JSON arrays.
+     
+     # Message description
+     
+     For each API,
+     
+     **Host**: Device IP address
+
+     **Port**: Device webpage management port, default value is 80
+
+
+
+
+  version: v2.6.1
   x-logo:
     url: ./EAPI-logo.png
     backgroundColor: '#FAFAFA'
@@ -38,10 +50,14 @@ tags:
   - name: ESIM
   - name: CellLock
     description: |-
-      💡Here is the POSTMAN JSON file for <a download target="_blank" href="./CellLock.postman_collection.json">CellLock</a> 
+      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./CellLock.postman_collection.json">💡Here is the POSTMAN JSON file for CellLock</a> </span>
   - name: Number Config
     description: |-
-      💡Here is the POSTMAN JSON file for <a download target="_blank" href="./NumberConfig.postman_collection.json">Number Config</a>
+      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./NumberConfig.postman_collection.json">💡Here is the POSTMAN JSON file for Number Config</a></span>
+  - name: Get SIM Cards Status
+  - name: Switch SIM Cards
+  - name: Disable/Enable Ports
+
     
 paths:
   http://host:port/goip_post_sms.html:
@@ -49,42 +65,30 @@ paths:
       summary: Send Message Task
       deprecated: false
       description: >-
-        Message description :
-
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
-
-
+        
         Tips:
 
-        1. While not choose a port, device will pick up a random port to send
-        SMS to every recipient.
+        1. If no port is selected, the device will randomly assign one to each SMS recipient.
+        
+        
+        2. If multiple ports are selected and only one recipient is specified, all selected ports will be used to send 
+        SMS to that single recipient.
 
-        2. While chose more than one ports, and just one SMS recipient , then
-        device will use all chose port to
 
-        send SMS to this recipient.
-
-        3. If more ports, and more recipient designed, then every port will send
-        SMS to every recipient
-
-        separately.
+        3. If multiple ports and multiple recipients are defined, each port will independently send SMS messages to each 
+        recipient.
       tags:
         - Send Message
       parameters:
         - name: version
           in: query
-          description: API version
+          description: >-
+            API version
+            <ul><li>1.0: Compatible with previous API</li>
+              <li>1.1: Support for the description of this document</li></ul>
           required: false
-          example: ''
           schema:
             type: string
-            examples:
-              - 1.0：Compatible with previous API
-              - '1.1: Support for the description of  this document'
             default: '1.0'
         - name: username
           in: query
@@ -111,8 +115,7 @@ paths:
                   example: send-sms
                 sr_url:
                   type: string
-                  description: Status report forward url
-                  default: System configuration
+                  description: Status report forward url,**configure through the page**
                 sr_cnt: 
                   type: string
                   description: Max num of SMS result can keep in cache
@@ -124,7 +127,6 @@ paths:
                 sms_url: 
                   type: string
                   description: SMS forward URL 
-                  default: System configuration
                 sms_cnt: 
                   type: integer
                   description: Max num of SMS can keep in cache
@@ -140,7 +142,6 @@ paths:
                 tasks: 
                   type: array
                   description: Specific SMS send task
-                  x-redoc-expanded: true
                   items: 
                     type: object
                     properties:
@@ -149,11 +150,11 @@ paths:
                         description: Task ID
                       from: 
                         type: string
-                        description: Use‘,’‘-’to assign more than one port(from channel 1) 
-                        default: CHoose of Device
+                        description: Use`,` `-`to assign more than one port(from channel 1) 
+                        default: Choose of Device
                       to:
                         type: string
-                        description: one or more(use ‘,’to distinguish) recipients
+                        description: one or more(use`,`to distinguish) recipients
                       to_all: 
                         type: string
                         description: 1 represents all ports
@@ -167,19 +168,27 @@ paths:
                         default: utf8
                       coding: 
                         type: integer
-                        description: Pecific the SMS codec
+                        description: >-
+                          Pecific the SMS codes
+                           <ul><li> 0 Not assign</li>
+                           <li>1 USC2</li>
+                           <li>2 7bit</li></ul>
                         enum: 
-                          - 0 not assign
-                          - 1 USC2
-                          - 2 7bit
+                          - 0
+                          - 1
+                          - 2
                         default: 0
                       smstype: 
                         type: integer
-                        description: SMS type
+                        description: >-
+                          SMS type
+                          <ul><li> 0 SMS</li>
+                           <li>1 MMS</li>
+                           <li>2 MMS with multiple numbers and multiple subject</li><ul>
                         enum: 
-                          - 0 SMS
-                          - 1 MMS
-                          - 2 MMS with multiple numbers and multiple subject
+                          - 0 
+                          - 1 
+                          - 2 
                         default: 0
                       smstitle: 
                         type: string
@@ -198,20 +207,34 @@ paths:
                       attachments:
                         type: string
                         nullable: true
-                        description: >-
+                        description: |-
                           1.MMS attachment,This field take effect only when smstype=1 or 2
 
-                          2.Field  content format:“File type1|base64 code file content 1;File type2|base64 code file content 2;......File type n|base64 code file content n”
 
-
-                          3.
-                          a.There can be a most of 5 attachment,all attachment total length cannot exceed 100K,at present only support jpg、gif、txt、mp3 formatted file.
+                          2.Field content format:File type1|base64 code file content 
                           
-                          b.File type and file content use symbol | separate
                           
-                          c.Attachment is could be empty,send the content of the SMS filed as a TXT attachment
+                          <ul><li>File type2|base64 code file content </li>
+                          
+                          
+                          <li>......</li><li>File type n|base64 code file content n</li></ul>
+                          
 
-                          4.example:“txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk”
+
+                          3.Tips:
+                          
+                          
+                          <ul><li>a.There can be a most of 5 attachment,all attachment total length cannot exceed 100K,at present only support `jpg` `gif` `txt` `mp3` formatted file.</li>
+                          
+                          
+                          <li>b.File type and file content use symbol | separate</li>
+                          
+                          
+                          <li>c.Attachment is could be empty,send the content of the SMS filed as a TXT attachment</li></ul>
+
+                          
+
+                          4.example: **txt|zsSxvg==;jpg|4AAQSkZJRgABAgAAZABk**
                           
                       smsc: 
                         type: string
@@ -226,25 +249,30 @@ paths:
                         description: Max time while waiting sending result(second)
                       sdr: 
                         type: integer
-                        description: If enable the successfully send report
+                        description: >-
+                          If enable the successfully send report
+                          <ul><li>0 disable</li>
+                          <li>1 enbale</li></ul>
                         default: 1
                         enum: 
-                          - 0 disable
-                          - 1 enbale
+                          - 0 
+                          - 1 
                       fdr: 
                         type: integer
                         default: 0
-                        description: If enable the failed report
+                        description: >-
+                           If enable the failed report
+                           <ul><li>0 disable</li>
+                           <li>1 enbale</li></ul>
                         enum:
-                          - 0 disable
-                          - 1 enable
+                          - 0 
+                          - 1 
                       sr_prd:
                         type: integer
-                        description: 
-                          Status report period (seconds)
-                        enum: 
-                          - 0 not on
-                          - Greater than 0:Control only the period in which a single task generates a report
+                        description: >-
+                           Status report period (seconds)
+                           <ul><li>0 Not on</li>
+                           <li>Greater than 0:Control only the period in which a single task generates a report</li></ul>
                         default: 60
                       sr_cnt:
                         type: integer
@@ -296,7 +324,7 @@ paths:
                   sr_cnt: 21
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -307,20 +335,13 @@ paths:
                     description: Interface processing result code
                   reason:
                     type: string
+                    description: Interface processing results
                   type:
                     type: string
-                    description: send-sms
+                    description: Task status
                   status:
                     type: array
-                    items:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                  task_num:
-                    type: array
+                    description: Task status
                     items:
                       type: object
                       properties:
@@ -328,43 +349,41 @@ paths:
                           type: integer
                           description: Task ID
                         status:
-                          type: integer
+                          type: string
                           description: >-
                             Task status code
 
 
                             If task status ID not equal to 0, then means this
                             task not received by device
+                            
+                            <ul><li>0 OK</li>
+                            <li>1 Invalid User</li>
+                            <li>2 Invalid Port</li>
+                            <li>3 USSD Expected</li>
+                            <li>4 Pending USSD</li>
+                            <li>5 SIM Unregistered</li>
+                            <li>6 Timeout</li>
+                            <li>7 Server Error</li>
+                            <li>8 SMS Expected</li>
+                            <li>9 TO Expected</li>
+                            <li>10 Pending Transaction</li>
+                            <li>11 TID Expected</li>
+                            <li>12 FROM Expected</li>
+                            <li>13 Duplicated TaskID</li>
+                            <li>14 Unauthorized</li>
+                            <li>15 Invalid CMD</li>
+                            <li>16 Too Many Task</li>
+                            <li>17 MMS Title Expected</li>
+                            <li>18 Too Many MMS Attachments</li>
+                            <li>19 MMS Attachments Expected</li>
+                            </ul>
                           minimum: 0
                           maximum: 19
-                          enum: 
-                            - 0 OK
-                            - 1 Invalid User
-                            - 2 Invalid Port
-                            - 3 USSD Expected
-                            - 4 Pending USSD
-                            - 5 SIM Unregistered
-                            - 6 Timeout
-                            - 7 Server Error
-                            - 8 SMS Expected
-                            - 9 TO Expected
-                            - 10 Pending Transaction
-                            - 11 TID Expected
-                            - 12 FROM Expected
-                            - 13 Duplicated TaskID
-                            - 14 Unauthorized
-                            - 15 Invalid CMD
-                            - 16 Too Many Task
-                            - 17 MMS Title Expected
-                            - 18 Too Many MMS Attachments
-                            - 19 MMS Attachments Expected
-                          examples:
-                            - 0
-                            - 1
-                            - 19
                       required:
                         - tid
                         - status
+                 
                 required:
                   - code
                   - reason
@@ -375,51 +394,11 @@ paths:
                 '1':
                   summary: Successful instance
                   value:
-                    type: send-sms
+                    type: task-status
                     task_num: 1
                     tasks:
                       - tid: tid_1
-          headers: {}
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: object
-                    properties:
-                      recipients:
-                        type: string
-                    required:
-                      - recipients
-                required:
-                  - message
-              examples:
-                '1':
-                  summary: Exception instance
-                  value:
-                    message:
-                      recipients: 'One of parameters: to, contacts, groups is required.'
-          headers: {}
-        '401':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: Invalid API key.
-                required:
-                  - message
-              examples:
-                '1':
-                  summary: Exception instance
-                  value:
-                    message: Invalid API key.
+                        status: 0 OK
           headers: {}
       security: []
       x-codeSamples:
@@ -936,20 +915,8 @@ paths:
       summary: Pause Message Task
       deprecated: false
       description: >-
-        Message description :
-
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
-
-                
-
-        When a SMS task is still waiting to be sent in the send queue, one or
-        more SMS can be paused.
-
-
+        
+        Pause one or more SMS tasks that are still in the sending queue and have not yet been dispatched.
       tags:
         - Send Message
       parameters:
@@ -959,21 +926,19 @@ paths:
             API version
             This document describes specification support only
           required: false
-          example: '1.1'
           schema:
             type: string
+            default: 1.1
         - name: username
           in: query
-          description: ''
+          description: Device Username
           required: true
-          example: Device Username
           schema:
             type: string
         - name: password
           in: query
-          description: ''
+          description: Device Password
           required: true
-          example: Device Password
           schema:
             type: string
       requestBody:
@@ -981,15 +946,19 @@ paths:
           application/json:
             example:
               tids:
-                - - tid1
-                - - tid2
+                - tid1
+                - tid2
             schema:
               type: object
+              required:
+                - tids
               properties:
                 tids:
                   type: array
                   items:
                     type: object
+                    required:
+                      - tid
                     properties:
                       tid:
                         type: integer
@@ -998,7 +967,7 @@ paths:
               
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -1024,29 +993,30 @@ paths:
                           description: Task ID
                         status:
                           type: string
-                          description: Task status code
-                          enum:
-                            - 0 OK
-                            - 1 Invalid User
-                            - 2 Invalid Port
-                            - 3 USSD Expected
-                            - 4 Pending USSD
-                            - 5 SIM Unregistered
-                            - 6 TImeout
-                            - 7 Server Error
-                            - 8 SMS expected
-                            - 9 TO expected
-                            - 10 Pending Transaction
-                            - 11 TID Expected
-                            - 12 From Expected
-                      required:
-                        - status
-                        - tid
+                          description: >-
+                            Task status code
+                            <ul>
+                            <li>0 OK</li>
+                            <li>1 Invalid User</li>
+                            <li>2 Invalid Port</li>
+                            <li>3 USSD Expected</li>
+                            <li>4 Pending USSD</li>
+                            <li>5 SIM Unregistered</li>
+                            <li>6 TImeout</li>
+                            <li>7 Server Error</li>
+                            <li>8 SMS expected</li>
+                            <li>9 TO expected</li>
+                            <li>10 Pending Transaction</li>
+                            <li>11 TID Expected</li>
+                            <li>12 From Expected</li>
+                            </ul>
+                          maximum: 12
+                          minimum: 0  
                     description: >-
                       Task processing results.
 
                       When there is no tids in the request, this field is not
-                      included in the result.
+                      included in the result
                 required:
                   - reason
                   - code
@@ -1251,16 +1221,8 @@ paths:
       summary: Resume Paused Message Task
       deprecated: false
       description: >
-        Message description :
 
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
-
-
-        Resume the sending of one or more suspended SMS tasks. 
+         Resume the transmission of one or more previously paused SMS tasks from the sending queue. 
         
       tags:
         - Send Message
@@ -1272,9 +1234,9 @@ paths:
             This document describes 
             specification support only
           required: false
-          example: '1.1'
           schema:
             type: string
+            default: 1.1
         - name: username
           in: query
           description: Device Username
@@ -1292,11 +1254,15 @@ paths:
           application/json:
             schema:
               type: object
+              required: 
+                - tids
               properties:
                 tids:
                   type: array
                   items:
                     type: object
+                    required: 
+                      - tid
                     properties:
                       tid:
                         type: string
@@ -1310,7 +1276,7 @@ paths:
                 - tid2
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -1318,9 +1284,9 @@ paths:
                 properties:
                   code:
                     type: integer
-                    description: Interface processing result code
                     examples:
                       - 200
+                    description: Interface processing result code
                   reason:
                     type: string
                     description: 'Interface processing results '
@@ -1333,16 +1299,33 @@ paths:
                       properties:
                         tid:
                           type: string
+                          description: Task ID
                         status:
                           type: string
-                      required:
-                        - status
-                        - tid
+                          description: >-
+                            Task status code
+                            <ul>
+                            <li>0 OK</li>
+                            <li>1 Invalid User</li>
+                            <li>2 Invalid Port</li>
+                            <li>3 USSD Expected</li>
+                            <li>4 Pending USSD</li>
+                            <li>5 SIM Unregistered</li>
+                            <li>6 TImeout</li>
+                            <li>7 Server Error</li>
+                            <li>8 SMS expected</li>
+                            <li>9 TO expected</li>
+                            <li>10 Pending Transaction</li>
+                            <li>11 TID Expected</li>
+                            <li>12 From Expected</li>
+                            </ul>
+                          maximum: 12
+                          minimum: 0  
                     description: >-
                       Task processing results.
 
                       When there is no tids in the request, this field is not
-                      included in the result.
+                      included in the result
                 required:
                   - reason
                   - code
@@ -1546,13 +1529,8 @@ paths:
       summary: Delete Message Task
       deprecated: false
       description: |-
-        Message description :
 
-        host: Device IP address
-
-        port: Device webpage management port, default value is 80.
-
-        Delete one or more SMS tasks waiting to be sent in the send queue.
+        Delete one or more pending SMS tasks that are still queued for sending.
        
       tags:
         - Send Message
@@ -1563,9 +1541,9 @@ paths:
             API version
             This document describes specification support only
           required: false
-          example: '1.1'
           schema:
             type: string
+            default: 1.1
         - name: username
           in: query
           description: Device Username
@@ -1587,11 +1565,15 @@ paths:
                 - tid2
             schema:
               type: object
+              required:
+                - tids
               properties:
                 tids:
                   type: array
                   items:
                     type: object
+                    required: 
+                      - tid
                     properties:
                       tid:
                         type: integer
@@ -1599,7 +1581,7 @@ paths:
                   description: The task ID to be deleted
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -1607,9 +1589,9 @@ paths:
                 properties:
                   code:
                     type: integer
-                    description: Interface processing result code
                     examples:
                       - 200
+                    description: Interface processing result code
                   reason:
                     type: string
                     description: 'Interface processing results '
@@ -1625,34 +1607,32 @@ paths:
                           description: Task ID
                         status:
                           type: string
-                          description: |-
-                            The status code and reason description of 
-                            the task
-                          enum:
-                            - 0 OK
-                            - 1 Invalid User
-                            - 2 Invalid Port
-                            - 3 USSD Expected
-                            - 4 Pending USSD
-                            - 5 SIM Unregistered
-                            - 6 Timeout
-                            - 7 Server Error
-                            - 8 SMS expected
-                            - 9 TO expected
-                            - 10 Pending Transaction
-                            - 11 TID Expected
-                            - 12 From Expected
-                      required:
-                        - status
-                        - tid
+                          description: >-
+                            Task status code
+                            <ul>
+                            <li>0 OK</li>
+                            <li>1 Invalid User</li>
+                            <li>2 Invalid Port</li>
+                            <li>3 USSD Expected</li>
+                            <li>4 Pending USSD</li>
+                            <li>5 SIM Unregistered</li>
+                            <li>6 TImeout</li>
+                            <li>7 Server Error</li>
+                            <li>8 SMS expected</li>
+                            <li>9 TO expected</li>
+                            <li>10 Pending Transaction</li>
+                            <li>11 TID Expected</li>
+                            <li>12 From Expected</li>
+                            </ul>
+                          maximum: 12
+                          minimum: 0  
                     description: >-
-                      Task processing results .
+                      Task processing results.
 
-                      If there is no TIDS in the request, this field is not
+                      When there is no tids in the request, this field is not
                       included in the result
                 required:
                   - reason
-                  - results
                   - code
               examples:
                 '1':
@@ -1854,13 +1834,8 @@ paths:
       summary: Query Message Task
       deprecated: false
       description: |-
-        Message description :
 
-        host: Device IP address
-
-        port: Device webpage management port, default value is 80.
-
-        Query the SMS task waiting to be sent in the send queue. 
+         Retrieve details of SMS tasks currently queued for sending on the device.
       tags:
         - Send Message
       parameters:
@@ -1871,9 +1846,9 @@ paths:
             This document describes 
             specification support only
           required: false
-          example: '1.1'
           schema:
             type: string
+            default: 1.1
         - name: username
           in: query
           description: Device Username
@@ -1892,10 +1867,8 @@ paths:
           required: true
           schema:
             type: integer
-            examples:
-              - 1
-              - 32
-              - 64
+            minimum: 1
+            maximum: max-port
         - name: has_content
           in: query
           description: Whether to bring a text message in the result
@@ -1949,7 +1922,7 @@ paths:
                 - tid2
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -1975,15 +1948,14 @@ paths:
                     type: array
                     items:
                       type: object
-                      properties:
+                      properties: 
                         tid:
                           type: integer
                           description: Task id
                         from:
                           type: string
                           description: |-
-                            One or more (commas, short horizontal 
-                            connections) send ports (from 1)
+                            **Configure from the device** : One or more send ports (starting from 1), separated by commas or short hyphens to indicate ranges
                           default: Device selection
                         to:
                           type: string
@@ -1995,22 +1967,24 @@ paths:
                           description: Message content
                         chs:
                           type: string
-                          description: Code set（utf8|base64）
+                          description: >-
+                            Code set **utf8|base64**
                           default: Utf-8
                         coding:
                           type: integer
-                          description: 'Specifies the encoding of the message sent. '
+                          description: |-
+                            Specifies the encoding of the message sent. 
+                            <ul><li>0 Do not specify</li>
+                            <li>1 USC2</li>
+                            <li>2 7bit</li></ul>
                           default: 0
-                          enum:
-                            - 0 Do not specify
-                            - 1 USC2
-                            - 2 7bit
                         state:
                           type: integer
-                          description: Task status
-                          enum:
-                            - 0 normal
-                            - 1 suspended
+                          description: |-
+                            Task status
+                          
+                            <ul><li>0 normal</li>
+                            <li>1 suspended</li></ul>
                       required:
                         - tid
                         - to
@@ -2051,14 +2025,14 @@ paths:
       summary: Sending Status Report
       deprecated: false
       description: >-
-        While SMS send successfully/failed/timeout, device will put the result
-        in cache, after meet condition(cache storage full or cache time reached
-        ),device will send POST request to report one or more task execute
-        result. If it is group sending, device will report execute result
-        periodically until all num in this group sending task get a result. 
+        Automatically sends a status report to the server via POST request when SMS tasks succeed, fail, or time out.
+
+        If the task involves group sending, the device will continue reporting status updates until all messages in the 
+        group are processed.
+        Includes detailed success and failure records with timestamp and sending port. 
 
 
-        Tips： 
+        Tips:  
 
 
         1.tid related to the task ID in the send-sms message. 
@@ -2079,15 +2053,15 @@ paths:
         - name: version
           in: query
           description: |-
-            API version
+            API version.
             This document describes specification support only
           required: false
-          example: '1.1'
           schema:
             type: string
+            default: 1.1
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2127,42 +2101,39 @@ paths:
                           type: array
                           items:
                             type: object
-                            properties: {}
-                            description: |-
-                              Success report is a array, 
-                              [0]: recipients num index(based on 
-                              group sending),int 
-                              [1]: num, string 
-                              [2]: SMS sending port(1.01,2.02,...), 
-                              string 
-                              [3]: SMS send timestamp in UTC time, int
+                            properties: {}                              
                           description: |-
                             Successfully send details(one list for 
-                            one num)
+                            one num).
+                            
+                            Success report is a array:
+                              <ul><li>[0]: recipients num index(based on 
+                              group sending),int </li>
+                              <li>[1]: num, string</li> 
+                              <li>[2]: SMS sending port(1.01,2.02,...), 
+                              string </li>
+                              <li>[3]: SMS send timestamp in UTC time, int</li></ul>
                         fdr:
                           type: array
                           items:
                             type: object
                             properties: {}
-                            description: >-
-                              [0]: recipients num index(based on 
+                          description: |-
+                              Fail send details(one num one list)
+                            
+                              <ul><li>[0]: recipients num index(based on group sending),int </li>
 
-                              group sending),int 
+                              <li>[1]: num, string </li>
 
-                              [1]: num, string 
+                              <li>[2]: SMS sending port(1.01,2.02,...),string </li>
 
-                              [2]: SMS sending port(1.01,2.02,...), 
+                              <li>[3]: SMS send timestamp in UTC time.int</li>
 
-                              string 
+                              <li>[4]: Progress reason, code+details[refer to 1.0
+                              API] </li>
 
-                              [3]: SMS send timestamp in UTC time.int
-
-                              [4]: Progress reason, code+details[refer to 1.0
-                              API] 
-
-                              [5]: Carrier reason, code+ description. Valid when
-                              [4] is failed to send
-                          description: Fail send details(one num one list)
+                              <li>[5]: Carrier reason, code+ description. Valid when
+                              [4] is failed to send</li></ul>
                       required:
                         - tid
                         - sending
@@ -2210,23 +2181,9 @@ paths:
       summary: Query ESIM
       deprecated: false
       description: >-
-        Message description :
-
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
-
-
-        The write and delete operations for ESIM cannot be completed
-        immediately, so when a successful HTTP request is submitted, the status
-        field returned is 1, indicating that the task has been submitted but the
-        operation has not been performed yet. To know the result of the previously submitted operation, it is necessary to use the query ESIM
-        interface regularly to obtain various ESIM information and judge the
-        value of the status field.
-
-
+        Retrieve the status and details of previously submitted eSIM operations.
+        Since write/delete operations are asynchronous, this interface provides updates on task progress, including eSIM   
+        status, slot usage, and operation results.
       tags:
         - ESIM
       parameters:
@@ -2234,15 +2191,12 @@ paths:
           in: query
           description: |-
             API version  
-            1.0: Compatible with
+            <ul><li>1.0: Compatible with</li>
             previous API
-            1.1: Support for the description of this document
+            <li>1.1: Support for the description of this document</li></ul>
           required: false
           schema:
             type: string
-            examples:
-              - '1.0: Compatible with previous API '
-              - '1.1: Support for the description of this document'
             default: '1.0'
         - name: username
           in: query
@@ -2258,23 +2212,26 @@ paths:
             type: string
         - name: ports
           in: query
-          description: |-
+          description: >-
             The specified port number (valued
             from 1)
+            
+            <ul>
+            <li>all: all ports</li>
+            <li>Specify a single port</li>
+            <li>numbers separated by short numbers, specifying multiple ports, <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number 
+            
+            
+            <span style="font-weight: bold;color: red">Such as "1-3,5"</span> means querying ports 1, 2, 3, and 5</li></ul>
           required: false
           schema:
             type: string
             default: all
-            examples:
-              - 'all: all ports'
-              - '2: Specify a single port'
-              - >-
-                1-2, 4: Port numbers separated by short numbers, specifying
-                multiple ports, where "-" indicates a continuous port number
+
 
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2302,10 +2259,13 @@ paths:
                           description: eUICC ID
                         esim_state:
                           type: string
-                          description: If or not the eid is obtained correctly
+                          description: >-
+                            If or not the eid is obtained correctly
+                            <ul><li>0 no</li>
+                            <li>1 yes</li></ul>
                           enum:
-                            - 0 no
-                            - 1 yes
+                            - 0
+                            - 1
                         profiles:
                           type: array
                           items:
@@ -2316,10 +2276,13 @@ paths:
                                 description: Slot number (value from 1)
                               enabled:
                                 type: integer
-                                description: If or not the current profile is enabled
+                                description: >-
+                                  If or not the current profile is enabled
+                                  <ul><li>0 disabled</li>
+                                  <li>1 enabled</li></ul>
                                 enum:
-                                  - 0 disabled
-                                  - 1 enabled
+                                  - 0 
+                                  - 1 
                               iccid:
                                 type: string
                                 description: ESIM corresponding iccid
@@ -2337,24 +2300,36 @@ paths:
                                 description: >-
                                   If or not the current slot has been written
                                   into the profile
+                                  <ul><li>0 no</li>
+                                  <li>1 yes</li></ul>
                                 enum:
-                                  - 0 no
-                                  - 1 yes
+                                  - 0
+                                  - 1
                               op:
                                 type: integer
-                                description: Profile operation of the current slot
+                                description: >-
+                                  Profile operation of the current slot
+                                  
+                                  <ul><li>0 No operation</li>
+                                  <li>1 Writing</li>
+                                  <li>2 Deleting</li></ul>
                                 enum:
-                                  - 0 No operation
-                                  - 1 Writing
-                                  - 2 Deleting
+                                  - 0
+                                  - 1
+                                  - 2
                               status:
                                 type: integer
-                                description: The current esim profile operation status
+                                description: >-
+                                  The current esim profile operation status
+                                  <ul><li>0 No operation</li>
+                                  <li>1 Operation request submitted</li>
+                                  <li>2 Profile operation is in progress on the current port</li>
+                                  <li>3 Operation error,the specific reason is described in the reason field</li></ul>
                                 enum:
-                                  - 0 No operation
-                                  - 1 Operation request submitted
-                                  - 2 Profile operation is in progress on the current port
-                                  - 3 Operation error,the specific reason is described in the reason field
+                                  - 0
+                                  - 1
+                                  - 2
+                                  - 3
                               reason:
                                 type: string
                                 description: Causes of operational errors
@@ -2417,25 +2392,22 @@ paths:
       summary: Write ESIM
       deprecated: false
       description: |-
-        Message description :
 
-        host: Device IP address
-
-        port: Device webpage management port, default value is 80.
-
-        The write operations for ESIM  cannot be completed immediately.
+        Submit a request to write eSIM information to the specified port and slot.
+        The operation is **asynchronous**, and its progress should be monitored using the query ESIM interface.
       tags:
         - ESIM
       parameters:
         - name: version
           in: query
-          description: API version
+          description: >-
+            API version
+            <ul>
+            <li>1.0: Compatible with previous API</li>
+              <li>1.1: Support for the description of this document</li></ul>
           schema:
             type: string
             default: '1.0'
-            examples:
-              - '1.0: Compatible with previous API'
-              - '1.1: Support for the description of this document'
         - name: username
           in: query
           description: Device Username
@@ -2461,10 +2433,14 @@ paths:
               properties:
                 port:
                   type: integer
-                  description: Port number (value from 1)
+                  minimum: 1
+                  maximum: max-port
+                  description: Port number
                 slot:
                   type: integer
-                  description: Slot number (value from 1)
+                  minimum: 1
+                  maximum: 8
+                  description: Slot number
                 ac:
                   type: string
                   description: Activation code
@@ -2478,7 +2454,7 @@ paths:
                 - cc
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2501,24 +2477,20 @@ paths:
                       properties:
                         port:
                           type: integer
-                          description: Port number (value from 1)
-                          examples:
-                            - 1
-                            - 32
-                            - 64
+                          minimum: 1
+                          maximum: max-port
+                          description: Port number
                         slot:
                           type: integer
-                          description: slot number (value from 1)
-                          examples:
-                            - 1
-                            - 32
-                            - 64
+                          minimum: 1
+                          maximum: 8
+                          description: Slot number
                         status:
                           type: integer
                           description: >-
                             The current esim profile submission write operation
                             status
-                            enum: 
+                             
                               - 1 Write request has been submitted
                               - 2 The current port is performing profile operation,submission failed
                               - 3 Other errors,submission failed
@@ -2549,27 +2521,23 @@ paths:
       summary: Delete ESIM
       deprecated: false
       description: |-
-        Message description :
-
-        host: Device IP address
-
-        port: Device webpage management port, default value is 80.
-
-        The delete operations for ESIM cannot be completed immediately.
+        Submit a request to delete an eSIM profile from the specified port and slot.
+        This operation is **asynchronous**, and its progress should be monitored using the query ESIM interface.
         
       tags:
         - ESIM
       parameters:
         - name: version
           in: query
-          description: API version
+          description: >-
+            API version
+            
+              - 1.0: Compatible with previous API
+              - 1.1: Support for the description of this document
           required: false
           schema:
             type: string
             default: '1.0'
-            examples:
-              - '1.0: Compatible with previous API'
-              - '1.1: Support for the description of this document'
         - name: username
           in: query
           description: Device Username
@@ -2593,24 +2561,20 @@ paths:
               properties:
                 port:
                   type: integer
-                  description: port number (value from 1)
-                  examples:
-                    - 1
-                    - 32
-                    - 64
+                  minimum: 1
+                  maximum: max-port
+                  description: port number
                 slot:
                   type: integer
-                  description: slot number (value from 1)
-                  examples:
-                    - 1
-                    - 32
-                    - 64
+                  minimum: 1
+                  maximum: 8
+                  description: Slot number
               required:
                 - port
                 - slot
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2618,27 +2582,34 @@ paths:
                 properties:
                   code:
                     type: integer
-                    examples:
-                      - 200
+                    description: Interface processing result code
                   reason:
                     type: string
-                    examples:
-                      - OK
+                    description: Interface processing result reason
                   ports:
                     type: array
+                    description: An array of results
                     items:
                       type: object
                       properties:
                         port:
+                          description: Port number
+                          minimum: 1
+                          maximum: max-port
                           type: integer
                         slot:
                           type: integer
+                          description: Slot number
+                          minimum: 1
+                          maximum: max-port
                         status:
                           type: integer
-                          enum:
-                            - 1 The deletion request has been submitted
-                            - 2 The current port is performing a profile operation,and the submission failed
-                            - 3 Other errors,submission failed
+                          description: >-
+                            The current esim profile submission deletionoperation status, with the following values  
+                          
+                             - 1 The deletion request has been submitted
+                             - 2 The current port is performing a profile operation,and the submission failed
+                             - 3 Other errors,submission failed
                       required:
                         - port
                         - slot
@@ -2673,7 +2644,7 @@ paths:
         device in LAN, and server in a public net, it also can work effectively
 
 
-        3.URL：Default set by device，server can revise it in SMS sending quest
+        3.URL: Default set by device,server can revise it in SMS sending quest
         message.
       tags:
         - Receive SMS
@@ -2682,13 +2653,12 @@ paths:
           in: query
           description: API version
           required: false
-          example: '1.1'
           schema:
             type: string
             default: '1.1'
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2707,9 +2677,9 @@ paths:
                     description: >-
                       For saving the bandwidth, SMS content also storage in a
                       array.
-                      enum:
+                      
                         - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report
-                        - [1]: Receive report(‘1.01’,’1.02’)
+                        - [1]: Receive report(**1.01**,**1.02**)
                         - [2]: timestamp while device got this SMS
                         - [3]: Sender(If Delivery report flag set to 1, then sender
                       should be SMCC)
@@ -2735,35 +2705,26 @@ paths:
       deprecated: false
       description: >-
 
-        1.Customers can actively query the SMS received by the device through
+        Customers can actively query the SMS received by the device through
         HTTP GET/POST request.
 
 
-        2.Query process：
+        Query process: 
 
 
-        1).Query all messages received by the device without the query
-        parameters (except for user-verified parameters). 
+        <ul><li>1.Query all messages received by the device without the query
+        parameters (except for user-verified parameters). </li>
 
 
-        2).Use the value of next_sms returned by the device as the value of the
-        sms_id parameter to query subsequent SMS messages. 
+        <li>2.Use the value of next_sms returned by the device as the value of the
+        sms_id parameter to query subsequent SMS messages. </li>
 
 
-        3).If the device restarts, return a different ssrc synchronization
-        source ID and return to step 1. 
+        <li>3.If the device restarts, return a different ssrc synchronization
+        source ID and return to step 1. </li>
 
 
-        4).Repeat step 2
-
-
-        3.Message description :
-
-
-        host: Device IP address 
-
-
-        port: Device webpage management port, default value is 80.
+        <li>4.Repeat step 2</li></ul>
       tags:
         - Query SMS
       parameters:
@@ -2771,43 +2732,41 @@ paths:
           in: query
           description: Device Username
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
           description: Device  Password
           required: true
-          example: root
           schema:
             type: string
         - name: sms_id
           in: query
           description: Start SMS ID
           required: false
-          example: '1'
           schema:
             type: string
+            default: 1
         - name: sms_num
           in: query
           description: 'Specify the number of SMS to be queried '
           required: false
-          example: 0 Query all SMS
           schema:
             type: string
+            default: 0
         - name: sms_del
           in: query
-          description: Delete the SMS that has been returned by the query
-          required: false
-          enum: 
-            - 0 Do not Delete
-            - 1 Delete
-          default: 0
+          description: >-
+            Delete the SMS that has been returned by the query
+             - 0 Do not Delete
+             - 1 Delete
+          required: false        
           schema:
             type: string
+            default: 0
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2837,8 +2796,8 @@ paths:
 
                       For saving the bandwidth, SMS content also storage in a
                       array. 
-                      enum: 
-                        - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report [1]: Receive report(‘1.01’,’1.02’)
+                       
+                        - [0]: Delivery report flag,0:normal SMS, 1:This is a delivery report [1]: Receive report(**1.01**,**1.02**)
                         - [2]: timestamp while device got this SMS
                         - [3]: Sender(If Delivery report flag set to 1, then sender should be SMCC)
                         - [4]: Recipient(If Delivery report flag set to 1,then recipient should be the original recipient.)
@@ -2880,24 +2839,16 @@ paths:
       summary: Status Notification
       deprecated: false
       description: >-
-        1.This device will send a HTTP POST request which include the device
+        The device will send a HTTP POST request which include the device
         running status information to the SMS server when it reaches either of
-        below conditions.
+        below conditions:
 
 
-        One of device port status changed.
+        **1.One of device port status changed.**
 
 
-        Community period expired.
+        **2.Community period expired.**
 
-
-        2.Message description :
-
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
       tags:
         - Status Notification
       parameters:
@@ -2905,14 +2856,12 @@ paths:
           in: query
           description: Device Username
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
           description: Device  Password
           required: true
-          example: root
           schema:
             type: string
         - name: url
@@ -2930,37 +2879,43 @@ paths:
           description: >-
             Report period
 
-            >0:Report status according to the specified report period,the
+            - Greater than 0:Report status according to the specified report period,the
             minimum value is 60,the unit is second 
 
-            0:cancel status report
+            - 0:cancel status report
           required: false
           schema:
             type: integer
             default: 60
         - name: all_sims
           in: query
-          description: Get all the card status
+          description: >-
+            Get all the card status
+              - 0 disable
+              - 1 enable
           required: false
           schema:
             type: integer
             default: 0
             enum:
-              - 0 disable
-              - 1 enable
+              - 0
+              - 1
         - name: all_slots
           in: query
-          description: Get the status of all card slots
+          description: >-
+            Get the status of all card slots
+              - 0 disable
+              - 1 enable
           required: false
           schema:
             type: integer
             default: 0
             enum:
-              - 0 disable
-              - 1 enable
+              - 0
+              - 1
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -2988,7 +2943,7 @@ paths:
                     description: Total ports of dev
                   max-slots:
                     type: string
-                    default: '1'
+                    default: 1
                     description: Total SIM slots of deviceice
                   status:
                     type: array
@@ -3055,37 +3010,38 @@ paths:
                       1.01,1.02.....32.04
                   sim:
                     type: string
-                    description: Simpool’s identification
+                    description: Simpool's identification
                   seq:
                     type: integer
                     description: The port is incremented from port 1
                   st:
                     type: string
-                    description: 'Port status code + detail '
-                    enum:
-                      - 0 No SIM card
-                      - 1 Exist idel SIM card
-                      - 2 Registering
-                      - 3 Registered
-                      - 4 Call connected
-                      - 5 Nobalance or alarm
-                      - 6 Register failed
-                      - 7 SIM card locked by device
-                      - 8 SIM card locked by operator
-                      - 9 Recognize SIM card error
-                      - 11 Card Detected
-                      - 12 User locked
-                      - 13 Port inter-calling
-                      - 14 Inter-calling holding
-                      - 15 Access Mobile Network
-                      - 16 Module Response timeout
+                    description: >-
+                      Port status code + detail
+                                            
+                       - 0 No SIM card
+                       - 1 Exist idel SIM card
+                       - 2 Registering
+                       - 3 Registered
+                       - 4 Call connected
+                       - 5 Nobalance or alarm
+                       - 6 Register failed
+                       - 7 SIM card locked by device
+                       - 8 SIM card locked by operator
+                       - 9 Recognize SIM card error
+                       - 11 Card Detected
+                       - 12 User locked
+                       - 13 Port inter-calling
+                       - 14 Inter-calling holding
+                       - 15 Access Mobile Network
+                       - 16 Module Response timeout
                   bal:
                     type: number
                     description: SIM card  balance(yy.mm)
                   opr:
                     type: string
                     description: >-
-                      SIM card operator name and ID valid while parameter “st”
+                      SIM card operator name and ID valid while parameter `st`
                       equal to 3 or 4
                     nullable: true
                   sn:
@@ -3096,10 +3052,13 @@ paths:
                     description: IMEI of module
                   active:
                     type: integer
-                    description: Current card
+                    description: >-
+                      Current card
+                       - 0 no
+                       - 1 yes
                     enum:
-                      - 0 no
-                      - 1 yes
+                      - 0
+                      - 1
                   imsi:
                     type: string
                     description: IMSI num of SIM card
@@ -3108,16 +3067,22 @@ paths:
                     description: ICCID num of SIM card
                   inserted:
                     type: integer
-                    description: A card is inserted into a slot
+                    description: >-
+                      A card is inserted into a slot
+                       - 1 yes
+                       - 0 no
                     enum:
-                      - 1 yes
-                      - 0 no
+                      - 0
+                      - 1
                   slot_active:
                     type: integer
-                    description: Whether the card slot is enabled
+                    description: >-
+                      Whether the card slot is enabled
+                       - 1 yes
+                       - 0 no
                     enum:
-                      - 0 disabled
-                      - 1 enabled
+                      - 0
+                      - 1
                   sig:
                     type: integer
                     description: Signal value of the module
@@ -3125,10 +3090,13 @@ paths:
                     maximum: 31
                   led:
                     type: integer
-                    description: Led is enabled or not
+                    description: >-
+                      Led is enabled or not
+                       - 1 yes
+                       - 0 no
                     enum:
-                      - 0 no
-                      - 1 yes
+                      - 0
+                      - 1
                 required:
                   - type
                   - port
@@ -3161,12 +3129,8 @@ paths:
       summary: Query SMS Statistics
       deprecated: false
       description: >-
-        1.The client can actively query the short message statistics of the
+        The client can actively query the short message statistics of the
         device through the HTTP GET request.
-
-
-        2.host: Device IP address
-           port: Device webpage management port, default value is 80.
       tags:
         - Query SMS Statistics
       parameters:
@@ -3174,21 +3138,19 @@ paths:
           in: query
           description: API version
           required: false
-          example: '1.0'
           schema:
             type: string
+            default: 1.0
         - name: username
           in: query
           description: Device Username
           required: true
-          example: xxx
           schema:
             type: string
         - name: password
           in: query
           description: Device Password
           required: true
-          example: xxx
           schema:
             type: string
         - name: ports
@@ -3196,13 +3158,13 @@ paths:
           description: >-
             The specified port number (valued from 1). The values are as
             follows:
-              enum: 
-                - 1)all: all ports;
-                - 2)Specify a single port;
-                - 3)1-2, 4: Port numbers separated by short numbers, specifying multiple ports, where "-" indicates a continuous port number;
+              
+               - 1.all: all ports
+               - 2.Specify a single port
+               - 3.Port numbers separated by short numbers, specifying multiple ports, where <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number; <span style="font-weight: bold;color: red">such as "1-3, 5" means querying ports 1, 2, 3, and 5</span>
 
           required: false
-          example: all
+          default: all
           schema:
             type: string
         - name: slots
@@ -3210,34 +3172,36 @@ paths:
           description: >-
             The specified card slot number (value from 1). The values are as
             follows:
-              enum: 
-                - 1).Do not specify: current card
-                - 2)all: all card slots;
-                - 3)2: Specify a single card slot;
-                - 4)1-2, 4: A card slot number separated by a short number, specifying a plurality of card slots, where "-" indicates a continuous card slot number;
+              
+               - 1.Do not specify: current card
+               - 2.all: all card slots;
+               - 3.Specify a single card slot;
+               - 4.Port numbers separated by short numbers, specifying multiple ports, where <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number; <span style="font-weight: bold;color: red">such as "1-3, 5" means querying ports 1, 2, 3, and 5</span>
 
           required: false
-          example: Current card
+          default: Current card
           schema:
             type: string
         - name: type
           in: query
           description: |-
             Statistic type. 
-
+             - 0 The last hour
+             - 1 The last two hours
+             - 2 Today
+             - 3 Cumulative
           required: false
-          example: '0'
           schema:
             type: string
             enum:
-              - 0 The last hour
-              - 1 The last two hours
-              - 2 Today
-              - 3 Cumulative
-            default: '0'
+              - 0
+              - 1
+              - 2
+              - 3 
+            default: 0
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -3261,10 +3225,14 @@ paths:
                       results are as follows)
                   port:
                     type: integer
-                    description: Port number (value from 1)
+                    description: Port number
+                    maximum: max-port
+                    minimum: 1
                   slot:
                     type: integer
-                    description: Slot number (value from 1)
+                    description: Slot number
+                    maximum: max-slot
+                    minimum: 1
                   received:
                     type: integer
                     description: Number of SMS received
@@ -3327,29 +3295,20 @@ paths:
       summary: Query Call Statistics
       deprecated: false
       description: >-
-        1.The client can actively query the call statistics of the device through the HTTP GET request.
-
-
-        2.Message description :
-
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
+        The client can actively query the call statistics of the device through the HTTP GET request.
       tags:
         - Query Call Statistics
       parameters:
         - name: version
           in: query
-          description: API version
+          description: >-
+            API version
+             - 1.0: Compatible with previous API
+             - 1.1: Support for the description of this document
           required: false
           schema:
             type: string
             default: '1.0'
-            examples:
-              - '1.0: Compatible with previous API'
-              - '1.1: Support for the description of this documen'
         - name: username
           in: query
           description: Device Username
@@ -3364,47 +3323,48 @@ paths:
             type: string
         - name: ports
           in: query
-          description: The specified port number (valued from 1)
+          description: >-
+            The specified port number
+            
+             - 1.all: all ports
+             - 2.Specify a single port
+             - 3.Port numbers separated by short numbers, specifying multiple ports, where <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number; <span style="font-weight: bold;color: red">such as "1-3, 5" means querying ports 1, 2, 3, and 5</span>
           required: false
           schema:
             type: string
-            examples:
-              - 'all: all ports'
-              - '2: Specify a single port'
-              - >-
-                1-2, 4: Port numbers separated by short numbers, specifying
-                multiple ports, where "-" indicates a continuous port number
             default: all
         - name: slots
           in: query
-          description: ''
+          description: >-
+            The specified card slot number
+             - 1.Do not specify: current card
+             - 2.all: all card slots;
+             - 3.Specify a single card slot;
+             - 4.Port numbers separated by short numbers, specifying multiple ports, where <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number; <span style="font-weight: bold;color: red">such as "1-3, 5" means querying ports 1, 2, 3, and 5</span>
           required: false
           schema:
             type: string
             default: Current card
-            examples:
-              - 'Do not specify: current card'
-              - 'all: all card slots'
-              - '2: Specify a single card slot'
-              - >-
-                1-2, 4: A card slot number separated by a short number,
-                specifying a plurality of card slots, where "-" indicates a
-                continuous card slot number
         - name: type
           in: query
-          description: ''
+          description: >-
+            Statistic type
+             - 0 The last hour
+             - 1 The last two hours
+             - 2 Today
+             - 3 Cumulative
           required: false
           schema:
             type: string
-            default: '0'
+            default: 0
             enum:
-              - 0 The last hour
-              - 1 The last two hours
-              - 2 Today
-              - 3 Cumulative
+              - 0
+              - 1
+              - 2
+              - 3
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -3426,10 +3386,14 @@ paths:
                       properties:
                         port:
                           type: integer
-                          description: Port number (value from 1)
+                          description: Port number
+                          minimum: 1
+                          maximum: max-port
                         slot:
                           type: integer
-                          description: Slot number (value from 1)
+                          description: Slot number
+                          minimum: 1
+                          maximum: max-slot
                         calls:
                           type: integer
                           description: Number of calling
@@ -3524,18 +3488,9 @@ paths:
       summary: 'Send Operate Command '
       deprecated: false
       description: >-
-        Message description :
-
-
-        host: Device IP address
-
-
-        port: Device webpage management port, default value is 80.
-        
-
         Device offer API to server to change device status, like change sim
         card, lock/unlock port, reboot device. About USSD command sending,
-        please refer to “USSD API”;
+        please refer to **USSD API**;
 
         Device will send message to the server by port status notification when
         lock port or change SIM card.
@@ -3552,7 +3507,7 @@ paths:
             type: string
         - name: username
           in: query
-          description: Device account
+          description: Device Username
           required: true
           schema:
             type: string
@@ -3586,7 +3541,7 @@ paths:
             the subscript starts from 0. 
             
 
-            Sms_url: destination URL for SMS push
+            - Sms_url: destination URL for SMS push
           required: false
           schema:
             type: string
@@ -3613,23 +3568,23 @@ paths:
                   description: |-
                       Operation type
 
-                      lock: lock port 
+                      - lock: lock port 
 
-                      unlock: unlock port 
+                      - unlock: unlock port 
 
-                      switch: switch SIM card 
+                      - switch: switch SIM card 
 
-                      reset: reboot module 
+                      - reset: reboot module 
 
-                      save: save configuration 
+                      - save: save configuration 
 
-                      reboot: reboot device 
+                      - reboot: reboot device 
 
-                      multiple: multiple command
+                      - multiple: multiple command
 
-                      ledon: turn on led
+                      - ledon: turn on led
                       
-                      ledoff: turn off led
+                      - ledoff: turn off led
                   enum: 
                       - lock
                       - unlock
@@ -3645,7 +3600,7 @@ paths:
                   description: |-
                       The port NO. need to operate.
 
-                      all,*: all ports 
+                      - all,*: all ports 
 
                       It is valid while op 
                       parameter equal to 
@@ -3662,6 +3617,7 @@ paths:
                       number is valid.
                 ops:
                   type: array
+                  description: An array of operation
                   items:
                     type: object
                     properties:
@@ -3670,12 +3626,13 @@ paths:
                         description: Operation type
                       ports:
                         type: String
+                        description: The port NO. need to operate
                     required:
                       - op
                       - ports
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
@@ -3702,7 +3659,17 @@ paths:
     post:
       summary: Add SIM Card Numbers
       deprecated: false
-      description: "Reference: \ninformation in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_number(n)=xxxx,\nn = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter\nExample:\nsim_number(192)=1358021178&sim_number(196)=123456762221\n192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1. \nSo, 25.01=(25 - 1)*8+(1-1) =192.\n196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. \nSo, \t25.05=(25-1)*8+(5-1)=196."
+      description: >-
+        
+        Information in HTTP message Body is a text, many imei parameters modify use & to connect. sim_number(n)=xxxx,**n = (port_number - 1) * slots_per_port + (slot_number - 1), xxx = sim_numbers parameter**
+        
+        
+        Example: 
+        
+        
+        - sim_number(192)=1358021178&sim_number(196)=123456762221192 represents 25.01, where max-slot is 8, and the slot number for 01 is 1.
+        
+        - So, 25.01=(25 - 1)*8+(1-1) =192.196 represents 25.05, max-slot is 8, and the slot number for 05 is 5. So,t25.05=(25-1)*8+(5-1)=196."
       tags:
         - 'Send Operate Command '
       parameters:
@@ -3710,19 +3677,17 @@ paths:
           in: query
           description: Device Username
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
           description: Device Password
           required: true
-          example: root
           schema:
             type: string
         - name: op
           in: query
-          description: ''
+          description: Operate type
           required: true
           const: set
           example: set
@@ -3735,6 +3700,7 @@ paths:
               type: object
               properties:
                 sim_number(n):
+                  description: SIM number(n)
                   type: string
               required:
                 - sim_number(n)
@@ -3742,17 +3708,24 @@ paths:
               sim_number(192)=135802xxxx&sim_number(196)=123456762221
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
                 type: object
+                required: 
+                  - code
+                  - reason
+                  - par_set
                 properties:
                   code:
                     type: integer
+                    description: Interface processing result code
                   reason:
                     type: string
+                    description: Interface processing result reason
                   par_set:
+                    description: Parameter set result
                     type: integer
               examples:
                 '1':
@@ -3768,7 +3741,14 @@ paths:
     post:
       summary: Modify IMEI Parameters
       deprecated: false
-      description: "information in HTTP message Body is a text, many imei parameters modify use & to connect. \tsim_imei(n)=xxxx，\nn = (port_number - 1) * slots_per_port + (slot_number - 1) xxx = imei parameters \n\nExample: \nsim_imei(21)=865847053403202&sim_imei(51)=865847053403213 \n21 means 6B, B is slot_number 2 ,so 6B=（6 - 1）* 4+(2-1) =21 \n51 means 13D, D is slot_number 4,so 13D =(13-1)*4+(4-1)=51"
+      description: >-
+        Information in HTTP message Body is a text, many imei parameters modify use & to connect. 
+        sim_imei(n)=xxxx,n = (port_number - 1) * slots_per_port + (slot_number - 1) xxx = imei parameters
+        
+        
+        Example: sim_imei(21)=865847053403202&sim_imei(51)=865847053403213 
+         - 21 means 6B, B is slot_number 2 ,so 6B=(6 - 1)* 4+(2-1) =21 
+         - 51 means 13D, D is slot_number 4,so 13D =(13-1)*4+(4-1)=51"
       tags:
         - 'Send Operate Command '
       parameters:
@@ -3776,22 +3756,19 @@ paths:
           in: query
           description: Device Username
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
           description: Device Password
           required: true
-          example: root
           schema:
             type: string
         - name: op
           in: query
-          description: ''
+          description: Operation type
           required: true
           const: set
-          example: set
           schema:
             type: string
       requestBody:
@@ -3801,6 +3778,7 @@ paths:
               type: object
               properties:
                 sim_imei(n):
+                  description: IMEI of SIM
                   type: string
               required:
                 - sim_imei(n)
@@ -3808,18 +3786,25 @@ paths:
               sim_imei(21)=86584705340xxxx&sim_imei(51)=865847053403xxx
       responses:
         '200':
-          description: ''
+          description: 'OK'
           content:
             application/json:
               schema:
                 type: object
+                required:
+                  - code
+                  - reason
+                  - par_set
                 properties:
                   code:
+                    description: Interface processing result code
                     type: integer
                   reason:
                     type: string
+                    description: Interface processing result reason
                   par_set:
                     type: integer
+                    description: Parameter set result
               examples:
                 '1':
                   summary: Successfull instance
@@ -3936,8 +3921,6 @@ paths:
           example: application/smil
           schema:
             type: string
-          headers: {}
-      security: []
       x-codeSamples:
         - lang: Java
           label: Java
@@ -4138,28 +4121,18 @@ paths:
                     }
                 }
             }
+          headers: {}
+      security: []
   http://host:port/goip_send_at.html:
     get:
       summary: AT Command
       deprecated: false
       description: >-
-        1.Application will send a HTTP GET request to the device, device will
+        Application will send a HTTP GET request to the device, device will
         return HTTP 200 OK response to the application.
 
 
-        2.Request URL
-
-
-        http://host[:port]/goip_send_at.html
-
-
-        host: device IP address
-
-
-        port: web port，default is 80，(Optional) 
-
-
-        3.Notes: # and % will be ignore by the browser, they need to
+        Notes: # and % will be ignore by the browser, they need to
                     replace by %23 and %2B
       tags:
         - AT Command
@@ -4168,21 +4141,20 @@ paths:
           in: query
           description: 'Device Username '
           required: true
-          example: root
           schema:
             type: string
         - name: password
           in: query
           description: Device Password
           required: true
-          example: root
           schema:
             type: string
         - name: port
           in: query
-          description: Which port to send AT(begin with port 1)
+          description: Which port to send AT
+          maximum: max-port
+          minimum: 1
           required: true
-          example: ''
           schema:
             type: string
         - name: at
@@ -4198,7 +4170,7 @@ paths:
           required: false
           schema:
             type: string
-            default: '120'
+            default: 120
       responses:
         '200':
           description: ''
@@ -4206,6 +4178,12 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - code
+                  - reason
+                  - resp
+                  - max-port
+                  - port
                 properties:
                   code:
                     type: string
@@ -4248,8 +4226,11 @@ paths:
                   port:
                     type: string
                     description: |-
-                      Means available port
-                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
+                      Available port
+                      
+                      
+                      
+                      `1,3-6,8,10` **means port 1,3,4,5,6,8,10 available**
               examples:
                 '1':
                   summary: Successful instance
@@ -4264,17 +4245,6 @@ paths:
       summary: USSD
       deprecated: false
       description: >
-        Request URL
-
-        http://host[:port]/goip_send_ussd.html
-        
-
-        host: device IP address
-        
-
-        port: web port,default is 80,(Optional)
-        
-        
         Application will send a HTTP GET request to the device, device will
         return HTTP 200 OK response to the application.
       tags:
@@ -4335,25 +4305,25 @@ paths:
                     description: >-
                       Return code:
                       
-                       0 Success or OK
+                       - 0 Success or OK
                        
                        
-                       1 Username or password wrong
+                       - 1 Username or password wrong
                        
                        
-                       2 Port parameter wrong
+                       - 2 Port parameter wrong
                        
                        
-                       3 No ussd parameter
+                       - 3 No ussd parameter
                        
                        
-                       4 Have incomplete USSD request
+                       - 4 Have incomplete USSD request
                        
                        
-                       5 SIM not resisted
+                       - 5 SIM not resisted
                        
                        
-                       6 Timeout
+                       - 6 Timeout
                     enum:
                       - 0 
                       - 1
@@ -4374,8 +4344,8 @@ paths:
                   port:
                     type: string
                     description: |-
-                      Means available port
-                      Notes： 1,3-6,8,10 means port 1，3，4，5，6，8，10 available
+                      Available port
+                      `1,3-6,8,10` **means port 1,3,4,5,6,8,10 available**
                 required:
                   - code
                   - reason
@@ -4397,6 +4367,7 @@ paths:
       summary: Set Network Type
       deprecated: false
       description: >-
+         It enables the device to lock onto a specific network type such as **LTE, WCDMA, GSM, or Auto**. The network type configuration is essential for managing which radio network the device connects to, especially when using cell locking features.
          It enables the device to lock onto a specific network type such as **LTE, WCDMA, GSM, or Auto**. The network type configuration is essential for managing which radio network the device connects to, especially when using cell locking features.
       tags:
         - CellLock
@@ -4835,7 +4806,7 @@ paths:
       summary: Lock Cells
       deprecated: false
       description: >-
-         It allows the user to lock specific cells on the device,  The device will lock onto a cell specified by its E-UTRA Absolute Radio Frequency Channel Number (EARFCN) and Physical Cell ID (PCI). Locking a cell can be useful for optimizing network performance,restricting the device to a specific network cell，ensuring stable connectivity.
+         It allows the user to lock specific cells on the device,  The device will lock onto a cell specified by its E-UTRA Absolute Radio Frequency Channel Number (EARFCN) and Physical Cell ID (PCI). Locking a cell can be useful for optimizing network performance,restricting the device to a specific network cell,ensuring stable connectivity.
          
          
          The system may require a retry after this delay if the lock operation isn't completed successfully or if there are issues with the network settings.
@@ -5430,5 +5401,785 @@ paths:
       responses:
         '200':
           description: 'OK'
+          headers: {}
+      security: []
+  http://ip:port/goip_get_status:
+    get:
+      summary: Get All SIM Cards Status
+      deprecated: false
+      description: >-
+         
+      tags: 
+        - Get SIM Cards Status
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+        - name: all_sims
+          in: query
+          description: Get all the card status
+          const: 1
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    const: dev-status
+                    description: Message type
+                  seq:
+                    type: integer
+                    description: Device status message sequence number, start from 1
+                  expires:
+                    type: integer
+                    default: 180
+                    description: Dev-status sending period
+                  mac:
+                    type: string
+                    description: Device MAC
+                  ip:
+                    type: string
+                    description: Device IP address
+                  max-ports:
+                    type: integer
+                    description: Total ports of dev
+                  max-slots:
+                    type: string
+                    default: '1'
+                    description: Total SIM slots of deviceice
+                  status:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: string
+                          description: Describe the current working port and SIM slot
+                        sim:
+                          type: string
+                          description: Simpool's identification
+                        seq:
+                          type: int
+                          description: The port is incremented from port 1
+                        st:
+                          type: string
+                          description: >-
+                            Port status code + detail
+                            
+                            
+                            <ul>
+                            <li>0 : No SIM card</li>
+                            <li>1 : Exist idel SIM card</li>
+                            <li>2 : Registering</li>
+                            <li>3 : Registered</li>
+                            <li>4 : call connected</li>
+                            <li>5 : no balance or alarm</li>
+                            <li>6 : Register failed</li>
+                            <li>7 : SIM card locked by device</li>
+                            <li>8 : SIM card locked by operator</li>
+                            <li>9 : Recognize SIM card error</li>
+                            <li>11 : Card Detected</li>
+                            <li>12 : User locked</li>
+                            <li>13 : Port inter-calling</li>
+                            <li>14 : Inter-calling holding</li>
+                            <li>15 : Access Mobile Network</li>
+                            <li>16 : module Response timeout</li></ul>
+                        imei:
+                          type: string
+                          description: IMEI of module
+                        active:
+                          type: int
+                          description: >-
+                            Current card
+                            
+                            
+                            <ul><li>1 : yes</li><li>0 : no</li></ul> 
+                        inserted: 
+                          type: int
+                          description: >-
+                            A card is inserted into a slot
+                            
+                            
+                            <ul><li>1 : yes</li><li>0 : no</li></ul>
+                        slot_active: 
+                          type: int
+                          description: >-
+                            Whether the card slot is enabled
+                            
+                            
+                            <ul><li>1 : enabled</li><li>0 : disabled</li></ul>
+                        led: 
+                          type: int
+                          description: >-
+                            Current card
+                            
+                            
+                            <ul><li>1 : yes</li><li>0 : no</li></ul> 
+                        iccid:
+                          type: string
+                          description: ICCID num of SIM card 
+                        imsi: 
+                          type: string
+                          description: IMSI num of SIM card
+                        sn: 
+                          type: string
+                          description: SIM number 
+                        opr:
+                          type: string
+                          description: SIM card operator name and ID valid while parameter "st" equal to 3 or 4
+                        bal:
+                          type: float
+                          description: SIM card balance(yy.mm)
+                        sig:
+                          type: int
+                          description: Signal value of the module
+                        
+                      required:
+                        - port
+                        - sim
+                        - seq
+                        - st
+                        - imei
+                        - active
+                        - inserted
+                        - slot_active
+                        - led
+                    description: Status of device port
+                required:
+                  - type
+                  - mac
+                  - ip
+                  - status
+                  - seq
+                  - max-ports
+              examples:
+                '1':
+                  summary: dev-status
+                  value: 
+                    type: dev-Status
+                    seq: 1
+                    expires: 180
+                    mac: 00-30-f1-01-02-03
+                    ip: 192.168.1.67
+                    max-ports: 32
+                    max-slots: 4
+                    status: 
+                      - port: 1.01
+                        sim: ""
+                        seq: 1
+                        st: 7
+                        imei: 86739075242xxxx
+                        active: 1
+                        inserted: 1
+                        slot_active: 1
+                        led: 0
+                        iccid: 893510123241310xxxxx
+                        imsi: 2680111006xxxxx
+                        sn: ""
+                        opr: 46000 CHINA MOBILE
+                        bal: 0.00
+                        sig: 5
+                      - port: 2.04
+                        sim: ""
+                        seq: 2
+                        st: 0
+                        imei: 86739075242xxxx
+                        active: 1
+                        inserted: 0
+                        slot_active: 1
+                        led: 0
+                      - ......
+          headers: {}
+      security: []
+  http://IP:port/goip_get_status.html:
+    get:
+      summary: Get Specific SIM Card Status
+      deprecated: false
+      description: >-
+         
+      tags: 
+        - Get SIM Cards Status
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+        - name: port
+          in: query
+          description: The specific port number
+          schema:
+            type: string
+            minimum: 1
+            maximum: max-port
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    const: dev-status
+                    description: Message type
+                  seq:
+                    type: integer
+                    description: Device status message sequence number, start from 1
+                  expires:
+                    type: integer
+                    default: 180
+                    description: Dev-status sending period
+                  mac:
+                    type: string
+                    description: Device MAC
+                  ip:
+                    type: string
+                    description: Device IP address
+                  max-ports:
+                    type: integer
+                    description: Total ports of device
+                  max-slots:
+                    type: string
+                    default: '1'
+                    description: Total SIM slots of deviceice
+                  status:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        port:
+                          type: string
+                          description: Describe the current working port and SIM slot
+                        sim:
+                          type: string
+                          description: Simpool's identification
+                        seq:
+                          type: int
+                          description: The port is incremented from port 1
+                        st:
+                          type: string
+                          description: >-
+                            Port status code + detail
+                            
+                            
+                            <ul>
+                            <li>0 : No SIM card</li>
+                            <li>1 : Exist idel SIM card</li>
+                            <li>2 : Registering</li>
+                            <li>3 : Registered</li>
+                            <li>4 : call connected</li>
+                            <li>5 : no balance or alarm</li>
+                            <li>6 : Register failed</li>
+                            <li>7 : SIM card locked by device</li>
+                            <li>8 : SIM card locked by operator</li>
+                            <li>9 : Recognize SIM card error</li>
+                            <li>11 : Card Detected</li>
+                            <li>12 : User locked</li>
+                            <li>13 : Port inter-calling</li>
+                            <li>14 : Inter-calling holding</li>
+                            <li>15 : Access Mobile Network</li>
+                            <li>16 : module Response timeout</li></ul>
+                        imei:
+                          type: string
+                          description: IMEI of module
+                        active:
+                          type: int
+                          description: >-
+                            Current card
+                            
+                            
+                            <ul><li>1 : yes</li><li>0 : no</li></ul> 
+                        inserted: 
+                          type: int
+                          description: >-
+                            A card is inserted into a slot
+                            
+                            
+                            <ul><li>1 : yes</li><li>0 : no</li></ul>
+                        slot_active: 
+                          type: int
+                          description: >-
+                            Whether the card slot is enabled
+                            
+                            
+                            <ul><li>1 : enabled</li><li>0 : disabled</li></ul>
+                        led: 
+                          type: int
+                          description: >-
+                            Current card
+                            
+                            
+                            <ul><li>1 : yes</li><li>0 : no</li></ul> 
+                        iccid:
+                          type: string
+                          description: ICCID num of SIM card 
+                        imsi: 
+                          type: string
+                          description: IMSI num of SIM card
+                        sn: 
+                          type: string
+                          description: SIM number 
+                        opr:
+                          type: string
+                          description: SIM card operator name and ID valid while parameter "st" equal to 3 or 4
+                        bal:
+                          type: float
+                          description: SIM card balance(yy.mm)
+                        sig:
+                          type: int
+                          description: Signal value of the module
+                        
+                      required:
+                        - port
+                        - sim
+                        - seq
+                        - st
+                        - imei
+                        - active
+                        - inserted
+                        - slot_active
+                        - led
+                    description: Status of device port
+                required:
+                  - type
+                  - mac
+                  - ip
+                  - status
+                  - seq
+                  - max-ports
+              examples:
+                '1':
+                  summary: dev-status
+                  value: 
+                    type: dev-Status
+                    seq: 1
+                    expires: 180
+                    mac: 00-30-f1-01-02-03
+                    ip: 192.168.1.67
+                    max-ports: 32
+                    max-slots: 4
+                    status: 
+                      - port: 1.01
+                        sim: ""
+                        seq: 1
+                        st: 7
+                        imei: 86739075242xxxx
+                        active: 1
+                        inserted: 1
+                        slot_active: 1
+                        led: 0
+                        iccid: 893510123241310xxxxx
+                        imsi: 2680111006xxxxx
+                        sn: ""
+                        opr: 46000 CHINA MOBILE
+                        bal: 0.00
+                        sig: 5
+          headers: {}
+      security: []
+  http://ip:port/goip_send_cmd.html:
+    post:
+      summary: 'Switch SIM Card'
+      deprecated: false
+      description: >-
+        
+
+      tags:
+        - Switch SIM Cards
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string          
+
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              type: command
+              op: switch
+              ports: 1.02
+            schema: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  const: command
+                  description: Message type
+                op:
+                  type: string
+                  description: |-
+                      Operation type
+
+
+                      switch: switch SIM card 
+
+                  const: switch
+                ports: 
+                  type: string
+                  description: |-
+                      The port NO. need to operate.
+
+
+                      Format: Port.Slot 
+
+      
+                      When op=switch, it means to switch to this location.    
+              required:
+                - type
+                - op
+                - ports
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                required:
+                  - code
+                  - reason
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+          headers: {}
+      security: []
+  http://IP:port/goip_send_cmd.html:
+    post:
+      summary: 'Switch All SIM Cards'
+      deprecated: false
+      description: >-
+        
+
+      tags:
+        - Switch SIM Cards
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string          
+
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              type: command
+              op: switch
+              ports: 1.02-64.02
+            schema: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  const: command
+                  description: Message type
+                op:
+                  type: string
+                  description: |-
+                      Operation type
+
+                      switch: switch SIM card 
+
+                  const: switch
+                ports: 
+                  type: string
+                  description: |-
+                      The port NO. need to operate.
+
+
+                      Format: **Port1**.Slot-**Max-Port**.Slot 
+
+      
+                      When op=switch, it means to switch to this location.    
+              required:
+                - type
+                - op
+                - ports
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                required:
+                  - code
+                  - reason
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+          headers: {}
+      security: []
+  http://IP:Port/goip_send_cmd.html:
+    post:
+      summary: 'Disable Ports'
+      deprecated: false
+      description: >-
+        
+
+
+      tags:
+        - Disable/Enable Ports
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              type: command
+              op: lock
+              ports: 1,2.01,3.01,3.02
+            schema: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  const: command
+                  description: Message type
+                op:
+                  type: string
+                  description: |-
+                      Operation type
+
+                      lock: lock port 
+
+                  const: lock
+                ports: 
+                  type: string
+                  description: |-
+                      The port NO. need to operate.
+
+                      `all` `*` : all ports 
+                      
+                      
+                      `Port` : all slots
+                      
+                      
+                      `Port.Slot` : Specified port/slot combination
+
+
+                      When op=lock|unlock, if you 
+                      do not specify the SIM slot, 
+                      the entire port will be 
+                      locked/unlocked. 
+
+              required:
+                - type
+                - op
+                - ports
+                
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                required:
+                  - code
+                  - reason
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
+          headers: {}
+      security: []
+  http://Ip:Port/goip_send_cmd.html:
+    post:
+      summary: 'Enable Ports'
+      deprecated: false
+      description: >-
+        
+
+
+      tags:
+        - Disable/Enable Ports
+      parameters:
+        - name: version
+          in: query
+          description: API version
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              type: command
+              op: unlock
+              ports: 1,2.01,3.01,3.02
+            schema: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  const: command
+                  description: Message type
+                op:
+                  type: string
+                  description: |-
+                      Operation type
+
+
+                      unlock: unlock port 
+
+
+                  const: unlock
+                ports: 
+                  type: string
+                  description: |-
+                      The port NO. need to operate.
+
+                      `all` `*` : all ports 
+                      
+                      
+                      `Port` : all slots
+                      
+                      
+                      `Port.Slot` : Specified port/slot combination
+
+
+                      When op=lock|unlock, if you 
+                      do not specify the SIM slot, 
+                      the entire port will be 
+                      locked/unlocked. 
+
+              required:
+                - type
+                - op
+                - ports
+                
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: Interface processing result code
+                  reason:
+                    type: string
+                    description: Interface processing result reason
+                required:
+                  - code
+                  - reason
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    code: 200
+                    reason: OK
           headers: {}
       security: []
