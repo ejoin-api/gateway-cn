@@ -42,11 +42,11 @@ info:
 tags:
   - name: SMS Operations
     description: |-
-      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./SMS Operations.postman_collection.json">💡Here is the POSTMAN JSON file for CellLock</a> </span>
+      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./SMS Operations.postman_collection.json">💡Here is the POSTMAN JSON file for SMS Operations</a> </span>
   - name: Receive MMS
   - name: Device Action Commands
-      description: |-
-      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Device Action Commands.postman_collection.json">💡Here is the POSTMAN JSON file for CellLock</a> </span>
+    description: |-
+       <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Device Action Commands.postman_collection.json">💡Here is the POSTMAN JSON file for Device Action Commands</a> </span>
   - name: Status Notification
   - name: Statistics Information
   - name: AT Command
