@@ -20,6 +20,9 @@ info:
      The API remains HTTP-based but now supports POST requests, allowing multiple tasks and status updates to be 
      processed using JSON arrays.
      
+     
+     <span style="text-decoration: underline;font-weight: bold;font-style: italic">To use the API version 3.0.0, please update the device to version 8.0d or above.</span>
+
      # Message description
      
      For each API,
@@ -31,7 +34,7 @@ info:
 
 
 
-  version: v2.7.0
+  version: 3.0.0
   x-logo:
     url: ./EAPI-logo.png
     backgroundColor: '#FAFAFA'
