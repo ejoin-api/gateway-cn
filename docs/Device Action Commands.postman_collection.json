@@ -1,0 +1,540 @@
+{
+	"info": {
+		"_postman_id": "73173578-3d55-4e1f-acb0-4cc1225ce51c",
+		"name": "Device Action Commands",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43156585"
+	},
+	"item": [
+		{
+			"name": "Lock SIMs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // \"slots\": [\r\n    //     {\r\n    //         \"port\": 1,\r\n    //         \"slot\": 1\r\n    //     }\r\n    // ],\r\n    \"slots_pattern\": \"1.02-32.08\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.161/lock_sims?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"161"
+					],
+					"path": [
+						"lock_sims"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UnLock SIMs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // \"slots\": [\r\n    //     {\r\n    //         \"port\": 4,\r\n    //         \"slot\": 1\r\n    //     }\r\n    // ],\r\n    \"slots_pattern\": \"1.02-32.02\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.161/unlock_sims?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"161"
+					],
+					"path": [
+						"unlock_sims"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SIM Numbers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/get_numbers?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"get_numbers"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set SIM Numbers",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"port\": 1,\r\n        \"slot\": 1,\r\n        \"number\": \"13304466842\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/set_numbers?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"set_numbers"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get IMEI",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.158/get_imeis?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"get_imeis"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set IMEI",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"port\": 1,\r\n        \"slot\": 1,\r\n        \"imei\": \"351288391482664\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/set_imeis?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"set_imeis"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Dev Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.158/get_device_status?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"get_device_status"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Ports Status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ports\": [\r\n        1,\r\n        2\r\n    ]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/get_ports_status?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"get_ports_status"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Switch SIMs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // \"slots\": [\r\n    //     {\r\n    //         \"port\": 1,\r\n    //         \"slot\": 3\r\n    //     }\r\n    // ],\r\n    \"slots_pattern\": \"1-8.02\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/switch_sims?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"switch_sims"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reboot Modems",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ports\": [\r\n        1,\r\n        2\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/reboot_modems?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"reboot_modems"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Turn On Leds",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"slots\": [\r\n        {\r\n            \"port\": 2,\r\n            \"slot\": 1\r\n        },\r\n        {\r\n            \"port\": 1,\r\n            \"slot\": 1\r\n        }\r\n    ],\r\n    \"slots_pattern\": \"all\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/on_leds?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"on_leds"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Turn Off Leds",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"slots_pattern\": \"all\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/off_leds?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"off_leds"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Config",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.158/save_config?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"save_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reboot Dev",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.158/reboot_device?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"reboot_device"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "9fdf3415-2f16-4fb6-a67e-a3d0148e5668",
+		"name": "SMS Operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43156585"
+	},
+	"item": [
+		{
+			"name": "Send Message Task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": 5,\r\n        \"recipients\": [\r\n            \"10086\"\r\n        ],\r\n        \"from\": \"3\",\r\n        \"sms\": \"2\",\r\n        \"interval_min\": 30000,\r\n        \"interval_max\": 50000,\r\n        \"timeout\": 30,\r\n        \"charset\": \"utf-8\",\r\n        \"coding\": 0,\r\n        \"sms_type\": 0,\r\n        \"sdr\": true,\r\n        \"fdr\": true,\r\n        \"dr\": true\r\n        // \"flash_sms\": true\r\n        // \"sms_count\": 1,\r\n        // \"sms_period\": 0,\r\n        // \"to_all\": \"true\"\r\n        // \"bcc\":,\r\n        // \"cc\":,\r\n        // \"position\":0，\r\n        // \"subject\": \"Dog\",\r\n        // \"subjects\": [\r\n        //     {\r\n        //         \"recipient\": \"18933031136\",\r\n        //         \"subject\": \"6K+V6K+VMQ==\"\r\n        //     },\r\n        //     {\r\n        //         \"recipient\": \"18933031136\",\r\n        //         \"subject\": \"6K+V6K+VMg==\"\r\n        //     }\r\n        // ],\r\n\r\n    },\r\n    {\r\n        \"id\": 6,\r\n        \"recipients\": [\r\n            \"10086\"\r\n        ],\r\n        \"from\": \"3\",\r\n        \"sms\": \"2\",\r\n        \"interval_min\": 30000,\r\n        \"interval_max\": 50000,\r\n        \"timeout\": 30,\r\n        \"charset\": \"utf-8\",\r\n        \"coding\": 0,\r\n        \"sms_type\": 0,\r\n        \"sdr\": true,\r\n        \"fdr\": true,\r\n        \"dr\": true\r\n        // \"flash_sms\": true\r\n        // \"sms_count\": 1,\r\n        // \"sms_period\": 0,\r\n        // \"to_all\": \"true\"\r\n        // \"bcc\":,\r\n        // \"cc\":,\r\n        // \"position\":0，\r\n        // \"subject\": \"Dog\",\r\n        // \"subjects\": [\r\n        //     {\r\n        //         \"recipient\": \"18933031136\",\r\n        //         \"subject\": \"6K+V6K+VMQ==\"\r\n        //     },\r\n        //     {\r\n        //         \"recipient\": \"18933031136\",\r\n        //         \"subject\": \"6K+V6K+VMg==\"\r\n        //     }\r\n        // ],\r\n\r\n    }\r\n    \r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/submit_sms_tasks?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"submit_sms_tasks"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Received SMS",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"detele\": \"true\",\r\n    \"num\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.161:80/get_received_smses?username=root&password=root",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"161"
+					],
+					"port": "80",
+					"path": [
+						"get_received_smses"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Message Task",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"port\": 3,\r\n    \"index\": 0,\r\n    \"num\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/get_sms_tasks?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"get_sms_tasks"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pause Message Task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    6\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/pause_sms_tasks?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"pause_sms_tasks"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resume Paused Message Task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    5\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/resume_sms_tasks?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"resume_sms_tasks"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Message Task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    5\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/remove_sms_tasks?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"remove_sms_tasks"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set SMS Report Config",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sms_status_url\": \"192.168.1.171\",\r\n    \"sms_status_max\": 100,\r\n    \"sms_status_period\": 30,\r\n    \"recv_sms_url\": \"192.168.1.171\",\r\n    \"recv_sms_max\": 1,\r\n    \"recv_sms_period\": 30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.1.158/set_sms_config?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"set_sms_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SMS Report Config",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.158/get_sms_config?username=root&password=nbh5vnqmwf@",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"158"
+					],
+					"path": [
+						"get_sms_config"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "nbh5vnqmwf@"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
