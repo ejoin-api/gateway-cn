@@ -31,7 +31,9 @@ info:
 
      **Port**: Device webpage management port, default value is 80
 
-
+     # Postman download url
+     
+     https://www.postman.com/downloads/
 
 
   version: 3.0.0
