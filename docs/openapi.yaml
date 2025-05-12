@@ -300,24 +300,24 @@ paths:
                          <ul><li>OK</li>
                          <li>Invalid User</li>
                          <li>Invalid Port</li>
-                         <li>USSD Expected</li>
+                         <li>"USSD" Expected</li>
                          <li>Pending USSD</li>
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>SMS Expected</li>
-                         <li>TO Expected</li>
+                         <li>"SMS" Expected</li>
+                         <li>"TO" Expected</li>
                          <li>Pending Transaction</li>
-                         <li>TID Expected</li>
-                         <li>FROM Expected</li>
+                         <li>"TID" Expected</li>
+                         <li>"FROM" Expected</li>
                          <li>Duplicated TaskID</li>
                          <li>Unauthorized</li>
                          <li>Invalid CMD</li>
                          <li>Too Many Task</li>
-                         <li>MMS Title Expected</li>
-                         <li>Too Many MMS Attachments</li>
-                         <li>MMS Attachments Expected</li>
-                         <li>MMS Attachments Cache size Overlimit</li>
+                         <li>"MMS" Title Expected</li>
+                         <li>Too Many "MMS" Attachments</li>
+                         <li>"MMS" Attachments Expected</li>
+                         <li>"MMS" Attachments Cache size Overlimit</li>
                          </ul>            
               examples:
                 '1':
