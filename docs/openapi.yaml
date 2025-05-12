@@ -24,12 +24,14 @@ info:
      <span style="text-decoration: underline;font-weight: bold;font-style: italic">To use the API version 3.0.0, please update the device to version 8.0d or above.</span>
 
      # Message description
-     
-     For each API,
-     
-     **Host**: Device IP address
 
-     **Port**: Device webpage management port, default value is 80
+     To communicate with the device, you need to specify two key parameters:
+
+     **Host**: The IP address of the target device. This is typically the address assigned to the device within your  local network or via a static IP if accessed remotely.
+
+     **Port**: The port used by the device’s web-based management interface. By default, this is set to 80, which is the standard HTTP port. If the device configuration has been customized, be sure to use the updated port number.
+
+     These values are required for constructing the full request URL when calling the API.
 
      # Postman download url
      
@@ -403,16 +405,16 @@ paths:
                          <li>OK</li>
                          <li>Invalid User</li>
                          <li>Invalid Port</li>
-                         <li>USSD Expected</li>
+                         <li>"USSD" Expected</li>
                          <li>Pending USSD</li>
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>SMS expected</li>
-                         <li>TO expected</li>
+                         <li>"SMS" expected</li>
+                         <li>"TO" expected</li>
                          <li>Pending Transaction</li>
-                         <li>TID Expected</li>
-                         <li>From Expected</li>
+                         <li>"TID" Expected</li>
+                         <li>"From" Expected</li>
                          </ul>      
                 required:
                   - reason
@@ -505,16 +507,16 @@ paths:
                          <li>OK</li>
                          <li>Invalid User</li>
                          <li>Invalid Port</li>
-                         <li>USSD Expected</li>
+                         <li>"USSD" Expected</li>
                          <li>Pending USSD</li>
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>SMS expected</li>
-                         <li>TO expected</li>
+                         <li>"SMS" expected</li>
+                         <li>"TO" expected</li>
                          <li>Pending Transaction</li>
-                         <li>TID Expected</li>
-                         <li>From Expected</li>
+                         <li>"TID" Expected</li>
+                         <li>"From" Expected</li>
                          </ul>      
                 required:
                   - reason
@@ -606,16 +608,16 @@ paths:
                          <li>OK</li>
                          <li>Invalid User</li>
                          <li>Invalid Port</li>
-                         <li>USSD Expected</li>
+                         <li>"USSD" Expected</li>
                          <li>Pending USSD</li>
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>SMS expected</li>
-                         <li>TO expected</li>
+                         <li>"SMS" expected</li>
+                         <li>"TO" expected</li>
                          <li>Pending Transaction</li>
-                         <li>TID Expected</li>
-                         <li>From Expected</li>
+                         <li>"TID" Expected</li>
+                         <li>"From" Expected</li>
                          </ul>      
                 required:
                   - reason
