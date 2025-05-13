@@ -127,7 +127,7 @@ paths:
                   type: number
                   default: 30
                   description: >-
-                    Max time while waiting sending result,**in seconds**
+                    Max time while waiting sending result, **in seconds**
                 charset:
                   type: string
                   default: UTF-8
