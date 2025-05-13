@@ -332,7 +332,7 @@ paths:
 
   http://host:port/pause_sms_tasks:
     post:
-      summary: Paused Message Task
+      summary: Pause Message Task
       deprecated: false
       description: >
 
@@ -4249,7 +4249,7 @@ paths:
       security: []
   http://host:port/on_leds:
     post:
-      summary: Turn on LED
+      summary: Turn On LED
       deprecated: false
       description: >-
         Turn on the LED light on the specified SIM slot or port of the device.
@@ -4312,7 +4312,7 @@ paths:
       security: []
   http://host:port/off_leds:
     post:
-      summary: Turn off LED
+      summary: Turn Off LED
       deprecated: false
       description: >-
         Turn off the LED light on the specified SIM slot or port of the device.
