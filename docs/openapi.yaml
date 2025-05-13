@@ -44,10 +44,9 @@ info:
     backgroundColor: '#FAFAFA'
     altText: SMS logo
 tags:
-  - name: SMS Operations
+  - name: Message Operations
     description: |-
-      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./SMS Operations.postman_collection.json">💡Here is the POSTMAN JSON file for SMS Operations</a> </span>
-  - name: Receive MMS
+      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Message Operations.postman_collection.json">💡Here is the POSTMAN JSON file for Message Operations</a> </span>
   - name: Device Action Commands
     description: |-
        <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Device Action Commands.postman_collection.json">💡Here is the POSTMAN JSON file for Device Action Commands</a> </span>
@@ -82,7 +81,7 @@ paths:
         3. If multiple ports and multiple recipients are defined, each port will independently send SMS messages to each 
         recipient.
       tags:
-        - SMS Operations  
+        - Message Operations  
       parameters:
         - name: username
           in: query
@@ -340,7 +339,7 @@ paths:
          Pause one or more SMS tasks that are still in the sending queue and have not yet been dispatched. 
         
       tags:
-        - SMS Operations  
+        - Message Operations  
       parameters:
         - name: username
           in: query
@@ -442,7 +441,7 @@ paths:
         Resume the transmission of one or more previously paused SMS tasks from the sending queue.
        
       tags:
-        - SMS Operations
+        - Message Operations
       parameters:
         - name: username
           in: query
@@ -543,7 +542,7 @@ paths:
         Delete one or more pending SMS tasks that are still queued for sending.
        
       tags:
-        - SMS Operations
+        - Message Operations
       parameters:
         - name: username
           in: query
@@ -643,7 +642,7 @@ paths:
 
          Retrieve details of SMS tasks currently queued for sending on the device.
       tags:
-        - SMS Operations
+        - Message Operations
       parameters:
         - name: username
           in: query
@@ -760,139 +759,6 @@ paths:
                       sms: 102
           headers: {}
       security: []
-  http://host:port/get_received_smses:
-    get:
-      summary: Query Received SMS
-      deprecated: false
-      description: >-
-        Query process: 
-
-
-        <ul><li>1.Query all messages received by the device without the query
-        parameters (except for user-verified parameters). </li>
-
-
-        <li>2.Use the value of next_id returned by the device as the value of the
-        sms_id parameter to query subsequent SMS messages. </li>
-
-
-        <li>3.If the device restarts, return a different ssrc synchronization
-        source ID and return to step 1. </li>
-
-
-        <li>4.Repeat step 2</li></ul>
-      tags:
-        - SMS Operations
-      parameters:
-        - name: username
-          in: query
-          description: Device Username
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: Device  Password
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  default: 1
-                  type: number
-                  description: ID of the SMS to start the query from; **1 indicates the first message in the inbox**
-                num: 
-                  default: 0
-                  type: number
-                  description: Maximum number of SMS messages to return in this query, **0 indicates querying all SMS messages**  
-            example: 
-              id: 1
-              num: 0
-      responses:
-        '200':
-          description: 'OK'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ssrc:
-                    type: string
-                    description: >-
-                      Synchronization source identifier. The device generates a
-                      new ssrc each time it runs.So the value changes, re-query
-                  next_id:
-                    type: number
-                    description: The next SMS ID
-                  smses:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - port
-                        - slot
-                        - timestamp
-                        - from
-                        - to
-                        - is_report
-                      properties:
-                        port:
-                          type: number
-                          description: Port number
-                        slot:
-                          type: number
-                          description: Slot number
-                        timestamp:
-                          type: string
-                          description: Timestamp while device got this SMS
-                        from:
-                          type: string
-                          description: Sender number
-                        to:
-                          type: string
-                          description: Recipient number
-                        is_report:
-                          type: bool
-                          description: Indicates whether it is an SMS delivery report
-                        status:
-                          type: number
-                          description: When `is_report` is true, indicates the delivery status of the SMS; **0 means successfully delivered**
-                        sms:
-                          type: string
-                          description: SMS content，encoded in BASE64 using UTF-8; appears when `is_report is` false
-                    description: Array of retrieved SMS message information
-                required:
-                  - ssrc
-                  - next_id
-                  - smses
-              examples:
-                '1':
-                  summary: Successful instance
-                  value: 
-                    ssrc: 2cc11d7f57ee0db6c0aa0b7483d02aa4
-                    next_id: 3
-                    smses:
-                      - port: 1
-                        slot: 1
-                        timestamp: 1745915984
-                        from: 8613800755500
-                        to: ""
-                        is_report: true
-                        status: 0
-                      - port: 1
-                        slot: 1
-                        timestamp: 1745915985
-                        from: 10086
-                        to: ""
-                        is_report: false
-                        sms: 5bCK5pWs55qE5a6i5oi377yM5oKo5b2T5YmN6K+d6LS55L2Z6aKdNDEuMDHlhYPvvIzlrp7ml7bor53otLkxMi4yMOWFg+OAguWunuaXtuafpeS9memineivt+eCueWHuyBodHRwczovL2R4LjEwMDg2LmNuL0EvdEpveEhRIOaIlueZu+W9leKAnOS4reWbveenu+WKqOKAnUFQUC3mnI3liqHlpKfljoUt5p+l6K+iLeS9memineafpeivouOAguW/g+e6p+acjeWKoe+8jOacn+W+heaCqOeahOKAnDEw5YiG4oCd5ruh5oSP44CC44CQ5Lit5Zu956e75Yqo44CR
-          headers: {}
-      security: []
   http://host:port/get_sms_config:
     get:
       summary: Get SMS Report Config
@@ -902,7 +768,7 @@ paths:
         Retrieve SMS report configuration.
        
       tags:
-        - SMS Operations
+        - Message Operations
       parameters:
         - name: username
           in: query
@@ -980,7 +846,7 @@ paths:
         Set SMS report reporting configuration.
        
       tags:
-        - SMS Operations
+        - Message Operations
       parameters:
         - name: username
           in: query
@@ -1075,7 +941,7 @@ paths:
         4.Fdr(failed detail record) list records between 2 status-report, server
         should keep before details.
       tags:
-        - SMS Operations
+        - Message Operations
       parameters:
         - name: version
           in: query
@@ -2418,6 +2284,139 @@ paths:
                       act_tcd: 0
           headers: {}
       security: []
+  http://host:port/get_received_smses:
+    get:
+      summary: Received SMS
+      deprecated: false
+      description: >-
+        Query process: 
+
+
+        <ul><li>1.Query all messages received by the device without the query
+        parameters (except for user-verified parameters). </li>
+
+
+        <li>2.Use the value of next_id returned by the device as the value of the
+        sms_id parameter to query subsequent SMS messages. </li>
+
+
+        <li>3.If the device restarts, return a different ssrc synchronization
+        source ID and return to step 1. </li>
+
+
+        <li>4.Repeat step 2</li></ul>
+      tags:
+        - Message Operations
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device  Password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  default: 1
+                  type: number
+                  description: ID of the SMS to start the query from; **1 indicates the first message in the inbox**
+                num: 
+                  default: 0
+                  type: number
+                  description: Maximum number of SMS messages to return in this query, **0 indicates querying all SMS messages**  
+            example: 
+              id: 1
+              num: 0
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ssrc:
+                    type: string
+                    description: >-
+                      Synchronization source identifier. The device generates a
+                      new ssrc each time it runs.So the value changes, re-query
+                  next_id:
+                    type: number
+                    description: The next SMS ID
+                  smses:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - port
+                        - slot
+                        - timestamp
+                        - from
+                        - to
+                        - is_report
+                      properties:
+                        port:
+                          type: number
+                          description: Port number
+                        slot:
+                          type: number
+                          description: Slot number
+                        timestamp:
+                          type: string
+                          description: Timestamp while device got this SMS
+                        from:
+                          type: string
+                          description: Sender number
+                        to:
+                          type: string
+                          description: Recipient number
+                        is_report:
+                          type: bool
+                          description: Indicates whether it is an SMS delivery report
+                        status:
+                          type: number
+                          description: When `is_report` is true, indicates the delivery status of the SMS; **0 means successfully delivered**
+                        sms:
+                          type: string
+                          description: SMS content，encoded in BASE64 using UTF-8; appears when `is_report is` false
+                    description: Array of retrieved SMS message information
+                required:
+                  - ssrc
+                  - next_id
+                  - smses
+              examples:
+                '1':
+                  summary: Successful instance
+                  value: 
+                    ssrc: 2cc11d7f57ee0db6c0aa0b7483d02aa4
+                    next_id: 3
+                    smses:
+                      - port: 1
+                        slot: 1
+                        timestamp: 1745915984
+                        from: 8613800755500
+                        to: ""
+                        is_report: true
+                        status: 0
+                      - port: 1
+                        slot: 1
+                        timestamp: 1745915985
+                        from: 10086
+                        to: ""
+                        is_report: false
+                        sms: 5bCK5pWs55qE5a6i5oi377yM5oKo5b2T5YmN6K+d6LS55L2Z6aKdNDEuMDHlhYPvvIzlrp7ml7bor53otLkxMi4yMOWFg+OAguWunuaXtuafpeS9memineivt+eCueWHuyBodHRwczovL2R4LjEwMDg2LmNuL0EvdEpveEhRIOaIlueZu+W9leKAnOS4reWbveenu+WKqOKAnUFQUC3mnI3liqHlpKfljoUt5p+l6K+iLeS9memineafpeivouOAguW/g+e6p+acjeWKoe+8jOacn+W+heaCqOeahOKAnDEw5YiG4oCd5ruh5oSP44CC44CQ5Lit5Zu956e75Yqo44CR
+          headers: {}
+      security: []
   In the 'SMS/MMS Settings' menu of the device, the 'MMS Inbox' page allows you to configure the push receiving server address:
     post:
       summary: Receive MMS
@@ -2435,7 +2434,7 @@ paths:
         In addition, header fields starting with
         'Emms-' are custom fields, while others are standard HTTP fields:
       tags:
-        - Receive MMS
+        - Message Operations
       parameters:
         - name: Date
           in: header
