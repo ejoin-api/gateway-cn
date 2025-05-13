@@ -221,7 +221,7 @@ paths:
                 flash_sms: 
                   type: bool
                   default: false
-                  description: Specifies whether to use Flash SMS for sending.
+                  description: Specifies whether to use Flash SMS for sending
                 sms_count:
                   type: number
                   default: 100
@@ -233,7 +233,7 @@ paths:
                 to_all:
                   type: bool
                   default: false
-                  description: Whether to use all available ports.
+                  description: Whether to use all available ports
                 bcc:
                   type: string
                   description: Blind Carbon Copy
@@ -986,7 +986,7 @@ paths:
                             properties: 
                               seq:
                                 type: integer
-                                description: Number index (based on bulk messaging numbers).
+                                description: Number index (based on bulk messaging numbers)
                               port:
                                 type: integer
                                 description: Port Number
@@ -1012,7 +1012,7 @@ paths:
                             properties: 
                               seq:
                                 type: integer
-                                description: Number index (based on bulk messaging numbers).
+                                description: Number index (based on bulk messaging numbers)
                               port:
                                 type: integer
                                 description: Port Number
@@ -2304,7 +2304,7 @@ paths:
         source ID and return to step 1. </li>
 
 
-        <li>4.Repeat step 2</li></ul>
+        <li>4.Repeat step 2.</li></ul>
       tags:
         - Message Operations
       parameters:
