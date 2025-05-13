@@ -23,7 +23,7 @@ info:
      
      <span style="text-decoration: underline;font-weight: bold;font-style: italic">To use the API version 3.0.0, please update the device to version 8.0d or above.</span>
 
-     # Message description
+     # Getting Started
 
      To communicate with the device, you need to specify two key parameters:
 
@@ -434,7 +434,7 @@ paths:
  
   http://host:port/resume_sms_tasks:
     post:
-      summary: Resume Paused Message Task
+      summary: Resume Message Task
       deprecated: false
       description: |-
 
@@ -2286,7 +2286,7 @@ paths:
       security: []
   http://host:port/get_received_smses:
     get:
-      summary: Received SMS
+      summary: Receive SMS
       deprecated: false
       description: >-
         Query process: 
