@@ -21,7 +21,7 @@ info:
      processed using JSON arrays.
      
      
-     <span style="text-decoration: underline;font-weight: bold;font-style: italic">To use the API version 3.0.0, please update the device to version 8.0d or above.</span>
+     <span style="text-decoration: underline;font-weight: bold;font-style: italic;color: red">To use the API version 3.0.0, please update the device to version 8.0d or above.</span>
 
      # Getting Started
 
