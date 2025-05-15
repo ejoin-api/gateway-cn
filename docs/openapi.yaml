@@ -21,7 +21,7 @@ info:
      processed using JSON arrays.
      
      
-     <span style="text-decoration: underline;font-weight: bold;font-style: italic;color: red">To use the API version 3.0.0, please update the device to version 8.0d or above.</span>
+     <span style="text-decoration: underline;font-weight: bold;font-style: italic;color: red">To use the API version 3.0.0, please update the device to version 8.0d or later.</span>
 
      # Getting Started
 
@@ -316,7 +316,7 @@ paths:
                          <li>"MMS" Title Expected</li>
                          <li>Too Many "MMS" Attachments</li>
                          <li>"MMS" Attachments Expected</li>
-                         <li>"MMS" Attachments Cache size Overlimit</li>
+                         <li>"MMS" Attachments Cache Size Overlimit</li>
                          </ul>            
               examples:
                 '1':
@@ -409,8 +409,8 @@ paths:
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>"SMS" expected</li>
-                         <li>"TO" expected</li>
+                         <li>"SMS" Expected</li>
+                         <li>"TO" Expected</li>
                          <li>Pending Transaction</li>
                          <li>"TID" Expected</li>
                          <li>"From" Expected</li>
@@ -511,8 +511,8 @@ paths:
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>"SMS" expected</li>
-                         <li>"TO" expected</li>
+                         <li>"SMS" Expected</li>
+                         <li>"TO" Expected</li>
                          <li>Pending Transaction</li>
                          <li>"TID" Expected</li>
                          <li>"From" Expected</li>
@@ -612,8 +612,8 @@ paths:
                          <li>SIM Unregistered</li>
                          <li>Timeout</li>
                          <li>Server Error</li>
-                         <li>"SMS" expected</li>
-                         <li>"TO" expected</li>
+                         <li>"SMS" Expected</li>
+                         <li>"TO" Expected</li>
                          <li>Pending Transaction</li>
                          <li>"TID" Expected</li>
                          <li>"From" Expected</li>
@@ -1715,22 +1715,22 @@ paths:
                           description: >-
                             Port status code + detail
                                             
-                              - 0 No SIM card
-                              - 1 Exist idel SIM card
+                              - 0 No SIM Card
+                              - 1 Exist Idle SIM Card
                               - 2 Registering
                               - 3 Registered
-                              - 4 Call connected
-                              - 5 Nobalance or alarm
-                              - 6 Register failed
-                              - 7 SIM card locked by device
-                              - 8 SIM card locked by operator
-                              - 9 Recognize SIM card error
+                              - 4 Call Connected
+                              - 5 Nobalance Or Alarm
+                              - 6 Register Failed
+                              - 7 SIM Card Locked By Device
+                              - 8 SIM Card Locked By Operator
+                              - 9 Recognize SIM Card Error
                               - 11 Card Detected
-                              - 12 User locked
-                              - 13 Port inter-calling
-                              - 14 Inter-calling holding
+                              - 12 User Locked
+                              - 13 Port Inter-calling
+                              - 14 Inter-calling Holding
                               - 15 Access Mobile Network
-                              - 16 Module Response timeout
+                              - 16 Module Response Timeout
                         imei:
                           type: string
                           description: IMEI of module
@@ -1873,22 +1873,22 @@ paths:
                     description: >-
                       Port status code + detail
                                             
-                       - 0 No SIM card
-                       - 1 Exist idel SIM card
+                       - 0 No SIM Card
+                       - 1 Exist Idle SIM Card
                        - 2 Registering
                        - 3 Registered
-                       - 4 Call connected
-                       - 5 Nobalance or alarm
-                       - 6 Register failed
-                       - 7 SIM card locked by device
-                       - 8 SIM card locked by operator
-                       - 9 Recognize SIM card error
+                       - 4 Call Connected
+                       - 5 Nobalance Or Alarm
+                       - 6 Register Failed
+                       - 7 SIM Card Locked By Device
+                       - 8 SIM Card Locked By Operator
+                       - 9 Recognize SIM Card Error
                        - 11 Card Detected
-                       - 12 User locked
-                       - 13 Port inter-calling
-                       - 14 Inter-calling holding
+                       - 12 User Locked
+                       - 13 Port Inter-calling
+                       - 14 Inter-calling Holding
                        - 15 Access Mobile Network
-                       - 16 Module Response timeout
+                       - 16 Module Response Timeout
                   bal:
                     type: number
                     description: SIM card  balance(yy.mm)
@@ -2179,8 +2179,8 @@ paths:
                     type: number
                     description: >-
                       Statistics type:
-                       - 0: Last 1 hour
-                       - 1: Last 2 hours
+                       - 0: Last 1 Hour
+                       - 1: Last 2 Hours
                        - 2: Today
                        - 3: Cumulative
       responses:
@@ -2822,13 +2822,13 @@ paths:
                         
                         - 0 : OK
                         
-                        - 4 : busy
+                        - 4 : Busy
                         
-                        - 5 : unavailable
+                        - 5 : Unavailable
                         
-                        - 6 : timeout
+                        - 6 : Timeout
                         
-                        - 15 : invalid at
+                        - 15 : Invalid AT
                     resp: 
                       type: string
                       description: System response content; when `code` is 0, it represents the reply result of the sent AT command.
@@ -2937,11 +2937,11 @@ paths:
                         
                         - 0 : OK
                         
-                        - 4 : busy
+                        - 4 : Busy
                         
-                        - 5 : unavailable
+                        - 5 : Unavailable
                         
-                        - 6 : timeout
+                        - 6 : Timeout
                     resp: 
                       type: string
                       description: System response content; when `code` is 0, it represents the reply result of the sent USSD command.
@@ -3164,16 +3164,16 @@ paths:
                        The status of the most recent service base station scan operation
                        
                        
-                       <ul><li>idle: No operation</li>
+                       <ul><li>Idle: No operation</li>
                        
                        
-                       <li>waitting: In progress</li>
+                       <li>Waitting: In progress</li>
                        
                        
-                       <li>completed: Completed</li>
+                       <li>Completed: Completed</li>
                        
                        
-                       <li>timeout: Timeout</li></ul>
+                       <li>Timeout: Timeout</li></ul>
                     default: completed
                     enum: 
                       - idle
@@ -3263,10 +3263,10 @@ paths:
                     Scan range
                     
                     
-                    <ul><li>all: All operator</li>
+                    <ul><li>All: All operator</li>
                     
                     
-                    <li>current: The operator  corresponding to the SIM card</li></ul>
+                    <li>Current: The operator  corresponding to the SIM card</li></ul>
                   enum: 
                     - all
                     - current
@@ -3342,16 +3342,16 @@ paths:
                        The status of the most recent service base station scan operation
                        
                        
-                       <ul><li>idle: No operation</li>
+                       <ul><li>Idle: No operation</li>
                        
                        
-                       <li>waitting: In progress</li>
+                       <li>Waitting: In progress</li>
                        
                        
-                       <li>completed: Completed</li>
+                       <li>Completed: Completed</li>
                        
                        
-                       <li>timeout: Timeout</li>
+                       <li>Timeout: Timeout</li>
                     default: completed
                     enum: 
                       - idle
@@ -4684,22 +4684,22 @@ paths:
                             
                             
                             <ul>
-                            <li>0 : No SIM card</li>
-                            <li>1 : Exist idel SIM card</li>
+                            <li>0 : No SIM Card</li>
+                            <li>1 : Exist Idle SIM Card</li>
                             <li>2 : Registering</li>
                             <li>3 : Registered</li>
-                            <li>4 : call connected</li>
-                            <li>5 : no balance or alarm</li>
-                            <li>6 : Register failed</li>
-                            <li>7 : SIM card locked by device</li>
-                            <li>8 : SIM card locked by operator</li>
-                            <li>9 : Recognize SIM card error</li>
+                            <li>4 : Call Connected</li>
+                            <li>5 : No Balance Or Alarm</li>
+                            <li>6 : Register Failed</li>
+                            <li>7 : SIM Card Locked By Device</li>
+                            <li>8 : SIM Card Locked By Operator</li>
+                            <li>9 : Recognize SIM Card Error</li>
                             <li>11 : Card Detected</li>
-                            <li>12 : User locked</li>
-                            <li>13 : Port inter-calling</li>
-                            <li>14 : Inter-calling holding</li>
+                            <li>12 : User Locked</li>
+                            <li>13 : Port Inter-calling</li>
+                            <li>14 : Inter-calling Holding</li>
                             <li>15 : Access Mobile Network</li>
-                            <li>16 : module Response timeout</li></ul>
+                            <li>16 : module Response Timeout</li></ul>
                         imei:
                           type: string
                           description: IMEI of module
@@ -4882,22 +4882,22 @@ paths:
                     description: >-
                       Port status code + detail
                                             
-                       - 0 No SIM card
-                       - 1 Exist idel SIM card
+                       - 0 No SIM Card
+                       - 1 Exist Idle SIM Card
                        - 2 Registering
                        - 3 Registered
-                       - 4 Call connected
-                       - 5 Nobalance or alarm
-                       - 6 Register failed
-                       - 7 SIM card locked by device
-                       - 8 SIM card locked by operator
-                       - 9 Recognize SIM card error
+                       - 4 Call Connected
+                       - 5 Nobalance Or Alarm
+                       - 6 Register Failed
+                       - 7 SIM Card Locked By Device
+                       - 8 SIM Card Locked By Operator
+                       - 9 Recognize SIM Card Error
                        - 11 Card Detected
-                       - 12 User locked
-                       - 13 Port inter-calling
-                       - 14 Inter-calling holding
+                       - 12 User Locked
+                       - 13 Port Inter-calling
+                       - 14 Inter-calling Holding
                        - 15 Access Mobile Network
-                       - 16 Module Response timeout
+                       - 16 Module Response Timeout
                   bal:
                     type: number
                     description: SIM card  balance(yy.mm)
