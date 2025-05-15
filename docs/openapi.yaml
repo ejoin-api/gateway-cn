@@ -143,7 +143,7 @@ paths:
                   type: integer
                   description: >-
                      Pecific the SMS codes
-                     <ul><li> 0 Not assign</li>
+                     <ul><li> 0 Not Assign</li>
                      <li>1 USC2</li>
                      <li>2 7bit</li></ul>
                   enum: 
@@ -1116,9 +1116,9 @@ paths:
             from 1)
             
             <ul>
-            <li>all: all ports</li>
+            <li>All: All ports</li>
             <li>Specify a single port</li>
-            <li>numbers separated by short numbers, specifying multiple ports, <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number 
+            <li>Numbers separated by short numbers, specifying multiple ports, <span style="font-weight: bold;color: red">"-"</span> indicates a continuous port number 
             
             
             <span style="font-weight: bold;color: red">Such as "1-3,5"</span> means querying ports 1, 2, 3, and 5</li></ul>
@@ -1160,8 +1160,8 @@ paths:
                           type: string
                           description: >-
                             If or not the eid is obtained correctly
-                            <ul><li>0 no</li>
-                            <li>1 yes</li></ul>
+                            <ul><li>0 No</li>
+                            <li>1 Yes</li></ul>
                           enum:
                             - 0
                             - 1
@@ -1177,8 +1177,8 @@ paths:
                                 type: integer
                                 description: >-
                                   If or not the current profile is enabled
-                                  <ul><li>0 disabled</li>
-                                  <li>1 enabled</li></ul>
+                                  <ul><li>0 Disabled</li>
+                                  <li>1 Enabled</li></ul>
                                 enum:
                                   - 0 
                                   - 1 
@@ -1199,8 +1199,8 @@ paths:
                                 description: >-
                                   If or not the current slot has been written
                                   into the profile
-                                  <ul><li>0 no</li>
-                                  <li>1 yes</li></ul>
+                                  <ul><li>0 No</li>
+                                  <li>1 Yes</li></ul>
                                 enum:
                                   - 0
                                   - 1
@@ -1735,8 +1735,8 @@ paths:
                            type: integer
                            description: >-
                               Current card
-                               - 0 no
-                               - 1 yes
+                               - 0 No
+                               - 1 Yes
                            enum:
                              - 0
                              - 1
@@ -1744,8 +1744,8 @@ paths:
                           type: integer
                           description: >-
                               A card is inserted into a slot
-                              - 1 yes
-                              - 0 no
+                              - 1 Yes
+                              - 0 No
                           enum: 
                             - 0
                             - 1
@@ -1753,8 +1753,8 @@ paths:
                           type: interger
                           description: >-
                             Whether the card slot is enabled
-                            - 1 yes
-                            - 0 no
+                            - 1 Yes
+                            - 0 No
                           enum:
                             - 0 
                             - 1
@@ -1762,8 +1762,8 @@ paths:
                           type: interger
                           description: >-
                             Led is enabled or not
-                            - 1 yes
-                            - 0 no
+                            - 1 Yes
+                            - 0 No
                           enum:
                             - 0
                             - 1
@@ -1905,8 +1905,8 @@ paths:
                     type: integer
                     description: >-
                       Current card
-                       - 0 no
-                       - 1 yes
+                       - 0 No
+                       - 1 Yes
                     enum:
                       - 0
                       - 1
@@ -1920,8 +1920,8 @@ paths:
                     type: integer
                     description: >-
                       A card is inserted into a slot
-                       - 1 yes
-                       - 0 no
+                       - 1 Yes
+                       - 0 No
                     enum:
                       - 0
                       - 1
@@ -1929,8 +1929,8 @@ paths:
                     type: integer
                     description: >-
                       Whether the card slot is enabled
-                       - 1 yes
-                       - 0 no
+                       - 1 Yes
+                       - 0 No
                     enum:
                       - 0
                       - 1
@@ -1943,8 +1943,8 @@ paths:
                     type: integer
                     description: >-
                       Led is enabled or not
-                       - 1 yes
-                       - 0 no
+                       - 1 Yes
+                       - 0 No
                     enum:
                       - 0
                       - 1
@@ -2039,8 +2039,8 @@ paths:
                     type: number
                     description: >-
                       Statistics type:
-                       - 0: Last 1 hour
-                       - 1: Last 2 hours
+                       - 0: Last 1 Hour
+                       - 1: Last 2 Hours
                        - 2: Today
                        - 3: Cumulative
       responses:
@@ -3263,7 +3263,7 @@ paths:
                     <ul><li>All: All operator</li>
                     
                     
-                    <li>Current: The operator  corresponding to the SIM card</li></ul>
+                    <li>Current: The operator corresponding to the SIM card</li></ul>
                   enum: 
                     - all
                     - current
@@ -3674,8 +3674,10 @@ paths:
                   locking_status:
                     type: array
                     description: >-
-                       A status array.
-                       For more details,please refer to **Get Cells Locking Status**.
+                       A status array
+                       
+                       
+                       For more details,please refer to **Get Cells Locking Status**
                     items: 
                      type: object
                      properties:
@@ -3766,7 +3768,11 @@ paths:
                     description: Report/Result Push URL
                   timeout:
                     type: number
-                    description: Cell operation timeout, in seconds. If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
+                    description: >-
+                    Cell operation timeout, in seconds
+                    
+                    
+                    If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
                     default: 120
                 required:
                   - report_url
