@@ -188,7 +188,7 @@ paths:
                     MMS attachment, **only effective when "sms_type" is 1(single mms) or 2(mutiple mms)**
                     
                     
-                    <span style="font-weight: bold;color: red"-">A maximum of 5 attachments are allowed, with a total size not exceeding 100KB</span>
+                    <span style="font-weight: bold;color: red">A maximum of 5 attachments are allowed, with a total size not exceeding 100KB </span>
                   items:
                     type: object
                     required: 
