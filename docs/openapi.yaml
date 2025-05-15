@@ -3769,10 +3769,10 @@ paths:
                   timeout:
                     type: number
                     description: >-
-                    Cell operation timeout, in seconds
+                      Cell operation timeout, in seconds
                     
                     
-                    If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
+                      If the operation is not completed within the timeout period and a **report_url** is set, the device will push a result with **status** set to timeout
                     default: 120
                 required:
                   - report_url
