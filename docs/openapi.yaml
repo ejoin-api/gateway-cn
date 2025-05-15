@@ -366,8 +366,7 @@ paths:
                   items:
                     type: number
                   description: >
-                    The task ID to be restored
-                    Restore all sending tasks when there is no field
+                    Array of SMS IDs for executing the task
             example: 
                 - 1
                 - 2
@@ -468,8 +467,7 @@ paths:
                   items:
                     type: number
                   description: >
-                    The task ID to be restored
-                    Restore all sending tasks when there is no field
+                    Array of SMS IDs for executing the task
             example: 
                 - 1
                 - 2
@@ -569,8 +567,7 @@ paths:
                   items:
                     type: number
                   description: >
-                    The task ID to be restored
-                    Restore all sending tasks when there is no field
+                    Array of SMS IDs for executing the task
             example: 
                 - 1
                 - 2
