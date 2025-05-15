@@ -4920,8 +4920,8 @@ paths:
                     type: integer
                     description: >-
                       Current card
-                       - 0 no
-                       - 1 yes
+                       - 0 No
+                       - 1 Yes
                     enum:
                       - 0
                       - 1
@@ -4935,8 +4935,8 @@ paths:
                     type: integer
                     description: >-
                       A card is inserted into a slot
-                       - 1 yes
-                       - 0 no
+                       - 1 Yes
+                       - 0 No
                     enum:
                       - 0
                       - 1
@@ -4944,8 +4944,8 @@ paths:
                     type: integer
                     description: >-
                       Whether the card slot is enabled
-                       - 1 yes
-                       - 0 no
+                       - 1 Yes
+                       - 0 No
                     enum:
                       - 0
                       - 1
@@ -4958,8 +4958,8 @@ paths:
                     type: integer
                     description: >-
                       Led is enabled or not
-                       - 1 yes
-                       - 0 no
+                       - 1 Yes
+                       - 0 No
                     enum:
                       - 0
                       - 1
