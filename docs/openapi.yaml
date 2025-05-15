@@ -1735,8 +1735,8 @@ paths:
                            type: integer
                            description: >-
                               Current card
-                               - 0 No
                                - 1 Yes
+                               - 0 No
                            enum:
                              - 0
                              - 1
@@ -1744,8 +1744,8 @@ paths:
                           type: integer
                           description: >-
                               A card is inserted into a slot
-                              - 1 Yes
-                              - 0 No
+                               - 1  Yes
+                               - 0  No
                           enum: 
                             - 0
                             - 1
@@ -1753,8 +1753,8 @@ paths:
                           type: interger
                           description: >-
                             Whether the card slot is enabled
-                            - 1 Yes
-                            - 0 No
+                             - 1  Yes
+                             - 0  No
                           enum:
                             - 0 
                             - 1
@@ -1762,8 +1762,8 @@ paths:
                           type: interger
                           description: >-
                             Led is enabled or not
-                            - 1 Yes
-                            - 0 No
+                             - 1  Yes
+                             - 0  No
                           enum:
                             - 0
                             - 1
@@ -1905,8 +1905,8 @@ paths:
                     type: integer
                     description: >-
                       Current card
-                       - 0 No
-                       - 1 Yes
+                       - 1  Yes
+                       - 0  No
                     enum:
                       - 0
                       - 1
@@ -1920,8 +1920,8 @@ paths:
                     type: integer
                     description: >-
                       A card is inserted into a slot
-                       - 1 Yes
-                       - 0 No
+                       - 1  Yes
+                       - 0  No
                     enum:
                       - 0
                       - 1
@@ -1929,8 +1929,8 @@ paths:
                     type: integer
                     description: >-
                       Whether the card slot is enabled
-                       - 1 Yes
-                       - 0 No
+                       - 1  Yes
+                       - 0  No
                     enum:
                       - 0
                       - 1
@@ -1943,8 +1943,8 @@ paths:
                     type: integer
                     description: >-
                       Led is enabled or not
-                       - 1 Yes
-                       - 0 No
+                       - 1  Yes
+                       - 0  No
                     enum:
                       - 0
                       - 1
@@ -3611,7 +3611,7 @@ paths:
                     type: array
                     description: >-
                        A serving cells array.  
-                       For more details, please refer to **Get Serving cells**.
+                       For more details, please refer to **Get Serving cells**
                     items: 
                      type: object
                      properties:
@@ -3640,7 +3640,7 @@ paths:
                     type: array
                     description: >-
                        A neighbour cells array.
-                       For more details,please refer to **Get Neighbour Cell**.
+                       For more details,please refer to **Get Neighbour Cell**
                     items: 
                      type: object
                      properties:
