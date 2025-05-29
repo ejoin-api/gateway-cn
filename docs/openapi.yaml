@@ -4221,11 +4221,11 @@ paths:
         content:
           application/json:
               example:
-                slots_pattern: 1,2
+                ports_pattern: 1,2
               schema:
                 type: object
                 properties:
-                  slots:
+                  ports:
                     type: array
                     description: >-
                       Array of port numbers and slot numbers
@@ -4238,7 +4238,7 @@ paths:
                         slot:
                           type: number
                           description: Slot number
-                  slots_pattern:
+                  ports_pattern:
                     type: string
                     description: >- 
                       Port mode string, with the following values:
