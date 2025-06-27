@@ -1951,6 +1951,13 @@ paths:
                     enum:
                       - 0
                       - 1
+                  network:
+                    type: interger
+                    description: >-
+                      Network type
+                       - 2: 2G
+                       - 3: 3G
+                       - 4: 4G
                 required:
                   - type
                   - port
