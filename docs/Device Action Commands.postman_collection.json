@@ -21,13 +21,9 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.1.161/lock_sims?username=root&password=root",
-					"protocol": "http",
+					"raw": "{{baseURL}}/lock_sims?username=root&password=root",
 					"host": [
-						"192",
-						"168",
-						"1",
-						"161"
+						"{{baseURL}}"
 					],
 					"path": [
 						"lock_sims"
@@ -175,13 +171,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://192.168.1.158/get_imeis?username=root&password=nbh5vnqmwf@",
+					"raw": "http://192.168.1.82/get_imeis?username=root&password=root",
 					"protocol": "http",
 					"host": [
 						"192",
 						"168",
 						"1",
-						"158"
+						"82"
 					],
 					"path": [
 						"get_imeis"
@@ -193,7 +189,7 @@
 						},
 						{
 							"key": "password",
-							"value": "nbh5vnqmwf@"
+							"value": "root"
 						}
 					]
 				}
@@ -207,7 +203,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"port\": 1,\r\n        \"slot\": 1,\r\n        \"imei\": \"351288391482664\"\r\n    }\r\n]",
+					"raw": "[\r\n    {\r\n        \"port\": 1,\r\n        \"slot\": 1,\r\n        \"imei\": \"351288391482664\"\r\n    },\r\n    {\r\n        \"port\": 128,\r\n        \"slot\": 1,\r\n        \"imei\": \"3512\"\r\n    },{\r\n        \"port\": 64,\r\n        \"slot\": 1,\r\n        \"imei\": \"3512\"\r\n    },{\r\n        \"port\": 32,\r\n        \"slot\": 1,\r\n        \"imei\": \"3512\"\r\n    },{\r\n        \"port\": 16,\r\n        \"slot\": 1,\r\n        \"imei\": \"3512\"\r\n    },{\r\n        \"port\": 8,\r\n        \"slot\": 1,\r\n        \"imei\": \"3512\"\r\n    }\r\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -215,13 +211,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.1.158/set_imeis?username=root&password=nbh5vnqmwf@",
+					"raw": "http://192.168.1.82/set_imeis?username=root&password=root",
 					"protocol": "http",
 					"host": [
 						"192",
 						"168",
 						"1",
-						"158"
+						"82"
 					],
 					"path": [
 						"set_imeis"
@@ -233,7 +229,7 @@
 						},
 						{
 							"key": "password",
-							"value": "nbh5vnqmwf@"
+							"value": "root"
 						}
 					]
 				}
@@ -242,17 +238,29 @@
 		},
 		{
 			"name": "Get Dev Status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://192.168.1.158/get_device_status?username=root&password=nbh5vnqmwf@",
+					"raw": "http://192.168.1.82/get_device_status?username=root&password=root",
 					"protocol": "http",
 					"host": [
 						"192",
 						"168",
 						"1",
-						"158"
+						"82"
 					],
 					"path": [
 						"get_device_status"
@@ -264,7 +272,7 @@
 						},
 						{
 							"key": "password",
-							"value": "nbh5vnqmwf@"
+							"value": "root"
 						}
 					]
 				}
@@ -281,7 +289,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"ports\": [\r\n        1,\r\n        2\r\n    ]\r\n\r\n}",
+					"raw": "{\r\n    \"ports\": [\r\n        1,2,128,64,32\r\n       \r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -289,13 +297,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.1.158/get_ports_status?username=root&password=nbh5vnqmwf@",
+					"raw": "http://192.168.1.82/get_ports_status?username=root&password=root",
 					"protocol": "http",
 					"host": [
 						"192",
 						"168",
 						"1",
-						"158"
+						"82"
 					],
 					"path": [
 						"get_ports_status"
@@ -307,7 +315,7 @@
 						},
 						{
 							"key": "password",
-							"value": "nbh5vnqmwf@"
+							"value": "root"
 						}
 					]
 				}
@@ -535,6 +543,76 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GetPIN",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/get_pins?username=root&password=Amamam123",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"get_pins"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "Amamam123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetPIN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"port\": 1,\r\n        \"slot\": 1,\r\n        \"pin\": 123456\r\n    },\r\n    {\r\n        \"port\": 2,\r\n        \"slot\": 1,\r\n        \"pin\": \"\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/set_pins?username=root&password=Amamam123",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"set_pins"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "root"
+						},
+						{
+							"key": "password",
+							"value": "Amamam123"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "192.168.1.82",
+			"type": "default"
 		}
 	]
 }

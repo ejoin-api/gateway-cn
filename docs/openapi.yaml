@@ -61,7 +61,6 @@ tags:
   - name: Number Config
     description: |-
       <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./NumberConfig.postman_collection.json">💡Here is the POSTMAN JSON file for Number Config</a></span>
-    
 paths:
   http://host:port/submit_sms_tasks:
     post:
@@ -3093,18 +3092,16 @@ paths:
             example: 
               - 1
             schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  minimum: 1
-                  maximum: max-port
-                  description: Ports number
-                  items:
+              type: array
+              items:
+                properties:
+                  ports:
                     type: number
-                    description: Port number
-              required: 
-                - ports
+                    minimum: 1
+                    maximum: max-port
+                    description: Ports number
+                required: 
+                  - ports
       responses:
         '202':
           description: 'Accepted'
@@ -3143,77 +3140,77 @@ paths:
             example: 
               - 1
             schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  description: Ports number
-                  items:
+              type: array
+              items:
+                required:
+                  - ports
+                properties:
+                  ports:
                     type: number
-                    description: Port number
-              required: 
-                - ports
+                    description: Ports number
+              
       responses:
         '200':
           description: 'OK'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  port:
-                    type: number
-                    minimum: 1
-                    maximum: max-port
-                    description: Port number
-                  status:
-                    type: string
-                    description: >
-                       The status of the most recent service base station scan operation
+                type: array
+                items:
+                  properties:
+                    port:
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Port number
+                    status:
+                      type: string
+                      description: >
+                         The status of the most recent service base station scan operation
                        
                        
-                       <ul><li>Idle: No operation</li>
+                         <ul><li>Idle: No operation</li>
                        
                        
-                       <li>Waitting: In progress</li>
+                         <li>Waitting: In progress</li>
+                        
+                       
+                         <li>Completed: Completed</li>
                        
                        
-                       <li>Completed: Completed</li>
-                       
-                       
-                       <li>Timeout: Timeout</li></ul>
-                    default: completed
-                    enum: 
-                      - idle
-                      - waitting
-                      - completed
-                      - timeout
-                  operator:
-                    type: string
-                    description: Operator ID
-                  earfcn:
-                    type: number
-                    description: E-UTRA Absolute Radio Frequency Channel Number
-                  pci:
-                    type: number
-                    description: Physical cell ID
-                  cid:
-                    type: string
-                    description: Cell ID, HEX string
-                  rsrp: 
-                    type: number
-                    description: Reference signal receiving power
+                         <li>Timeout: Timeout</li></ul>
+                      default: completed
+                      enum: 
+                        - idle
+                        - waitting
+                        - completed
+                        - timeout
+                    operator:
+                      type: string
+                      description: Operator ID
+                    earfcn:
+                      type: number
+                      description: E-UTRA Absolute Radio Frequency Channel Number
+                    pci:
+                      type: number
+                      description: Physical cell ID
+                    cid:
+                      type: string
+                      description: Cell ID, HEX string
+                    rsrp: 
+                      type: number
+                      description: Reference signal receiving power
               examples:
                   '1':
                     summary: Successful instance
                     value:
-                      port: 1
-                      status: completed
-                      operator: 46001
-                      earfcn: 1650
-                      pci: 114
-                      cid: 6161001
-                      rsrp: -86
+                      - port: 1
+                        status: completed
+                        operator: 46001
+                        earfcn: 1650
+                        pci: 114
+                        cid: 6161001
+                        rsrp: -86
               required:
                  - port
                  - status
@@ -3255,32 +3252,32 @@ paths:
         content: 
           application/json:
             example: 
-              type: 1
-              range: current
+              - port: 1
+                range: current
             schema:
-              type: object
-              properties: 
-                port:
-                  type: number
-                  minimum: 1
-                  maximum: max-port
-                  description: Port number
-                range:
-                  type: string
-                  description: >
-                    Scan range
+              type: array
+              items:
+                required:
+                  - port
+                  - range
+                properties:
+                  port: 
+                    type: number
+                    description: Port number
+                    minimum: 1
+                    maximum: max-port
+                  range:
+                    type: string
+                    description: >
+                       Scan range
                     
                     
-                    <ul><li>All: All operator</li>
+                          <ul><li>All: All operator</li>
                     
-                    
-                    <li>Current: The operator corresponding to the SIM card</li></ul>
-                  enum: 
-                    - all
-                    - current
-              required: 
-                - port
-                - range
+                          <li>Current: The operator corresponding to the SIM card</li></ul>
+                    enum: 
+                      - all
+                      - current
       responses:
         '202':
           description: 'Accepted'
@@ -3319,90 +3316,89 @@ paths:
             example: 
               - 1
             schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  description: Ports number
-                  minimum: 1
-                  maximum: max-port
-                  items:
+              type: array
+              items:
+                properties:
+                  ports:
                     type: number
-                    description: Port number
-              required: 
-                - ports
+                    description: Ports number
+                    minimum: 1
+                    maximum: max-port
+                required: 
+                  - ports
       responses:
         '200':
           description: 'OK'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  port:
-                    type: number
-                    minimum: 1
-                    maximum: max-port
-                    description: Port number
-                  status:
-                    type: string
-                    description: >
-                       The status of the most recent service base station scan operation
+                type: array
+                items:
+                  properties:
+                    port:
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Port number
+                    status:
+                      type: string
+                      description: >
+                         The status of the most recent service base station scan operation
                        
                        
-                       <ul><li>Idle: No operation</li>
+                         <ul><li>Idle: No operation</li>
                        
                        
-                       <li>Waitting: In progress</li>
+                         <li>Waitting: In progress</li>
                        
                        
-                       <li>Completed: Completed</li>
+                         <li>Completed: Completed</li>
                        
                        
-                       <li>Timeout: Timeout</li>
-                    default: completed
-                    enum: 
-                      - idle
-                      - waitting
-                      - completed
-                      - timeout
-                  cells:
-                    type: array
-                    description: Cell details
-                    items:
-                      type: object
-                      properties:
-                        operator: 
-                          type: string
-                          description: Operator ID
-                        earfcn:
-                          type: number
-                          description: E-UTRA Absolute Radio Frequency Channel Number
-                        pci: 
-                          type: number
-                          description: Physical cell ID
-                        cid:
-                          type: string
-                          description: Cell ID,HEX string
-                        rsrp:
-                          type: number
-                          description: Reference signal receiving power
-                required:
-                  - port
-                  - status
-                  - cells
+                         <li>Timeout: Timeout</li>
+                      default: completed
+                      enum: 
+                        - idle
+                        - waitting
+                        - completed
+                        - timeout
+                    cells:
+                      type: array
+                      description: Cell details
+                      items:
+                        type: object
+                        properties:
+                          operator: 
+                            type: string
+                            description: Operator ID
+                          earfcn:
+                            type: number
+                            description: E-UTRA Absolute Radio Frequency Channel Number
+                          pci: 
+                            type: number
+                            description: Physical cell ID
+                          cid:
+                            type: string
+                            description: Cell ID,HEX string
+                          rsrp:
+                            type: number
+                            description: Reference signal receiving power
+                  required:
+                    - port
+                    - status
+                    - cells
               examples:
                   '1':
                     summary: Successful instance
                     value:
-                      port: 1
-                      status: completed
-                      cells:
-                        - operator: 46000
-                          earfcn: 1850
-                          pci: 227
-                          cid: AC22D0E
-                          rsrp: -67
+                      - port: 1
+                        status: completed
+                        cells:
+                            operator: 46000
+                            earfcn: 1850
+                            pci: 227
+                            cid: AC22D0E
+                            rsrp: -67
           headers: {}
       security: []
   http://host:port/lock_cells:
@@ -3436,27 +3432,28 @@ paths:
         content: 
           application/json:
             example: 
-              port: 1
-              earfcn: 1850
-              pci: 227
+              - port: 1
+                earfcn: 1850
+                pci: 227
             schema: 
-              type: object
-              properties:
-                port:
-                  type: number
-                  minimum: 1
-                  maximum: max-port
-                  description: Port number
-                earfcn: 
-                  type: number
-                  description: E-UTRA Absolute Radio Frequency Channel Number
-                pci:
-                  type: number
-                  description: Physical cell ID
-              required: 
-                - port
-                - earfcn
-                - pci
+              type: array
+              items:
+                properties:
+                  port:
+                    type: number
+                    minimum: 1
+                    maximum: max-port
+                    description: Port number
+                  earfcn: 
+                    type: number
+                    description: E-UTRA Absolute Radio Frequency Channel Number
+                  pci:
+                    type: number
+                    description: Physical cell ID
+                required: 
+                  - port
+                  - earfcn
+                  - pci
       responses:
         '202':
           description: 'Accepted'
@@ -3499,21 +3496,95 @@ paths:
             example: 
               - 1
             schema:
-              type: object
-              properties:
-                ports:
-                  type: array
-                  description: Ports number
-                  minimum: 1
-                  maximum: max-port
-                  items:
+              type: array
+              items:
+                properties:
+                  ports:
                     type: number
-                    description: Port number
-              required: 
-                - ports
+                    description: Ports number
+                    minimum: 1
+                    maximum: max-port
+                required: 
+                  - ports
       responses:
-        '202':
-          description: 'Accepted'
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    port:
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Port number
+                    status:
+                      type: string
+                      description: >
+                         Status of the Most Recent Base Station Locking Operation​：
+                       
+                       
+                         <ul><li>Idle: No Operation</li>
+                       
+                       
+                         <li>Waitting: Waitting</li>
+                       
+                       
+                         <li>Completed: Completed</li>
+                       
+                       
+                         <li>Timeout: Timeout</li></ul>
+                      default: completed
+                      enum: 
+                        - idle
+                        - waitting
+                        - completed
+                        - timeout
+                    action:
+                      type: number
+                      description: >-
+                        Locking action：
+                      
+                      
+                          - 0： unlock cell
+                        
+                        
+                          - 1： lock cell through EARFCN
+                        
+                        
+                          - 2： lock cell through EARFCN and PCI
+                    earfcn:
+                      type: number
+                      description: E-UTRA Absolute Radio Frequency Channel Number
+                    pci:
+                      type: number
+                      description: Physical cell ID
+                    cid:
+                      type: string
+                      description: ​​Cell ID,HEX string
+                    action_status: 
+                      type: number
+                      description: >-
+                         Locking action status：
+                       
+                       
+                           - 0： finish
+                         
+                         
+                           - 1： not finish
+              examples:
+                  '1':
+                    summary: Successful instance
+                    value:
+                      - port: 1
+                        status: completed
+                        action: 1
+                        earfcn: 1650
+                        pci: 114
+                        cid: 6161001
+                        action_status: 1
           headers: {}
       security: []
   http://host:port/unlock_cells:
@@ -3547,27 +3618,28 @@ paths:
         content: 
           application/json:
             example: 
-              port: 1
-              earfcn: 1850
-              pci: 227
+              - port: 1
+                earfcn: 1850
+                pci: 227
             schema: 
-              type: object
-              properties:
-                port:
-                  type: number
-                  minimum: 1
-                  maximum: max-port
-                  description: Port number
-                earfcn: 
-                  type: number
-                  description: E-UTRA Absolute Radio Frequency Channel Number
-                pci:
-                  type: number
-                  description: Physical cell ID
-              required: 
-                - port
-                - earfcn
-                - pci
+              type: array
+              items:
+                properties:
+                  port:
+                    type: number
+                    minimum: 1
+                    maximum: max-port
+                    description: Port number
+                  earfcn: 
+                    type: number
+                    description: E-UTRA Absolute Radio Frequency Channel Number
+                  pci:
+                    type: number
+                    description: Physical cell ID
+                required: 
+                  - port
+                  - earfcn
+                  - pci
       responses:
         '202':
           description: 'Accepted'
@@ -3731,7 +3803,7 @@ paths:
                       - port: 1
                         status: completed
                         cells:
-                          - operator: 46000
+                            operator: 46000
                             earfcn: 3590
                             pci: 98
                             cid: AC22D0E
@@ -4619,6 +4691,131 @@ paths:
                     - port: 1
                       slot: 2
                       imei: 000000000002
+                    - ...: ...
+          headers: {}
+      security: []
+  http://host:port/set_pins:
+    post:
+      summary: Set Port PIN
+      deprecated: false
+      description: >-
+         Set a specific PIN for a given port and SIM slot.
+         
+         
+         Note: When a new PIN is specified, it will overwrite the existing PIN. If the value is set to empty, the current PIN will be cleared.
+      tags: 
+        - Device Action Commands
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+              example:
+                - port: 1
+                  slot: 1
+                  pin: 123456
+                - port: 1
+                  slot: 2
+                  pin: ""
+              schema:
+                type: array
+                description:
+                items:
+                  type: object
+                  required: 
+                    - port
+                    - slot
+                    - imei
+                  properties:
+                    port:
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Port number
+                    slot: 
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Slot number
+                    pin: 
+                      type: string
+                      description: SIM PIN
+                      default: ""                   
+      responses:
+        '200':
+          description: 'OK'
+          headers: {}
+      security: []
+  http://host:port/get_pins:
+    get:
+      summary: Get Port PIN
+      deprecated: false
+      description: >-
+         Retrieve the PIN configured for that port and slot.
+      tags: 
+        - Device Action Commands
+      parameters:
+        - name: username
+          in: query
+          description: Device Username
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Device Password
+          required: true
+          schema:
+            type: string               
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: array
+                description:
+                items:
+                  type: object
+                  required: 
+                    - port
+                    - slot
+                    - imei
+                  properties:
+                    port:
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Port number
+                    slot: 
+                      type: number
+                      minimum: 1
+                      maximum: max-port
+                      description: Slot number
+                    imei: 
+                      type: string
+                      description: SIM PIN   
+              examples:
+                '1':
+                  summary: Successful instance
+                  value:
+                    - port: 1
+                      slot: 1
+                      pin: 123456
+                    - port: 1
+                      slot: 2
+                      pin: ""
                     - ...: ...
           headers: {}
       security: []
