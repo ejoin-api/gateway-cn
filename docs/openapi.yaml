@@ -2702,9 +2702,6 @@ paths:
       summary: 发送AT命令
       deprecated: false
       description: >-
-        应用程序将向设备发送HTTP GET请求，设备将向应用程序返回HTTP 200 OK响应
-
-
          注意: 字符 #和 +需要分别替换为 %23和 %2B（浏览器会忽略原始字符的特殊含义）
                       
         
