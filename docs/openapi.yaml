@@ -42,9 +42,9 @@ info:
     backgroundColor: '#FAFAFA'
     altText: SMS logo
 tags:
-  - name: 短信任务
+  - name: 短信彩信
     description: |-
-      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Message Operations.postman_collection.json">💡一键导入：短信任务Postman配置集合</a> </span>
+      <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Message Operations.postman_collection.json">💡一键导入：短信彩信Postman配置集合</a> </span>
   - name: 设备操作
     description: |-
        <span style="text-decoration: underline;font-weight: bold;font-style: italic"><a download target="_blank" href="./Device Action Commands.postman_collection.json">💡一键导入：设备操作Postman配置集合</a> </span>
@@ -63,7 +63,7 @@ tags:
 paths:
   http://host:port/submit_sms_tasks:
     post:
-      summary: 提交短信任务
+      summary: 提交发送任务
       deprecated: false
       description: >-
         注意事项：
@@ -76,7 +76,7 @@ paths:
          
          3.若同时选择多个端口并指定多个接收方，每个端口将独立向所有接收方发送短信。
       tags:
-        - 短信任务  
+        - 短信彩信  
       parameters:
         - name: username
           in: query
@@ -330,14 +330,14 @@ paths:
 
   http://host:port/pause_sms_tasks:
     post:
-      summary: 暂停短信任务
+      summary: 暂停发送任务
       deprecated: false
       description: >
 
-         暂停一个或多个仍在发送队列中且尚未派发的短信任务 
+         暂停一个或多个仍在发送队列中且尚未派发的发送任务 
         
       tags:
-        - 短信任务  
+        - 短信彩信  
       parameters:
         - name: username
           in: query
@@ -430,14 +430,14 @@ paths:
  
   http://host:port/resume_sms_tasks:
     post:
-      summary: 恢复被暂停短信任务
+      summary: 恢复发送任务
       deprecated: false
       description: |-
 
-        继续执行发送队列中一个或多个先前被暂停的短信任务
+        继续执行发送队列中一个或多个先前被暂停的发送任务
        
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: username
           in: query
@@ -529,14 +529,14 @@ paths:
       security: []
   http://host:port/remove_sms_tasks:
     post:
-      summary: 删除短信任务
+      summary: 删除发送任务
       deprecated: false
       description: |-
 
-        删除一个或多个仍在发送队列中等待的短信任务
+        删除一个或多个仍在发送队列中等待的发送任务
        
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: username
           in: query
@@ -629,13 +629,13 @@ paths:
       security: []
   http://host:port/get_sms_tasks:
     get:
-      summary: 查询短信任务
+      summary: 查询发送任务
       deprecated: false
       description: |-
 
-         获取设备当前排队等待发送的短信任务详情
+         获取设备当前排队等待发送的发送任务详情
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: username
           in: query
@@ -761,7 +761,7 @@ paths:
         获取短信报告上报配置
        
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: username
           in: query
@@ -839,7 +839,7 @@ paths:
         设置短信报告上报配置
        
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: username
           in: query
@@ -934,7 +934,7 @@ paths:
          4. Fdr（失败明细记录）列表记录两次状态报告之间的失败详情，
          服务器需保留此前的明细数据。
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: version
           in: query
@@ -1625,7 +1625,7 @@ paths:
       summary: 设备状态报告内容
       deprecated: false
       description: >-
-        设备将在满足以下任一条件时，向短信服务器发送包含设备运行状态信息的HTTP POST请求：
+        设备将在满足以下任一条件时，向状态报告服务器发送包含设备运行状态信息的HTTP POST请求：
 
 
         **1.设备端口状态发生变化时**
@@ -1819,7 +1819,7 @@ paths:
       summary: 端口状态报告内容
       deprecated: false
       description: >-
-        设备将在满足以下任一条件时，向短信服务器发送HTTP POST请求（该请求包含设备运行状态信息）：
+        设备将在满足以下任一条件时，向状态报告服务器发送HTTP POST请求（该请求包含设备运行状态信息）：
 
 
         **1.设备某个端口状态发生变化时**
@@ -1975,7 +1975,7 @@ paths:
         客户端可通过HTTP GET请求主动查询设备的短信统计信息
         
         
-        若请求中包含 `slots` 字段, 则优先使用该字段; 若未提供 slots但包含 slots_pattern字段，则使用 slots_pattern
+        若请求中包含 `slots`字段, 则优先使用该字段; 若未提供 `slots` 但包含 `slots_pattern` 字段，则使用  `slots_pattern` ;都没有则报错
       tags:
         - 统计信息
       parameters:
@@ -2110,7 +2110,7 @@ paths:
         客户端可通过HTTP GET请求主动查询设备的通话统计信息
         
         
-        若请求中包含 `slots` 字段,则优先使用该字段；若未提供slots但包含 slots_pattern字段，则使用 slots_pattern；若两者均未提供，则返回错误
+        若请求中包含 `slots` 字段,则优先使用该字段；若未提供 `slots` 但包含 `slots_pattern` 字段，则使用  `slots_pattern` ；若两者均未提供，则返回错误
       tags:
         - 统计信息
       parameters:
@@ -2285,7 +2285,7 @@ paths:
 
         <li>4. 重复步骤2直至查询完成。</li></ul>
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: username
           in: query
@@ -2407,7 +2407,7 @@ paths:
                                   
                                   此外，以'Emms-'开头的头字段为自定义字段，其余为标准HTTP字段
       tags:
-        - 短信任务
+        - 短信彩信
       parameters:
         - name: Date
           in: header
@@ -3658,7 +3658,7 @@ paths:
                   example: 192.168.1.156
                 timeout:
                   type: number
-                  description: Cell 操作超时时间，单位为秒。在`timeout`时间内还没有完成操作，如果设置了 `report_url`, 设备会推送`status`为`timeout`的结果
+                  description: 基站操作超时时间，单位为秒。在`timeout`时间内还没有完成操作，如果设置了 `report_url`, 设备会推送`status`为`timeout`的结果
                   default: 120
                   example: 180
               
@@ -3972,7 +3972,7 @@ paths:
          该功能用于更新设备的​​号码配置​​设置。
          
          
-         允许指定以下参数：查询电话号码的方法（如USSD、短信、SIM查询），使用的指令，关键词识别规则，其他与号码获取和处理相关的参数。配置内容可包括：运营商ID变更、查询方法切换、号码前缀替换规则。若请求中确实某个参数，该字段将被更新为null值
+         允许指定以下参数：查询电话号码的方法（如USSD、短信、SIM查询），使用的指令，关键词识别规则，其他与号码获取和处理相关的参数。配置内容可包括：运营商ID变更、查询方法切换、号码前缀替换规则。若请求中缺失某个参数，该字段将被更新为null值
       tags: 
         - 号码设置
       parameters:
@@ -4782,7 +4782,7 @@ paths:
                       minimum: 1
                       maximum: max-port
                       description: 卡槽号
-                    imei: 
+                    pin: 
                       type: string
                       description: SIM PIN   
               examples:
