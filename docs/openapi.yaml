@@ -2304,9 +2304,10 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - id
               properties:
                 id:
-                  default: 1
                   type: number
                   description: 开始短信ID, 1表⽰收件箱中第⼀条短信
                 num: 
