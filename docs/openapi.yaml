@@ -670,7 +670,7 @@ paths:
                 need_content:
                   type: bool
                   default: false
-                  description: 是否显示短信任务的内容
+                  description: 查询结果是否显示任务提交时的短信内容
               required:
                 - port
                 - index
@@ -678,6 +678,7 @@ paths:
               port: 1
               index: 0
               num: 10
+              need_content: true
       responses:
         '200':
           description: 'OK'
