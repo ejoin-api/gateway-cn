@@ -4799,10 +4799,10 @@ paths:
       security: []
   http://host:port/set_bound_opers:
     post:
-      summary: 设置端口强制锁定运营商
+      summary: 模块强制锁定运营商
       deprecated: false
       description: >-
-         设置端口强制锁定运营商。如填46000，此端口将强制注册到46000，不会往别的运营商注册，该配置可能导致卡不能注册
+         设置锁定运营商。如填写46000，此端口将强制注册到46000，不会往别的运营商注册，该配置可能导致卡不能注册
          
          
          当 `oper_id` is 设置为 `0`, 解除锁定。<span style="text-decoration: underline;font-weight: bold;font-style: italic">要使用此API，请将设备版本更新到8.1l 及往后</span>
@@ -4853,7 +4853,7 @@ paths:
       security: []
   http://host:port/get_bound_opers:
     get:
-      summary: 获取端口强制锁定运营商
+      summary: 获取锁定运营商配置
       deprecated: false
       description: >-
          查询设备各端口强制锁定运营商ID
