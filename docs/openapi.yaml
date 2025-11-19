@@ -2402,7 +2402,7 @@ paths:
       summary: 接收彩信
       deprecated: false
       description: >-
-                                  此阶段的主要功能是通过HTTP将接收到的彩信内容推送至已配置的服务器地址。在设备的`短信设置`菜单栏下的`彩信接收`页面可以配置推送接收服务器地址，如下图所示：
+                                  此阶段的主要功能是通过HTTP将接收到的彩信内容推送至已配置的服务器地址。在设备的`短信设置`菜单栏下的`彩信接收`页面可以配置推送接收服务器地址，
                                   
                                   彩信内容通过HTTP-POST方式推送，具体格式请参照HTTP标准规范。下文仅对特殊HTTP头字段进行说明（注：部分头字段可能不存在）
                                   
@@ -2697,6 +2697,72 @@ paths:
                     }
                 }
             }
+          headers: {}
+      security: []
+  把彩信接收状态报告主动推送到配置的服务器地址上:
+    post:
+      summary: 彩信接收报告
+      deprecated: false
+      description: >-
+      
+          在设备`彩信接收`页面开启`状态报告`后，会通过当前页面配置的URL上报彩信接收状态信息
+          
+          
+          注意：`转发的彩信内容`HTTP Content-Type不会是JSON格式，而`彩信接收报告`Content-Type为Application/JSON
+      tags:
+        - 短信彩信
+      requestBody:
+        content: 
+          application/json:
+            example: 
+              ts: 1763458139
+              tid: xxxxxx
+              mac: 00-00-00-00-00-00
+              port: 1
+              slot: 1
+              iccid: xxxxxxxx
+              state: xxx
+              reason: xxx
+            schema: 
+              type: object
+              required:
+                - ts
+                - mac
+                - port
+                - slot
+                - iccid
+                - state
+              properties:
+                ts:
+                  type: int
+                  description: 时间戳
+                tid:
+                  type: string
+                  description: 事务ID，由运营商放回
+                mac:
+                  type: string
+                  description: 设备MAC地址
+                port:
+                  type: int
+                  description: 彩信所属设备端口
+                slot:
+                  type: int
+                  description: 彩信所属端口卡槽
+                iccid:
+                  type: string
+                  description: ICCID
+                state:
+                  type: string
+                  description: >-
+                    当前彩信状态，取值如下:
+                      - 1. `notification_ind`: 运营商通知,有彩信送达
+                      - 2. `pendding`: 等待接收彩信
+                      - 3. `receiving`: 正在接收彩信
+                      - 4. `failed`: 接收彩信失败
+                      - 5. `success`: 接收彩信成功
+                reason:
+                  type: string
+                  description: 彩信接收失败描述，只有在`state`字段为`failed`时存在
           headers: {}
       security: []
   http://host:port/send_ats:
