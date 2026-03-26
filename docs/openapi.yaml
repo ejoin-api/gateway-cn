@@ -1315,34 +1315,39 @@ paths:
         content:
           application/json:
             example:
-              port: 1
-              slot: 1
-              ac: ""
-              cc: ""
+              - port: 1
+                slot: 1
+                ac: ""
+                cc: ""
+              - port: 2
+                slot: 1
+                ac: ""
+                cc: ""
             schema:
-              type: object
-              properties:
-                port:
-                  type: integer
-                  minimum: 1
-                  maximum: max-port
-                  description: 端口号
-                slot:
-                  type: integer
-                  minimum: 1
-                  maximum: 8
-                  description: 卡槽号
-                ac:
-                  type: string
-                  description: 激活码
-                cc:
-                  type: string
-                  description: 确认码
-              required:
-                - port
-                - slot
-                - ac
-                - cc
+              type: array
+              items:
+                properties:
+                  port:
+                    type: integer
+                    minimum: 1
+                    maximum: max-port
+                    description: 端口号
+                  slot:
+                    type: integer
+                    minimum: 1
+                    maximum: 8
+                    description: 卡槽号
+                  ac:
+                    type: string
+                    description: 激活码
+                  cc:
+                    type: string
+                    description: 确认码
+                required:
+                  - port
+                  - slot
+                  - ac
+                  - cc
       responses:
         '200':
           description: 'OK'
